@@ -1,15 +1,15 @@
 package com.jackwink.tweakable.generators.java;
 
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 
-import java.util.ArrayList;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * Builds a preference from a Bundle
@@ -18,9 +18,14 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
 
     public static final String DEFAULT_VALUE_ATTRIBUTE = "defaultsTo";
+    public static final String KEY_ATTRIBUTE = "key";
+    public static final String TITLE_ATTRIBUTE = "title";
+    public static final String SUMMARY_ATTRIBUTE = "summary";
+
 
     private static LinkedHashMap<Class, Class> mTypeToElementMap = new LinkedHashMap<>();
 
+    private Context mContext = null;
     private Class<T> mType = null;
     private LinkedHashMap<String, Object> mAttributeMap = null;
 
@@ -41,6 +46,11 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
         return this;
     }
 
+    public PreferenceBuilder setContext(Context context) {
+        mContext = context;
+        return this;
+    }
+
     /** {@link JavaBuilder#build()} */
     public Preference build() {
         if (!mTypeToElementMap.containsKey(mType)) {
@@ -49,13 +59,28 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
         }
 
         Class cls = mTypeToElementMap.get(mType);
+        Constructor constructor = null;
         Preference preference = null;
         try {
-            preference = (Preference) cls.newInstance();
-            if (mAttributeMap.containsKey(DEFAULT_VALUE_ATTRIBUTE)) {
-                preference.setDefaultValue(mAttributeMap.get(DEFAULT_VALUE_ATTRIBUTE));
+            constructor = cls.getConstructor(Context.class);
+            preference = (Preference) constructor.newInstance(mContext);
+
+            /* Required Attributes */
+            preference.setKey((String) getAttribute(KEY_ATTRIBUTE));
+            preference.setTitle((CharSequence) getAttribute(TITLE_ATTRIBUTE));
+            preference.setSummary((String) getAttribute(SUMMARY_ATTRIBUTE));
+            preference.setDefaultValue(getAttribute(DEFAULT_VALUE_ATTRIBUTE));
+
+            /* Optional Attributes */
+
+            // Set the initial state to the default value
+            if (preference instanceof SwitchPreference) {
+                ((SwitchPreference) preference).setChecked(
+                        (boolean) getAttribute(DEFAULT_VALUE_ATTRIBUTE));
             }
-            
+
+            /* Non-User-Configurable Attributes */
+            preference.setPersistent(true);
 
         } catch (InstantiationException error) {
             Log.e(TAG, "InstantiationException!");
@@ -65,7 +90,29 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
             Log.e(TAG, "Illegal Access!");
             throw new FailedToBuildPreferenceException(
                     "Could not access constructor for " + cls.getSimpleName(), error);
+        } catch (NoSuchMethodException error) {
+            Log.e(TAG, "No preference constructor with single argument: 'Context'!");
+            throw new FailedToBuildPreferenceException(
+                    "No 'Context'-only constructor for " + cls.getSimpleName(), error);
+        } catch (InvocationTargetException error) {
+            Log.e(TAG, "Invalid target?");
+            throw new FailedToBuildPreferenceException(
+                    "Invalid constructor target for: " + cls.getSimpleName(), error);
         }
         return preference;
+    }
+
+    /**
+     * Returns the value of a given attribute or throws an exception if it's not found
+     *
+     * @param attributeName Name of the user-provided attribute to query for
+     * @return Value of the provided {@code attributeName}
+     */
+    private Object getAttribute(String attributeName) throws FailedToBuildPreferenceException {
+        if (!mAttributeMap.containsKey(attributeName)) {
+            throw new FailedToBuildPreferenceException(
+                    "Missing required attribute: " + attributeName);
+        }
+        return mAttributeMap.get(attributeName);
     }
 }
