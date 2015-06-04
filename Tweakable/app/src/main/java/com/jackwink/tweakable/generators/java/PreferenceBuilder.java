@@ -3,6 +3,7 @@ package com.jackwink.tweakable.generators.java;
 import android.content.Context;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
@@ -21,6 +22,10 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
     public static final String KEY_ATTRIBUTE = "key";
     public static final String TITLE_ATTRIBUTE = "title";
     public static final String SUMMARY_ATTRIBUTE = "summary";
+    public static final String ON_LABEL_ATTRIBUTE = "switch_text_on";
+    public static final String OFF_LABEL_ATTRIBUTE = "switch_text_off";
+    public static final String ON_SUMMARY_ATTRIBUTE = "summary_on";
+    public static final String OFF_SUMMARY_ATTRIBUTE = "summary_off";
 
 
     private static LinkedHashMap<Class, Class> mTypeToElementMap = new LinkedHashMap<>();
@@ -77,11 +82,20 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
             if (preference instanceof SwitchPreference) {
                 ((SwitchPreference) preference).setChecked(
                         (boolean) getAttribute(DEFAULT_VALUE_ATTRIBUTE));
+
+                ((SwitchPreference) preference).setSummaryOn(
+                        (String) getOptionalAttribute(ON_SUMMARY_ATTRIBUTE));
+                ((SwitchPreference) preference).setSummaryOff(
+                        (String) getOptionalAttribute(OFF_SUMMARY_ATTRIBUTE));
+
+                ((SwitchPreference) preference).setSwitchTextOn(
+                        (String) getOptionalAttribute(ON_LABEL_ATTRIBUTE));
+                ((SwitchPreference) preference).setSwitchTextOff(
+                        (String) getOptionalAttribute(OFF_LABEL_ATTRIBUTE));
             }
 
             /* Non-User-Configurable Attributes */
             preference.setPersistent(true);
-
         } catch (InstantiationException error) {
             Log.e(TAG, "InstantiationException!");
             throw new FailedToBuildPreferenceException(
@@ -112,6 +126,21 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
         if (!mAttributeMap.containsKey(attributeName)) {
             throw new FailedToBuildPreferenceException(
                     "Missing required attribute: " + attributeName);
+        }
+        return mAttributeMap.get(attributeName);
+    }
+
+    /**
+     * Like the {@link #getAttribute(String)} method, except it returns {@code null} instead of
+     * throwing an exception.
+     *
+     * @param attributeName Name of the user-provided attribute to query for
+     * @return Value of the provided {@code attributeName} or {@code null}
+     */
+    @Nullable
+    private Object getOptionalAttribute(String attributeName) {
+        if (!mAttributeMap.containsKey(attributeName)) {
+            return null;
         }
         return mAttributeMap.get(attributeName);
     }
