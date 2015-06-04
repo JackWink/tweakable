@@ -3,7 +3,6 @@ package com.jackwink.tweakable.generators.java;
 import android.content.Context;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
@@ -15,7 +14,7 @@ import java.util.LinkedHashMap;
 /**
  * Builds a preference from a Bundle
  */
-public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preference> {
+public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
 
     public static final String DEFAULT_VALUE_ATTRIBUTE = "defaultsTo";
@@ -32,7 +31,6 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
 
     private Context mContext = null;
     private Class<T> mType = null;
-    private LinkedHashMap<String, Object> mAttributeMap = null;
 
     static {
         mTypeToElementMap.put(boolean.class, SwitchPreference.class);
@@ -46,11 +44,13 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
         return this;
     }
 
+    @Override
     public PreferenceBuilder setAttributeMap(LinkedHashMap<String, Object> attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
 
+    @Override
     public PreferenceBuilder setContext(Context context) {
         mContext = context;
         return this;
@@ -71,17 +71,17 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
             preference = (Preference) constructor.newInstance(mContext);
 
             /* Required Attributes */
-            preference.setKey((String) getAttribute(KEY_ATTRIBUTE));
-            preference.setTitle((CharSequence) getAttribute(TITLE_ATTRIBUTE));
-            preference.setSummary((String) getAttribute(SUMMARY_ATTRIBUTE));
-            preference.setDefaultValue(getAttribute(DEFAULT_VALUE_ATTRIBUTE));
+            preference.setKey((String) getRequiredAttribute(KEY_ATTRIBUTE));
+            preference.setTitle((CharSequence) getRequiredAttribute(TITLE_ATTRIBUTE));
+            preference.setSummary((String) getRequiredAttribute(SUMMARY_ATTRIBUTE));
+            preference.setDefaultValue(getRequiredAttribute(DEFAULT_VALUE_ATTRIBUTE));
 
             /* Optional Attributes */
 
             // Set the initial state to the default value
             if (preference instanceof SwitchPreference) {
                 ((SwitchPreference) preference).setChecked(
-                        (boolean) getAttribute(DEFAULT_VALUE_ATTRIBUTE));
+                        (boolean) getRequiredAttribute(DEFAULT_VALUE_ATTRIBUTE));
 
                 ((SwitchPreference) preference).setSummaryOn(
                         (String) getOptionalAttribute(ON_SUMMARY_ATTRIBUTE));
@@ -96,6 +96,7 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
 
             /* Non-User-Configurable Attributes */
             preference.setPersistent(true);
+
         } catch (InstantiationException error) {
             Log.e(TAG, "InstantiationException!");
             throw new FailedToBuildPreferenceException(
@@ -116,32 +117,5 @@ public class PreferenceBuilder<T extends Class> implements JavaBuilder<Preferenc
         return preference;
     }
 
-    /**
-     * Returns the value of a given attribute or throws an exception if it's not found
-     *
-     * @param attributeName Name of the user-provided attribute to query for
-     * @return Value of the provided {@code attributeName}
-     */
-    private Object getAttribute(String attributeName) throws FailedToBuildPreferenceException {
-        if (!mAttributeMap.containsKey(attributeName)) {
-            throw new FailedToBuildPreferenceException(
-                    "Missing required attribute: " + attributeName);
-        }
-        return mAttributeMap.get(attributeName);
-    }
 
-    /**
-     * Like the {@link #getAttribute(String)} method, except it returns {@code null} instead of
-     * throwing an exception.
-     *
-     * @param attributeName Name of the user-provided attribute to query for
-     * @return Value of the provided {@code attributeName} or {@code null}
-     */
-    @Nullable
-    private Object getOptionalAttribute(String attributeName) {
-        if (!mAttributeMap.containsKey(attributeName)) {
-            return null;
-        }
-        return mAttributeMap.get(attributeName);
-    }
 }
