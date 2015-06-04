@@ -1,7 +1,7 @@
 package com.jackwink.tweakable.parsers;
 
 import com.jackwink.tweakable.annotations.TweakableInteger;
-import com.jackwink.tweakable.generators.PreferenceBuilder;
+import com.jackwink.tweakable.generators.xml.PreferenceBuilder;
 import com.jackwink.tweakable.stores.ValueStore;
 
 import java.lang.reflect.Field;

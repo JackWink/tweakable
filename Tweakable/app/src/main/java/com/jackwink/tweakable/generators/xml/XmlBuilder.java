@@ -1,8 +1,11 @@
-package com.jackwink.tweakable.generators;
+package com.jackwink.tweakable.generators.xml;
 
 
 import org.xmlpull.v1.XmlSerializer;
 
+/**
+ * Eventually to be used to statically generate a settings file?
+ */
 public interface XmlBuilder {
 
     /**

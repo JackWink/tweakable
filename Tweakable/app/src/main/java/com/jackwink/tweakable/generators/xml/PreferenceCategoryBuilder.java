@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators;
+package com.jackwink.tweakable.generators.xml;
 
 import android.util.Log;
 
