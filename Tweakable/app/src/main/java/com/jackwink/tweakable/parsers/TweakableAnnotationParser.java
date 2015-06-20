@@ -1,24 +1,18 @@
 package com.jackwink.tweakable.parsers;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.util.Log;
 
-import com.jackwink.tweakable.annotations.TweakableInteger;
-import com.jackwink.tweakable.generators.xml.PreferenceBuilder;
 import com.jackwink.tweakable.stores.ValueStore;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
-import com.jackwink.tweakable.types.PreferenceEntry;
 import com.jackwink.tweakable.types.TweakableBoolean;
 import com.jackwink.tweakable.types.TweakableValue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**

@@ -2,7 +2,6 @@ package com.jackwink.tweakable.controls;
 
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -16,8 +15,6 @@ import com.jackwink.tweakable.parsers.TweakableAnnotationParser;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  *

@@ -2,9 +2,7 @@ package com.jackwink.tweakable.types;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.jackwink.tweakable.annotations.TweakableInteger;
 import com.jackwink.tweakable.annotations.TwkBoolean;
 
 import java.lang.reflect.Field;
