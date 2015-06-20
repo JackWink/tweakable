@@ -11,6 +11,10 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     public static final String BUNDLE_KEYATTR_KEY = "key";
     public static final String BUNDLE_TITLE_KEY = "title";
     public static final String BUNDLE_SUMMARY_KEY = "summary";
+    public static final String BUNDLE_TYPEINFO_KEY = "type_information";
+
+    public static final String BUNDLE_CATEGORY_KEY = "category";
+
 
     protected String mTitle;
     protected String mKey;
@@ -37,6 +41,7 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
         bundle.putString(BUNDLE_KEYATTR_KEY, mKey);
         bundle.putString(BUNDLE_TITLE_KEY, mTitle);
         bundle.putString(BUNDLE_SUMMARY_KEY, mSummary);
+        bundle.putString(BUNDLE_TYPEINFO_KEY, getType().getName());
         return bundle;
     }
 

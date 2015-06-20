@@ -25,19 +25,19 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
 
     @Override
     public Class<Boolean> getType() {
-        return Boolean.class;
+        return boolean.class;
     }
 
     @Override
     public Boolean getValue() {
-        return mValue;
+        return mParsedAnnotation.defaultsTo();
     }
 
     @Nullable
     @Override
     public Bundle toBundle() {
         Bundle base = super.toBundle();
-        base.putBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY, mValue);
+        base.putBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY, mParsedAnnotation.defaultsTo());
         if (!mParsedAnnotation.offSummary().isEmpty()) {
             base.putString(BUNDLE_OFF_SUMMARY_KEY, mParsedAnnotation.offSummary());
         }
