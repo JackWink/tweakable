@@ -1,10 +1,9 @@
 package com.jackwink.tweakable.generators.java;
-;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceScreenException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;

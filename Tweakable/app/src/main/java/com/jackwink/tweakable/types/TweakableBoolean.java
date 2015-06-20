@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.jackwink.tweakable.annotations.TwkBoolean;
-import com.jackwink.tweakable.parsers.TweakableAnnotationParser;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
