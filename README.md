@@ -10,6 +10,7 @@ v0.0.1
 * Inject boolean & Boolean values from shared preferences
 * ~~Parse annotations to generate bundle format for preference generation~~
 * Clean up bundle format
+* ~~Allow sub-screens~~
 
 v0.0.2
 

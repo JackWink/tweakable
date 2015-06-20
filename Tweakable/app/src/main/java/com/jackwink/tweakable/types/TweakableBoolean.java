@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.jackwink.tweakable.annotations.TwkBoolean;
+import com.jackwink.tweakable.parsers.TweakableAnnotationParser;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -49,6 +50,7 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
             base.putString(BUNDLE_ON_SUMMARY_KEY, mParsedAnnotation.onSummary());
         }
 
+        // TODO: these don't seem to work in Android 5.x, need to test 4.x
         if (!mParsedAnnotation.onLabel().isEmpty()) {
             base.putString(BUNDLE_ON_LABEL_KEY, mParsedAnnotation.onLabel());
         }
@@ -67,11 +69,17 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
         TwkBoolean annotation = field.getAnnotation(TwkBoolean.class);
 
         TweakableBoolean returnValue = new TweakableBoolean();
-        returnValue.mKey = cls.getName() + "." + field.getName();
-        returnValue.mTitle = !annotation.title().isEmpty() ? annotation.title() : field.getName();
+
+        /* Abstract Tweakable Values */
+        returnValue.mKey = cls.getName() + "-" + field.getName();
+        returnValue.mTitle = getDefaultString(annotation.title(), field.getName());
         returnValue.mSummary = annotation.summary();
+        returnValue.mCategory = getDefaultString(annotation.category(), null);
+        returnValue.mScreen = getDefaultString(annotation.screen(), null);
+
+        /* TweakableBoolean */
         returnValue.mParsedAnnotation = annotation;
-        returnValue.mCategory = annotation.category().isEmpty() ? null : annotation.category();
         return returnValue;
     }
+
 }

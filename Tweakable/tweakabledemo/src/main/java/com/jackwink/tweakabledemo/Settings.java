@@ -7,7 +7,7 @@ import com.jackwink.tweakable.annotations.TwkBoolean;
  */
 public class Settings {
 
-    @TwkBoolean(category = "Boolean", title = "Lights?", onLabel = "ON!", offLabel = "OFF!",
+    @TwkBoolean(screen = "light settings", category = "Boolean", title = "Lights?", onLabel = "ON!", offLabel = "OFF!",
             defaultsTo = true)
     public static boolean lightsOn;
 

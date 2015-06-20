@@ -7,6 +7,7 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceScreenException;
+import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 /**
  * Builds a {@link PreferenceScreen}
@@ -53,7 +54,8 @@ public class PreferenceScreenBuilder extends BaseBuilder<PreferenceScreen> {
         }
 
         PreferenceScreen screen = mPreferenceManager.createPreferenceScreen(mContext);
-        screen.setTitle(mAttributeMap.getString(EXTRA_TITLE, DEFAULT_TITLE));
+        screen.setTitle((String) getRequiredAttribute(AbstractTweakableValue.BUNDLE_TITLE_KEY));
+        screen.setKey((String) getRequiredAttribute(AbstractTweakableValue.BUNDLE_KEYATTR_KEY));
         return screen;
     }
 }

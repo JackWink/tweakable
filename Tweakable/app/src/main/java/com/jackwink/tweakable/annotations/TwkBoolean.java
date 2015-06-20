@@ -9,7 +9,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TwkBoolean {
 
-    // If this string is empty, it will use the class name
+    // If this string is empty, preference will be added to the root screen.
+    // By providing a name, this will create a subscreen for the preference
+    String screen() default "";
+
+    // If this string is empty, preference will be added to the screen root
     String category() default "";
 
     // If string is empty, this will use the field name.

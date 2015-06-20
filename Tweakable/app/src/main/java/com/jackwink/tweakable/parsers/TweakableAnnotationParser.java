@@ -21,9 +21,18 @@ import java.util.Set;
 public class TweakableAnnotationParser {
     private static final String TAG = TweakableAnnotationParser.class.getSimpleName();
 
+    public static final String ROOT_SCREEN_TITLE = "Tweakable Values";
+    public static final String ROOT_SCREEN_KEY = "tweakable-values-root-screen";
+    public static final String ROOT_CATEGORY_KEY = "tweakable-values-root-category";
+
+
+    public static final String SCREEN_KEY_POSTFIX = "-screen";
+    public static final String CATEGORY_KEY_POSTFIX = "-category";
+
     // Total number of tweakable values, just so it doesn't get senseless.
     private final static int MAX_TWEAKABLE_VALUES = 64;
     private final static int MAX_TWEAKABLE_CATEGORIES = 16;
+    private final static int MAX_TWEAKABLE_SCREENS = 16;
 
     // TODO: init store
     private ValueStore mValueStore;
@@ -35,11 +44,12 @@ public class TweakableAnnotationParser {
     private static LinkedHashMap<String, Bundle> mCategories =
             new LinkedHashMap<>(MAX_TWEAKABLE_CATEGORIES);
 
+    private static LinkedHashMap<String, Bundle> mScreens =
+            new LinkedHashMap<>(MAX_TWEAKABLE_SCREENS);
+
     public void parse(Class<?> cls, Object instance) throws Exception {
         Field[] fields = cls.getFields();
 
-        String fieldName;
-        String categoryName;
         for (Field field : fields) {
             // Skip all non-static fields for now, as well as non-annotated methods.
             // TODO: See if static is an artificial limitation -- I think it'll be a lot of work for
@@ -57,13 +67,24 @@ public class TweakableAnnotationParser {
                     Log.d(TAG, "Parsing: " + field.getName() + " as boolean.");
                     value = TweakableBoolean.parse(cls, field);
                 } catch (IllegalArgumentException error) {
+                    error.printStackTrace();
                     continue;
                 }
 
                 Bundle bundle = value.toBundle();
+                if (!isScreenCreated(bundle)) {
+                    createScreenBundle(bundle);
+                }
+
                 if (!isCategoryCreated(bundle)) {
                     createCategoryBundle(bundle);
                 }
+
+
+                bundle.putString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY,
+                        getCategoryKey(bundle));
+                bundle.putString(AbstractTweakableValue.BUNDLE_SCREEN_KEY, getScreenKey(bundle));
+
                 mPreferences.add(bundle);
             }
         }
@@ -77,21 +98,61 @@ public class TweakableAnnotationParser {
         return mCategories.values();
     }
 
+    public Collection<Bundle> getScreens() {
+        return mScreens.values();
+    }
+
     private boolean isCategoryCreated(Bundle bundle) {
         if (!bundle.containsKey(AbstractTweakableValue.BUNDLE_CATEGORY_KEY)) {
+            Log.i(TAG, "No category listed.");
             return true;
         }
-        return mCategories.containsKey(bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY));
+        String categoryKey = getCategoryKey(bundle);
+        Log.i(TAG, "Category key: " + categoryKey + " is contained: " + mCategories.containsKey(categoryKey));
+        return mCategories.containsKey(getCategoryKey(bundle));
     }
 
     private void createCategoryBundle(Bundle bundle) {
         Bundle category = new Bundle();
+
         String categoryTitle = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
-        String categoryKey = categoryTitle + "-category";
 
         category.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, categoryTitle);
-        category.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY, categoryKey);
-        mCategories.put(categoryKey, category);
+        category.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY, getCategoryKey(bundle));
+        category.putString(AbstractTweakableValue.BUNDLE_SCREEN_KEY, getScreenKey(bundle));
+        mCategories.put(getCategoryKey(bundle), category);
+    }
+
+    private String getCategoryKey(Bundle bundle) {
+        String screenKey = getScreenKey(bundle);
+        String categoryTitle = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
+        if (categoryTitle != null) {
+            return screenKey + "." + categoryTitle + CATEGORY_KEY_POSTFIX;
+        }
+        return screenKey + "." + ROOT_CATEGORY_KEY;
+    }
+
+    private String getScreenKey(Bundle bundle) {
+        String screenKey = bundle.getString(AbstractTweakableValue.BUNDLE_SCREEN_KEY);
+        return screenKey == null ? ROOT_SCREEN_KEY : screenKey + SCREEN_KEY_POSTFIX;
+    }
+
+    private boolean isScreenCreated(Bundle bundle) {
+        if (!bundle.containsKey(AbstractTweakableValue.BUNDLE_SCREEN_KEY)) {
+            return true;
+        }
+        return mScreens.containsKey(getScreenKey(bundle));
+    }
+
+    private void createScreenBundle(Bundle bundle) {
+        Bundle screen = new Bundle();
+        String screenTitle = bundle.getString(AbstractTweakableValue.BUNDLE_SCREEN_KEY);
+        String screenKey = getScreenKey(bundle);
+        Log.i(TAG, "Creating screen bundle for: " + screenKey);
+
+        screen.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, screenTitle);
+        screen.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY, screenKey);
+        mScreens.put(screenKey, screen);
     }
 
 }

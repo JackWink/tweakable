@@ -3,6 +3,9 @@ package com.jackwink.tweakable.types;
 import android.os.Bundle;
 
 import android.support.annotation.Nullable;
+
+import java.lang.reflect.Field;
+
 /**
  *
  */
@@ -14,12 +17,14 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     public static final String BUNDLE_TYPEINFO_KEY = "type_information";
 
     public static final String BUNDLE_CATEGORY_KEY = "category";
+    public static final String BUNDLE_SCREEN_KEY = "screen";
 
 
     protected String mTitle;
     protected String mKey;
     protected String mSummary;
     protected String mCategory;
+    protected String mScreen;
 
     @Override
     public String getKey() {
@@ -51,6 +56,10 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
         if (mCategory != null && !mCategory.isEmpty()) {
             bundle.putString(BUNDLE_CATEGORY_KEY, mCategory);
         }
+
+        if (mScreen != null && !mScreen.isEmpty()) {
+            bundle.putString(BUNDLE_SCREEN_KEY, mScreen);
+        }
         return bundle;
     }
 
@@ -58,5 +67,12 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     @Override
     public PreferenceEntry[] getChildren() {
         return null;
+    }
+
+    public static String getDefaultString(String value, String defaultValue) {
+        if (value == null || value.isEmpty()) {
+            return defaultValue;
+        }
+        return value;
     }
 }
