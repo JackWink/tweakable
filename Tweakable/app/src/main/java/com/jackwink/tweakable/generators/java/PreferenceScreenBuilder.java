@@ -15,9 +15,6 @@ import com.jackwink.tweakable.types.AbstractTweakableValue;
 public class PreferenceScreenBuilder extends BaseBuilder<PreferenceScreen> {
     private static final String TAG = PreferenceScreenBuilder.class.getSimpleName();
 
-    public static final String EXTRA_TITLE = "title";
-    private static final String DEFAULT_TITLE = "Settings";
-
     private PreferenceManager mPreferenceManager = null;
 
 

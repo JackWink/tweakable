@@ -58,7 +58,6 @@ public class TweaksFragment extends PreferenceFragment {
                     .build();
             Log.d(TAG, "Created sub-screen: " + screen.getTitle());
             root.addPreference(screen);
-            Log.i(TAG, "Putting: " + screen.getKey() + " in map.");
             mScreens.put(screen.getKey(), screen);
         }
 
@@ -70,13 +69,8 @@ public class TweaksFragment extends PreferenceFragment {
                     .setBundle(bundle)
                     .build();
             Log.d(TAG, "Created category: " + category.getKey());
-            if (screenKey.equals(TweakableAnnotationParser.ROOT_SCREEN_KEY)) {
-                Log.d(TAG, "Adding '" + category.getTitle() + "' to root screen.");
-                root.addPreference(category);
-            } else {
-                Log.d(TAG, "Adding '" + category.getTitle() + "' to " + screenKey);
-                mScreens.get(screenKey).addPreference(category);
-            }
+            Log.d(TAG, "Adding '" + category.getTitle() + "' to " + screenKey);
+            mScreens.get(screenKey).addPreference(category);
             mPreferences.put(category.getKey(), category);
         }
 
@@ -105,23 +99,25 @@ public class TweaksFragment extends PreferenceFragment {
                     .build();
 
             String categoryKey = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
-            String[] keys = categoryKey.split("\\.");
-            if (keys[0].equals(TweakableAnnotationParser.ROOT_SCREEN_KEY)
-                    && keys[1].equals(TweakableAnnotationParser.ROOT_CATEGORY_KEY)) {
-                Log.d(TAG, "No category or screen listed for '"
+            String screenKey = categoryKey.split("\\.")[0];
+
+            if (mPreferences.containsKey(categoryKey)) {
+                Log.d(TAG, "Adding preference '"
                         + preference.getTitle()
-                        + "', adding to root");
-                root.addPreference(preference);
-            } else if (keys[1].equals(TweakableAnnotationParser.ROOT_CATEGORY_KEY)) {
-                Log.d(TAG, "No category listed for '"
-                        + preference.getTitle()
-                        + "', adding to "
-                        + keys[1]);
-                mScreens.get(keys[1]).addPreference(preference);
-            } else if (!mPreferences.containsKey(categoryKey)) {
-                throw new FailedToBuildPreferenceException("No such category: " + categoryKey);
-            } else {
+                        + "' to "
+                        + categoryKey);
                 mPreferences.get(categoryKey).addPreference(preference);
+            } else if (mScreens.containsKey(screenKey)) {
+                Log.d(TAG, "Adding preference '"
+                        + preference.getTitle()
+                        + "' to "
+                        + screenKey);
+                mScreens.get(screenKey).addPreference(preference);
+            } else {
+                throw new FailedToBuildPreferenceException("No such category: "
+                        + categoryKey
+                        + " or screen: "
+                        + screenKey);
             }
         }
 

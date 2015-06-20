@@ -52,25 +52,6 @@ public class MainActivity extends PreferenceActivity implements ShakeDetector.Li
     @Override
     public void hearShake() {
         Log.i(TAG, "Shake!");
-        //TweaksFragment fragment = new TweaksFragment();
-
-        Bundle screenResources = new Bundle();
-        screenResources.putString(PreferenceScreenBuilder.EXTRA_TITLE, "My Settings!");
-        PreferenceScreen screen = new PreferenceScreenBuilder()
-                .setContext(this)
-                .setPreferenceManager(getPreferenceManager())
-                .setBundle(screenResources)
-                .build();
-
-        Bundle categoryResources = new Bundle();
-        categoryResources.putString(PreferenceCategoryBuilder.BUNDLE_TITLE_KEY, "Boolean");
-        categoryResources.putString(PreferenceCategoryBuilder.BUNDLE_KEYATTR_KEY, "boolean-category");
-        PreferenceCategory category = new PreferenceCategoryBuilder()
-                .setContext(this)
-                .setBundle(categoryResources)
-                .build();
-        screen.addPreference(category);
-        setPreferenceScreen(screen);
     }
 
 }

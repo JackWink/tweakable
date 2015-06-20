@@ -80,7 +80,6 @@ public class TweakableAnnotationParser {
                     createCategoryBundle(bundle);
                 }
 
-
                 bundle.putString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY,
                         getCategoryKey(bundle));
                 bundle.putString(AbstractTweakableValue.BUNDLE_SCREEN_KEY, getScreenKey(bundle));
@@ -104,11 +103,8 @@ public class TweakableAnnotationParser {
 
     private boolean isCategoryCreated(Bundle bundle) {
         if (!bundle.containsKey(AbstractTweakableValue.BUNDLE_CATEGORY_KEY)) {
-            Log.i(TAG, "No category listed.");
             return true;
         }
-        String categoryKey = getCategoryKey(bundle);
-        Log.i(TAG, "Category key: " + categoryKey + " is contained: " + mCategories.containsKey(categoryKey));
         return mCategories.containsKey(getCategoryKey(bundle));
     }
 
@@ -127,14 +123,21 @@ public class TweakableAnnotationParser {
         String screenKey = getScreenKey(bundle);
         String categoryTitle = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
         if (categoryTitle != null) {
-            return screenKey + "." + categoryTitle + CATEGORY_KEY_POSTFIX;
+            return screenKey + "." + normalize(categoryTitle) + CATEGORY_KEY_POSTFIX;
         }
         return screenKey + "." + ROOT_CATEGORY_KEY;
     }
 
     private String getScreenKey(Bundle bundle) {
         String screenKey = bundle.getString(AbstractTweakableValue.BUNDLE_SCREEN_KEY);
-        return screenKey == null ? ROOT_SCREEN_KEY : screenKey + SCREEN_KEY_POSTFIX;
+        if (screenKey == null) {
+            return ROOT_SCREEN_KEY;
+        }
+        return normalize(screenKey) + SCREEN_KEY_POSTFIX;
+    }
+
+    private String normalize(String str) {
+        return str.replace(' ', '-').replace('.', '-').toLowerCase();
     }
 
     private boolean isScreenCreated(Bundle bundle) {
