@@ -1,6 +1,7 @@
 package com.jackwink.tweakable.generators.java;
 
 import android.app.Application;
+import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.test.ApplicationTestCase;
@@ -24,18 +25,18 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         String offSummary = "Switch is off!";
         boolean defaultValue = true;
 
-        LinkedHashMap<String, Object> objectMap = new LinkedHashMap<>();
-        objectMap.put(PreferenceBuilder.KEY_ATTRIBUTE, key);
-        objectMap.put(PreferenceBuilder.TITLE_ATTRIBUTE, title);
-        objectMap.put(PreferenceBuilder.SUMMARY_ATTRIBUTE, summary);
-        objectMap.put(PreferenceBuilder.DEFAULT_VALUE_ATTRIBUTE, defaultValue);
-        objectMap.put(PreferenceBuilder.ON_SUMMARY_ATTRIBUTE, onSummary);
-        objectMap.put(PreferenceBuilder.OFF_SUMMARY_ATTRIBUTE, offSummary);
-        objectMap.put(PreferenceBuilder.ON_LABEL_ATTRIBUTE, onLabel);
-        objectMap.put(PreferenceBuilder.OFF_LABEL_ATTRIBUTE, offLabel);
+        Bundle bundle = new Bundle();
+        bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
+        bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
+        bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
+        bundle.putBoolean(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
+        bundle.putString(PreferenceBuilder.ON_SUMMARY_ATTRIBUTE, onSummary);
+        bundle.putString(PreferenceBuilder.OFF_SUMMARY_ATTRIBUTE, offSummary);
+        bundle.putString(PreferenceBuilder.ON_LABEL_ATTRIBUTE, onLabel);
+        bundle.putString(PreferenceBuilder.OFF_LABEL_ATTRIBUTE, offLabel);
         Preference preference = new PreferenceBuilder()
                 .setType(boolean.class)
-                .setAttributeMap(objectMap)
+                .setBundle(bundle)
                 .setContext(getContext())
                 .build();
 
@@ -60,14 +61,14 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         String summary = "I am a summary";
         boolean defaultValue = true;
 
-        LinkedHashMap<String, Object> objectMap = new LinkedHashMap<>();
-        objectMap.put(PreferenceBuilder.KEY_ATTRIBUTE, key);
-        objectMap.put(PreferenceBuilder.TITLE_ATTRIBUTE, title);
-        objectMap.put(PreferenceBuilder.SUMMARY_ATTRIBUTE, summary);
-        objectMap.put(PreferenceBuilder.DEFAULT_VALUE_ATTRIBUTE, defaultValue);
+        Bundle bundle = new Bundle();
+        bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
+        bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
+        bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
+        bundle.putBoolean(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
         Preference preference = new PreferenceBuilder()
                 .setType(boolean.class)
-                .setAttributeMap(objectMap)
+                .setBundle(bundle)
                 .setContext(getContext())
                 .build();
 

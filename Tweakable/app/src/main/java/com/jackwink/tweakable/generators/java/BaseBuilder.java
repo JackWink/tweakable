@@ -1,11 +1,10 @@
 package com.jackwink.tweakable.generators.java;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
-
-import java.util.LinkedHashMap;
 
 /**
  *  Contains convenience methods for any {@link JavaBuilder} subclass
@@ -14,7 +13,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
     private static final String TAG = BaseBuilder.class.getSimpleName();
 
     /* Builder set attributes */
-    protected LinkedHashMap<String, Object> mAttributeMap = null;
+    protected Bundle mAttributeMap = null;
     protected Context mContext = null;
 
     /**
@@ -46,7 +45,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
         return mAttributeMap.get(attributeName);
     }
 
-    public BaseBuilder setAttributeMap(LinkedHashMap<String, Object> attributeMap) {
+    public BaseBuilder setBundle(Bundle attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }

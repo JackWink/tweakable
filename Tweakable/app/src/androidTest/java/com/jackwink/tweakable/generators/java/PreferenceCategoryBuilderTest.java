@@ -1,14 +1,10 @@
 package com.jackwink.tweakable.generators.java;
 
 import android.app.Application;
-import android.preference.Preference;
+import android.os.Bundle;
 import android.preference.PreferenceCategory;
-
 import android.test.ApplicationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class PreferenceCategoryBuilderTest extends ApplicationTestCase {
 
@@ -16,18 +12,17 @@ public class PreferenceCategoryBuilderTest extends ApplicationTestCase {
         super(Application.class);
     }
 
-
     @SmallTest
     public void testNewCategoryWithAllAttributes() {
         String key = "testCategory";
         String title = "Test Category";
 
-        LinkedHashMap<String, Object> objectMap = new LinkedHashMap<>();
-        objectMap.put(PreferenceCategoryBuilder.KEY_ATTRIBUTE, key);
-        objectMap.put(PreferenceCategoryBuilder.TITLE_ATTRIBUTE, title);
-        
+        Bundle bundle = new Bundle();
+        bundle.putString(PreferenceCategoryBuilder.BUNDLE_KEYATTR_KEY, key);
+        bundle.putString(PreferenceCategoryBuilder.BUNDLE_TITLE_KEY, title);
+
         PreferenceCategory category = new PreferenceCategoryBuilder()
-                .setAttributeMap(objectMap)
+                .setBundle(bundle)
                 .setContext(getContext())
                 .build();
 

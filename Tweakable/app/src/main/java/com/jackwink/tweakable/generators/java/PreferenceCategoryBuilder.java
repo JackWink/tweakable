@@ -1,9 +1,8 @@
 package com.jackwink.tweakable.generators.java;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.preference.PreferenceCategory;
-
-import java.util.LinkedHashMap;
 
 /**
  *
@@ -11,14 +10,14 @@ import java.util.LinkedHashMap;
 public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     private static final String TAG = PreferenceCategoryBuilder.class.getSimpleName();
 
-    public static final String TITLE_ATTRIBUTE = "title";
-    public static final String KEY_ATTRIBUTE = "key";
+    public static final String BUNDLE_TITLE_KEY = PreferenceBuilder.BUNDLE_TITLE_KEY;
+    public static final String BUNDLE_KEYATTR_KEY = PreferenceBuilder.BUNDLE_KEYATTR_KEY;
 
     public PreferenceCategoryBuilder() {
     }
 
     @Override
-    public PreferenceCategoryBuilder setAttributeMap(LinkedHashMap<String, Object> attributeMap) {
+    public PreferenceCategoryBuilder setBundle(Bundle attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
@@ -32,8 +31,8 @@ public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     /** {@inheritDoc} */
     public PreferenceCategory build() {
         PreferenceCategory category = new PreferenceCategory(mContext);
-        category.setKey((String) getRequiredAttribute(KEY_ATTRIBUTE));
-        category.setTitle((CharSequence) getRequiredAttribute(TITLE_ATTRIBUTE));
+        category.setKey((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY));
+        category.setTitle((CharSequence) getRequiredAttribute(BUNDLE_TITLE_KEY));
         return category;
     }
 }

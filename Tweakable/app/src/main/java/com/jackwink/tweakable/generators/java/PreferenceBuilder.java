@@ -1,6 +1,7 @@
 package com.jackwink.tweakable.generators.java;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.util.Log;
@@ -17,14 +18,18 @@ import java.util.LinkedHashMap;
 public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
 
-    public static final String DEFAULT_VALUE_ATTRIBUTE = "defaultsTo";
-    public static final String KEY_ATTRIBUTE = "key";
-    public static final String TITLE_ATTRIBUTE = "title";
-    public static final String SUMMARY_ATTRIBUTE = "summary";
+    public static final String BUNDLE_DEFAULT_VALUE_KEY = "defaultsTo";
+    public static final String BUNDLE_KEYATTR_KEY = "key";
+    public static final String BUNDLE_TITLE_KEY = "title";
+    public static final String BUNDLE_SUMMARY_KEY = "summary";
+
+    //TODO: change later when I figure out how to handle types better
     public static final String ON_LABEL_ATTRIBUTE = "switch_text_on";
     public static final String OFF_LABEL_ATTRIBUTE = "switch_text_off";
     public static final String ON_SUMMARY_ATTRIBUTE = "summary_on";
     public static final String OFF_SUMMARY_ATTRIBUTE = "summary_off";
+
+    public static final String BUNDLE_TYPE_INFORMATION = "type_information";
 
 
     private static LinkedHashMap<Class, Class> mTypeToElementMap = new LinkedHashMap<>();
@@ -45,7 +50,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
     }
 
     @Override
-    public PreferenceBuilder setAttributeMap(LinkedHashMap<String, Object> attributeMap) {
+    public PreferenceBuilder setBundle(Bundle attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
@@ -71,17 +76,17 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             preference = (Preference) constructor.newInstance(mContext);
 
             /* Required Attributes */
-            preference.setKey((String) getRequiredAttribute(KEY_ATTRIBUTE));
-            preference.setTitle((CharSequence) getRequiredAttribute(TITLE_ATTRIBUTE));
-            preference.setSummary((String) getRequiredAttribute(SUMMARY_ATTRIBUTE));
-            preference.setDefaultValue(getRequiredAttribute(DEFAULT_VALUE_ATTRIBUTE));
+            preference.setKey((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY));
+            preference.setTitle((CharSequence) getRequiredAttribute(BUNDLE_TITLE_KEY));
+            preference.setSummary((String) getRequiredAttribute(BUNDLE_SUMMARY_KEY));
+            preference.setDefaultValue(getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
 
             /* Optional Attributes */
 
             // Set the initial state to the default value
             if (preference instanceof SwitchPreference) {
                 ((SwitchPreference) preference).setChecked(
-                        (boolean) getRequiredAttribute(DEFAULT_VALUE_ATTRIBUTE));
+                        (boolean) getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
 
                 ((SwitchPreference) preference).setSummaryOn(
                         (String) getOptionalAttribute(ON_SUMMARY_ATTRIBUTE));
