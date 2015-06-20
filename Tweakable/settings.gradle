@@ -1,1 +1,1 @@
-include ':app', ':tweakabledemo'
+include ':tweakabledemo', ':tweakable-annotations-processor', ':tweakable-annotations'
