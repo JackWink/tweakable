@@ -92,12 +92,12 @@ public class TweakableAnnotationParser {
 
     private void createCategoryBundle(Bundle bundle) {
         Bundle category = new Bundle();
-        category.putString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY,
-                bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY));
-        category.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
-                bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY + "-category"));
-        mCategories.put(bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY),
-                category);
+        String categoryTitle = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
+        String categoryKey = categoryTitle + "-category";
+
+        category.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, categoryTitle);
+        category.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY, categoryKey);
+        mCategories.put(categoryKey, category);
     }
 
 }

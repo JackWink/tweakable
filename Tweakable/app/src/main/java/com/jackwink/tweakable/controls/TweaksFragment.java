@@ -49,11 +49,13 @@ public class TweaksFragment extends PreferenceFragment {
 
         /* Generate all the categories */
         for (Bundle bundle : parser.getCategories()) {
+
             PreferenceCategory category =  new PreferenceCategoryBuilder()
                     .setContext(getActivity())
                     .setBundle(bundle)
                     .build();
             root.addPreference(category);
+            Log.i(TAG, "Creating category: " + category.getTitle());
             mPreferences.put(category.getKey(), category);
         }
 
@@ -73,7 +75,7 @@ public class TweaksFragment extends PreferenceFragment {
                 }
             }
 
-            String category = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
+            String categoryKey = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY) + "-category";
             bundle.remove(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
 
             //noinspection unchecked
@@ -83,12 +85,12 @@ public class TweaksFragment extends PreferenceFragment {
                     .setType(cls)
                     .build();
 
-            if (category == null) {
+            if (categoryKey == null) {
                 root.addPreference(preference);
-            } else if (!mPreferences.containsKey(category)) {
-                throw new FailedToBuildPreferenceException("No such category: " + category);
+            } else if (!mPreferences.containsKey(categoryKey)) {
+                throw new FailedToBuildPreferenceException("No such category: " + categoryKey);
             } else {
-                mPreferences.get(category).addPreference(preference);
+                mPreferences.get(categoryKey).addPreference(preference);
             }
         }
 

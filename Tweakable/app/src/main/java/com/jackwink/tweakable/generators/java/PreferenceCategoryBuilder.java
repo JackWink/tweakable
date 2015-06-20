@@ -4,14 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceCategory;
 
+import com.jackwink.tweakable.types.AbstractTweakableValue;
+
 /**
  *
  */
 public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     private static final String TAG = PreferenceCategoryBuilder.class.getSimpleName();
 
-    public static final String BUNDLE_TITLE_KEY = PreferenceBuilder.BUNDLE_TITLE_KEY;
-    public static final String BUNDLE_KEYATTR_KEY = PreferenceBuilder.BUNDLE_KEYATTR_KEY;
+    public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
+    public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
 
     public PreferenceCategoryBuilder() {
     }

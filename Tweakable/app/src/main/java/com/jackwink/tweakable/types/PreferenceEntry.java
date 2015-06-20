@@ -16,6 +16,8 @@ public interface PreferenceEntry {
 
     Bundle toBundle();
 
+    String getCategory();
+
     @Nullable
     PreferenceEntry[] getChildren();
 }

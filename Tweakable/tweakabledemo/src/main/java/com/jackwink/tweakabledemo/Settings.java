@@ -11,7 +11,7 @@ public class Settings {
             onSummary = "This light is on!", offSummary = "This light is off!", defaultsTo = true)
     public static boolean lightsOn;
 
-    @TwkBoolean(category = "Boolean", title = "Other light", onLabel = "ON!", offLabel = "OFF!",
+    @TwkBoolean(category = "Boolean 2", title = "Other light", onLabel = "ON!", offLabel = "OFF!",
             onSummary = "This other light is on!", offSummary = "This other light is off!", defaultsTo = true)
     public static boolean otherLightsOn;
 }

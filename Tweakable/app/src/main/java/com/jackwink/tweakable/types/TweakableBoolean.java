@@ -37,7 +37,9 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
     @Override
     public Bundle toBundle() {
         Bundle base = super.toBundle();
-        base.putBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY, mParsedAnnotation.defaultsTo());
+        base.putBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY,
+                mParsedAnnotation.defaultsTo());
+
         if (!mParsedAnnotation.offSummary().isEmpty()) {
             base.putString(BUNDLE_OFF_SUMMARY_KEY, mParsedAnnotation.offSummary());
         }
@@ -68,6 +70,7 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
         returnValue.mTitle = !annotation.title().isEmpty() ? annotation.title() : field.getName();
         returnValue.mSummary = annotation.summary();
         returnValue.mParsedAnnotation = annotation;
+        returnValue.mCategory = annotation.category().isEmpty() ? null : annotation.category();
         return returnValue;
     }
 }

@@ -19,6 +19,7 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     protected String mTitle;
     protected String mKey;
     protected String mSummary;
+    protected String mCategory;
 
     @Override
     public String getKey() {
@@ -36,12 +37,20 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     }
 
     @Override
+    public String getCategory() {
+        return mCategory;
+    }
+
+    @Override
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_KEYATTR_KEY, mKey);
         bundle.putString(BUNDLE_TITLE_KEY, mTitle);
         bundle.putString(BUNDLE_SUMMARY_KEY, mSummary);
         bundle.putString(BUNDLE_TYPEINFO_KEY, getType().getName());
+        if (mCategory != null && !mCategory.isEmpty()) {
+            bundle.putString(BUNDLE_CATEGORY_KEY, mCategory);
+        }
         return bundle;
     }
 
