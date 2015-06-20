@@ -7,6 +7,8 @@ import android.preference.SwitchPreference;
 import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
+import com.jackwink.tweakable.types.AbstractTweakableValue;
+import com.jackwink.tweakable.types.TweakableBoolean;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -18,19 +20,12 @@ import java.util.LinkedHashMap;
 public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
 
-    public static final String BUNDLE_DEFAULT_VALUE_KEY = "defaultsTo";
-    public static final String BUNDLE_KEYATTR_KEY = "key";
-    public static final String BUNDLE_TITLE_KEY = "title";
-    public static final String BUNDLE_SUMMARY_KEY = "summary";
-
-    //TODO: change later when I figure out how to handle types better
-    public static final String ON_LABEL_ATTRIBUTE = "switch_text_on";
-    public static final String OFF_LABEL_ATTRIBUTE = "switch_text_off";
-    public static final String ON_SUMMARY_ATTRIBUTE = "summary_on";
-    public static final String OFF_SUMMARY_ATTRIBUTE = "summary_off";
-
-    public static final String BUNDLE_TYPE_INFORMATION = "type_information";
-
+    public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
+    public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
+    public static final String BUNDLE_SUMMARY_KEY = AbstractTweakableValue.BUNDLE_SUMMARY_KEY;
+    public static final String BUNDLE_TYPEINFO_KEY = AbstractTweakableValue.BUNDLE_TYPEINFO_KEY;
+    public static final String BUNDLE_DEFAULT_VALUE_KEY =
+            AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY;
 
     private static LinkedHashMap<Class, Class> mTypeToElementMap = new LinkedHashMap<>();
 
@@ -89,14 +84,15 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
                         (boolean) getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
 
                 ((SwitchPreference) preference).setSummaryOn(
-                        (String) getOptionalAttribute(ON_SUMMARY_ATTRIBUTE));
+                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_ON_SUMMARY_KEY));
                 ((SwitchPreference) preference).setSummaryOff(
-                        (String) getOptionalAttribute(OFF_SUMMARY_ATTRIBUTE));
+                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_SUMMARY_KEY));
 
                 ((SwitchPreference) preference).setSwitchTextOn(
-                        (String) getOptionalAttribute(ON_LABEL_ATTRIBUTE));
+                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_ON_LABEL_KEY));
+
                 ((SwitchPreference) preference).setSwitchTextOff(
-                        (String) getOptionalAttribute(OFF_LABEL_ATTRIBUTE));
+                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_LABEL_KEY));
             }
 
             /* Non-User-Configurable Attributes */
@@ -121,6 +117,5 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
         }
         return preference;
     }
-
 
 }

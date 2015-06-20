@@ -2,6 +2,7 @@ package com.jackwink.tweakable.types;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.jackwink.tweakable.annotations.TweakableInteger;
 import com.jackwink.tweakable.annotations.TwkBoolean;
@@ -13,6 +14,8 @@ import java.lang.reflect.Modifier;
  *
  */
 public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
+    private static final String TAG = TweakableBoolean.class.getSimpleName();
+
     public static final String BUNDLE_ON_LABEL_KEY = "switch_text_on";
     public static final String BUNDLE_OFF_LABEL_KEY = "switch_text_off";
     public static final String BUNDLE_ON_SUMMARY_KEY = "summary_on";
