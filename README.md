@@ -8,7 +8,7 @@ v0.0.1
 
 * ~~Generate preference views from bundle~~
 * Inject boolean & Boolean values from shared preferences
-* Parse annotations to generate bundle format for preference generation
+* ~~Parse annotations to generate bundle format for preference generation~~
 * Clean up bundle format
 
 v0.0.2
