@@ -14,6 +14,7 @@ v0.0.1
 v0.0.2
 
 * Inject int & Integer types
+* Look in to possibility of generating XML at compile time
 
 v0.0.3
 
