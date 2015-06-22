@@ -13,6 +13,8 @@ public interface PreferenceEntry {
 
     String getSummary();
 
+    String getScreen();
+
     Bundle toBundle();
 
     String getCategory();

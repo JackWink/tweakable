@@ -14,4 +14,5 @@ sourceSets {
 dependencies {
     compile project(':tweakable-annotations')
     compile 'com.google.android:android:4.1+'
+    compile 'com.squareup:javapoet:1.1.0'
 }

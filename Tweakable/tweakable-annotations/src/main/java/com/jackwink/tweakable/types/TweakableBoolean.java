@@ -23,6 +23,26 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
     private TwkBoolean mParsedAnnotation;
 
 
+    public String getOnLabel() {
+        return mParsedAnnotation.onLabel();
+    }
+
+    public String getOffLabel() {
+        return mParsedAnnotation.offLabel();
+    }
+
+    public String getOnSummary() {
+        return mParsedAnnotation.onSummary();
+    }
+
+    public String getOffSummary() {
+        return mParsedAnnotation.offSummary();
+    }
+
+    public boolean getDefaultValue() {
+        return mParsedAnnotation.defaultsTo();
+    }
+
     @Override
     public Class<Boolean> getType() {
         return boolean.class;

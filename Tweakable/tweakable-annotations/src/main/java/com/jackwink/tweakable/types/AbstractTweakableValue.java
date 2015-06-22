@@ -15,6 +15,9 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     public static final String BUNDLE_CATEGORY_KEY = "category";
     public static final String BUNDLE_SCREEN_KEY = "screen";
 
+    public static final String ROOT_SCREEN_KEY = "tweakable-values-root-screen";
+    public static final String ROOT_CATEGORY_KEY = "tweakable-values-root-category";
+
 
     protected String mTitle;
     protected String mKey;
@@ -29,7 +32,7 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
 
     @Override
     public String getTitle() {
-        return mTitle;
+        return mTitle == null ? "ERROR" : mTitle;
     }
 
     @Override
@@ -43,19 +46,19 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     }
 
     @Override
+    public String getScreen() {
+        return mScreen;
+    }
+
+    @Override
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_KEYATTR_KEY, mKey);
         bundle.putString(BUNDLE_TITLE_KEY, mTitle);
         bundle.putString(BUNDLE_SUMMARY_KEY, mSummary);
         bundle.putString(BUNDLE_TYPEINFO_KEY, getType().getName());
-        if (mCategory != null && !mCategory.isEmpty()) {
-            bundle.putString(BUNDLE_CATEGORY_KEY, mCategory);
-        }
-
-        if (mScreen != null && !mScreen.isEmpty()) {
-            bundle.putString(BUNDLE_SCREEN_KEY, mScreen);
-        }
+        bundle.putString(BUNDLE_CATEGORY_KEY, getCategory());
+        bundle.putString(BUNDLE_SCREEN_KEY, getScreen());
         return bundle;
     }
 

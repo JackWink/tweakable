@@ -8,12 +8,14 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
+
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
 import com.jackwink.tweakable.parsers.TweakableAnnotationParser;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
@@ -25,17 +27,27 @@ public class TweaksFragment extends PreferenceFragment {
     LinkedHashMap<String, PreferenceScreen> mScreens = new LinkedHashMap<>();
     LinkedHashMap<String, PreferenceCategory> mPreferences = new LinkedHashMap<>();
 
+    /* Used in generated code, do not use directly! */
+    public interface PreferenceAnnotationProcessor {
+        Collection<Bundle> getDeclaredScreens();
+        Collection<Bundle> getDeclaredCategories();
+        Collection<Bundle> getDeclaredPreferences();
+    }
+
+    private PreferenceAnnotationProcessor mProcessor;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TweakableAnnotationParser parser = new TweakableAnnotationParser();
 
         try {
-            parser.parse(Class.forName("com.jackwink.tweakabledemo.Settings"), null);
+            mProcessor = (PreferenceAnnotationProcessor) Class.forName(
+                    "com.jackwink.tweakable.GeneratedPreferences").newInstance();
         } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
+
 
         Bundle screenResources = new Bundle();
         screenResources.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "Tweakable Values");
@@ -50,7 +62,7 @@ public class TweaksFragment extends PreferenceFragment {
         mScreens.put(root.getKey(), root);
 
         /* Generate all the subscreens */
-        for (Bundle bundle : parser.getScreens()) {
+        for (Bundle bundle : mProcessor.getDeclaredScreens()) {
             PreferenceScreen screen = new PreferenceScreenBuilder()
                     .setContext(getActivity())
                     .setPreferenceManager(getPreferenceManager())
@@ -62,7 +74,7 @@ public class TweaksFragment extends PreferenceFragment {
         }
 
         /* Generate all the categories */
-        for (Bundle bundle : parser.getCategories()) {
+        for (Bundle bundle : mProcessor.getDeclaredCategories()) {
             String screenKey = bundle.getString(AbstractTweakableValue.BUNDLE_SCREEN_KEY);
             PreferenceCategory category =  new PreferenceCategoryBuilder()
                     .setContext(getActivity())
@@ -75,7 +87,7 @@ public class TweaksFragment extends PreferenceFragment {
         }
 
         /* Generate all the preferences */
-        for (Bundle bundle : parser.getPreferences()) {
+        for (Bundle bundle : mProcessor.getDeclaredPreferences()) {
             Class cls = null;
             String typeInfo = bundle.getString(AbstractTweakableValue.BUNDLE_TYPEINFO_KEY);
             try {

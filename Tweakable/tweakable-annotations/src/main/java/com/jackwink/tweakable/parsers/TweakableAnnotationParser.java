@@ -3,6 +3,7 @@ package com.jackwink.tweakable.parsers;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.jackwink.tweakable.controls.TweaksFragment;
 import com.jackwink.tweakable.stores.ValueStore;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
@@ -18,7 +19,7 @@ import java.util.Set;
 /**
  *
  */
-public class TweakableAnnotationParser {
+public class TweakableAnnotationParser implements TweaksFragment.PreferenceAnnotationProcessor {
     private static final String TAG = TweakableAnnotationParser.class.getSimpleName();
 
     public static final String ROOT_SCREEN_TITLE = "Tweakable Values";
@@ -91,16 +92,20 @@ public class TweakableAnnotationParser {
         }
     }
 
-    public Set<Bundle> getPreferences() {
-        return mPreferences;
+
+    @Override
+    public Collection<Bundle> getDeclaredScreens() {
+        return mScreens.values();
     }
 
-    public Collection<Bundle> getCategories() {
+    @Override
+    public Collection<Bundle> getDeclaredCategories() {
         return mCategories.values();
     }
 
-    public Collection<Bundle> getScreens() {
-        return mScreens.values();
+    @Override
+    public Collection<Bundle> getDeclaredPreferences() {
+        return mPreferences;
     }
 
     private boolean isCategoryCreated(Bundle bundle) {
