@@ -28,7 +28,7 @@
     <content url="file://$MODULE_DIR$/../tweakable-annotations/src/main/java">
       <sourceFolder url="file://$MODULE_DIR$/../tweakable-annotations/src/main/java" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="tweakable-annotations" exported="" />
     <orderEntry type="library" exported="" name="android-4.1.1.4" level="project" />

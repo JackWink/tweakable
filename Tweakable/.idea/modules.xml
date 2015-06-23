@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/Tweakable.iml" filepath="$PROJECT_DIR$/Tweakable.iml" />
       <module fileurl="file://$PROJECT_DIR$/tweakable-annotations/tweakable-annotations.iml" filepath="$PROJECT_DIR$/tweakable-annotations/tweakable-annotations.iml" />
       <module fileurl="file://$PROJECT_DIR$/tweakable-annotations-processor/tweakable-annotations-processor.iml" filepath="$PROJECT_DIR$/tweakable-annotations-processor/tweakable-annotations-processor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tweakable-annotation-processor/tweakable-annotations-processor.iml" filepath="$PROJECT_DIR$/tweakable-annotation-processor/tweakable-annotations-processor.iml" />
       <module fileurl="file://$PROJECT_DIR$/tweakabledemo/tweakabledemo.iml" filepath="$PROJECT_DIR$/tweakabledemo/tweakabledemo.iml" />
     </modules>
   </component>

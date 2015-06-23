@@ -19,7 +19,7 @@ public class Settings {
             defaultsTo = false)
     public static boolean featureFlag2;
 
-    @TwkBoolean(category = "Something Cool", title = "Some Feature 3",
+    @TwkBoolean(screen = "Light settingss", title = "Some Feature 3",
             onSummary = "Some feature 3 enabled", offSummary = "Some feature 3 disabled",
             defaultsTo = true)
     public static boolean featureFlag3;
