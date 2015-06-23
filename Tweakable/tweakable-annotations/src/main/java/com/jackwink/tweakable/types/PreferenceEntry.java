@@ -18,6 +18,4 @@ public interface PreferenceEntry {
     Bundle toBundle();
 
     String getCategory();
-
-    PreferenceEntry[] getChildren();
 }

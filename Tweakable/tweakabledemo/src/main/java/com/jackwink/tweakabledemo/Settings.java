@@ -7,11 +7,21 @@ import com.jackwink.tweakable.annotations.TwkBoolean;
  */
 public class Settings {
 
-    @TwkBoolean(screen = "light settings", title = "Lights?", onLabel = "ON!", offLabel = "OFF!",
-            defaultsTo = true)
+    @TwkBoolean(screen = "Light settingss", title = "Lights?", defaultsTo = true)
     public static boolean lightsOn;
 
-    @TwkBoolean(screen = "light settings", category = "Boolean 2", title = "Other light", onLabel = "ON!", offLabel = "OFF!",
-            onSummary = "This other light is on!", offSummary = "This other light is off!", defaultsTo = false)
-    public static boolean otherLightsOn;
+    @TwkBoolean(title = "Some Feature", onSummary = "Some feature enabled",
+            offSummary = "Some feature disabled", defaultsTo = false)
+    public static boolean featureFlag;
+
+    @TwkBoolean(category = "Something Cool", title = "Some Feature 2",
+            onSummary = "Some feature 2 enabled", offSummary = "Some feature 2 disabled",
+            defaultsTo = false)
+    public static boolean featureFlag2;
+
+    @TwkBoolean(category = "Something Cool", title = "Some Feature 3",
+            onSummary = "Some feature 3 enabled", offSummary = "Some feature 3 disabled",
+            defaultsTo = true)
+    public static boolean featureFlag3;
+
 }

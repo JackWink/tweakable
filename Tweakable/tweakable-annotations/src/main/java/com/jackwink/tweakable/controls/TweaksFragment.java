@@ -29,6 +29,8 @@ public class TweaksFragment extends PreferenceFragment {
 
     /* Used in generated code, do not use directly! */
     public interface PreferenceAnnotationProcessor {
+        Collection<Bundle> getRootPreferences();
+        Collection<Bundle> getRootCategories();
         Collection<Bundle> getDeclaredScreens();
         Collection<Bundle> getDeclaredCategories();
         Collection<Bundle> getDeclaredPreferences();
@@ -60,6 +62,41 @@ public class TweaksFragment extends PreferenceFragment {
                 .build();
 
         mScreens.put(root.getKey(), root);
+
+        for (Bundle bundle : mProcessor.getRootPreferences()) {
+            Class cls = null;
+            String typeInfo = bundle.getString(AbstractTweakableValue.BUNDLE_TYPEINFO_KEY);
+            try {
+                cls = Class.forName(typeInfo);
+            } catch (ClassNotFoundException e) {
+                if (typeInfo.equals(boolean.class.getName())) {
+                    cls = boolean.class;
+                } else {
+                    Log.e(TAG, "Class not found: " + typeInfo);
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+
+            //noinspection unchecked
+            Preference preference = new PreferenceBuilder()
+                    .setBundle(bundle)
+                    .setContext(getActivity())
+                    .setType(cls)
+                    .build();
+            root.addPreference(preference);
+        }
+
+        for (Bundle bundle : mProcessor.getRootCategories()) {
+            PreferenceCategory category =  new PreferenceCategoryBuilder()
+                    .setContext(getActivity())
+                    .setBundle(bundle)
+                    .build();
+            Log.d(TAG, "Created category: " + category.getKey());
+            Log.d(TAG, "Adding '" + category.getTitle() + "' to root.");
+            root.addPreference(category);
+            mPreferences.put(category.getKey(), category);
+        }
 
         /* Generate all the subscreens */
         for (Bundle bundle : mProcessor.getDeclaredScreens()) {

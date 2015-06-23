@@ -1,0 +1,309 @@
+package com.jackwink.tweakable.annotations.processor.generators;
+
+import com.jackwink.tweakable.controls.TweaksFragment;
+import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceCategoryException;
+import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
+import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceScreenException;
+import com.jackwink.tweakable.types.AbstractTweakableValue;
+import com.jackwink.tweakable.types.TweakableBoolean;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+
+import javax.lang.model.element.Modifier;
+import javax.annotation.processing.Filer;
+
+/**
+ *
+ */
+public class PreferencesGenerator {
+    private static final String TAG = PreferencesGenerator.class.getSimpleName();
+
+    private static TypeName BUNDLE_TYPE = ClassName.get("android.os", "Bundle");
+
+    public static final String ROOT_SCREEN_TITLE = "Tweakable Values";
+    public static final String ROOT_SCREEN_KEY = "tweakable-values-root-screen";
+    public static final String ROOT_CATEGORY_KEY = "tweakable-values-root-category";
+
+    public static final String SCREEN_KEY_POSTFIX = "-screen";
+    public static final String CATEGORY_KEY_POSTFIX = "-category";
+
+    // Total number of tweakable values, just so it doesn't get senseless.
+    private final static int MAX_TWEAKABLE_VALUES = 64;
+    private final static int MAX_TWEAKABLE_CATEGORIES = 16;
+    private final static int MAX_TWEAKABLE_SCREENS = 16;
+
+    // List of preferences
+    private static LinkedHashSet<AbstractTweakableValue> mRootPreferences =
+            new LinkedHashSet<>(MAX_TWEAKABLE_VALUES);
+
+    private static LinkedHashMap<String, String> mRootCategories =
+            new LinkedHashMap<>(MAX_TWEAKABLE_CATEGORIES);
+
+    private static LinkedHashSet<AbstractTweakableValue> mPreferences =
+            new LinkedHashSet<>(MAX_TWEAKABLE_VALUES);
+
+    private static LinkedHashMap<String, String> mCategories =
+            new LinkedHashMap<>(MAX_TWEAKABLE_CATEGORIES);
+
+    private static LinkedHashMap<String, String> mScreens =
+            new LinkedHashMap<>(MAX_TWEAKABLE_SCREENS);
+
+    private static final String mScreenSetName = "mScreens";
+    private static final String mCategorySetName = "mCategories";
+    private static final String mPreferenceSetName = "mPreferences";
+
+    private int mScreenCount = 0;
+    private int mCategoryCount = 0;
+    private int mPreferenceCount = 0;
+
+    private Filer mFiler;
+
+    public PreferencesGenerator(Filer filer) {
+        mFiler = filer;
+    }
+
+    public void addTweakableValue(AbstractTweakableValue value) {
+        if (getScreenKey(value.getScreen()).equals(ROOT_SCREEN_KEY) &&
+                (value.getCategory() == null || value.getCategory().isEmpty()
+                || value.getCategory().equals(ROOT_CATEGORY_KEY))) {
+            mRootPreferences.add(value);
+        } else {
+            mPreferences.add(value);
+        }
+    }
+
+    public void addScreen(String title) {
+        mScreens.put(getScreenKey(title), title);
+    }
+
+    public boolean hasScreen(String key) {
+        return getScreenKey(key).equals(ROOT_SCREEN_KEY) || mScreens.containsKey(getScreenKey(key));
+    }
+
+    public boolean hasCategory(String categoryName) {
+        return hasCategory(categoryName, ROOT_SCREEN_KEY);
+    }
+
+    public boolean hasCategory(String categoryName, String screenName) {
+        return categoryName == null || categoryName.isEmpty() ||
+                categoryName.equals(ROOT_SCREEN_KEY) ||
+                mCategories.containsKey(getCategoryKey(categoryName, screenName));
+    }
+
+    public void addCategory(String categoryName) {
+        addCategory(categoryName, ROOT_SCREEN_KEY);
+    }
+
+    public void addCategory(String categoryName, String screenName) {
+        if (getScreenKey(screenName).equals(ROOT_SCREEN_KEY)) {
+            mRootCategories.put(getCategoryKey(categoryName, screenName), categoryName);
+        } else {
+            mCategories.put(getCategoryKey(categoryName, screenName), categoryName);
+        }
+    }
+
+    public void build() {
+        TypeSpec.Builder preferences = TypeSpec.classBuilder("GeneratedPreferences")
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addSuperinterface(ClassName.get(TweaksFragment.PreferenceAnnotationProcessor.class))
+                .addMethod(createDeclaredScreensMethod())
+                .addMethod(createDeclaredCategoriesMethod())
+                .addMethod(createDeclaredPreferencesMethod())
+                .addMethod(createRootPreferencesMethod())
+                .addMethod(createRootCategoriesMethod());
+
+        JavaFile javaFile = JavaFile.builder("com.jackwink.tweakable", preferences.build())
+                .build();
+        try {
+            javaFile.writeTo(mFiler);
+        } catch (IOException error) {
+            error.printStackTrace();
+        }
+    }
+
+    public MethodSpec createDeclaredScreensMethod() {
+        ClassName hashSet = ClassName.get("java.util", "LinkedHashSet");
+        TypeName returnSet = ParameterizedTypeName.get(ClassName.get("java.util", "Collection"),
+                BUNDLE_TYPE);
+        TypeName declaredSet = ParameterizedTypeName.get(hashSet, BUNDLE_TYPE);
+
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getDeclaredScreens")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(returnSet)
+                .addStatement("$T " + mScreenSetName + " = new $T<>()", declaredSet, hashSet);
+
+        for (String key : mScreens.keySet()) {
+            writeScreenBundle(builder, key);
+        }
+        return builder.addStatement("return " + mScreenSetName).build();
+    }
+
+    public MethodSpec createDeclaredCategoriesMethod() {
+        ClassName hashSet = ClassName.get("java.util", "LinkedHashSet");
+        TypeName returnSet = ParameterizedTypeName.get(ClassName.get("java.util", "Collection"),
+                BUNDLE_TYPE);
+        TypeName declaredSet = ParameterizedTypeName.get(hashSet, BUNDLE_TYPE);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getDeclaredCategories")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(returnSet)
+                .addStatement("$T " + mCategorySetName + " = new $T<>()", declaredSet, hashSet);
+        for (String key : mCategories.keySet()) {
+            writeCategoryBundle(builder, mCategories, key);
+        }
+        return builder.addStatement("return " + mCategorySetName).build();
+    }
+
+    public MethodSpec createRootCategoriesMethod() {
+        ClassName hashSet = ClassName.get("java.util", "LinkedHashSet");
+        TypeName returnSet = ParameterizedTypeName.get(ClassName.get("java.util", "Collection"),
+                BUNDLE_TYPE);
+        TypeName declaredSet = ParameterizedTypeName.get(hashSet, BUNDLE_TYPE);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getRootCategories")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(returnSet)
+                .addStatement("$T " + mCategorySetName + " = new $T<>()", declaredSet, hashSet);
+        for (String key : mRootCategories.keySet()) {
+            writeCategoryBundle(builder, mRootCategories, key);
+        }
+        return builder.addStatement("return " + mCategorySetName).build();
+    }
+
+    public MethodSpec createDeclaredPreferencesMethod() {
+        ClassName hashSet = ClassName.get("java.util", "LinkedHashSet");
+        TypeName returnSet = ParameterizedTypeName.get(ClassName.get("java.util", "Collection"),
+                BUNDLE_TYPE);
+        TypeName declaredSet = ParameterizedTypeName.get(hashSet, BUNDLE_TYPE);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getDeclaredPreferences")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(returnSet)
+                .addStatement("$T " + mPreferenceSetName + " = new $T<>()", declaredSet, hashSet);
+        for (AbstractTweakableValue value : mPreferences) {
+            writePreferenceBundle(builder, value);
+        }
+        return builder.addStatement("return " + mPreferenceSetName).build();
+    }
+
+    public MethodSpec createRootPreferencesMethod() {
+        ClassName hashSet = ClassName.get("java.util", "LinkedHashSet");
+        TypeName returnSet = ParameterizedTypeName.get(ClassName.get("java.util", "Collection"),
+                BUNDLE_TYPE);
+        TypeName declaredSet = ParameterizedTypeName.get(hashSet, BUNDLE_TYPE);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getRootPreferences")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(returnSet)
+                .addStatement("$T " + mPreferenceSetName + " = new $T<>()", declaredSet, hashSet);
+        for (AbstractTweakableValue value : mRootPreferences) {
+            writePreferenceBundle(builder, value);
+        }
+        return builder.addStatement("return " + mPreferenceSetName).build();
+    }
+
+    public void writeScreenBundle(MethodSpec.Builder builder, String screenKey) {
+        String screenName = mScreens.get(screenKey);
+        String bundleName = "screenBundle" + mScreenCount;
+        String addString = bundleName + ".putString($S, $S)";
+
+        builder.addStatement("$T " + bundleName + " = new $T()", BUNDLE_TYPE, BUNDLE_TYPE)
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_KEYATTR_KEY, screenKey)
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_TITLE_KEY, screenName)
+                .addStatement(mScreenSetName + ".add(" + bundleName + ")");
+
+        ++mScreenCount;
+        if (mScreenCount > MAX_TWEAKABLE_SCREENS) {
+            throw new FailedToBuildPreferenceScreenException(
+                    "Too many preference screens declared!");
+        }
+    }
+
+
+    public void writeCategoryBundle(MethodSpec.Builder builder,
+                                    LinkedHashMap<String, String> categories, String categoryKey) {
+        String categoryName = categories.get(categoryKey);
+
+        String bundleName = "categoryBundle" + mCategoryCount;
+        String addString = bundleName + ".putString($S, $S)";
+
+        builder.addStatement("$T " + bundleName + " = new $T()", BUNDLE_TYPE, BUNDLE_TYPE)
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_KEYATTR_KEY, categoryKey)
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_TITLE_KEY, categoryName)
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_SCREEN_KEY,
+                        categoryKey.split("\\.")[0])
+                .addStatement(mCategorySetName + ".add(" + bundleName + ")");
+
+        ++mCategoryCount;
+        if (mCategoryCount > MAX_TWEAKABLE_CATEGORIES) {
+            throw new FailedToBuildPreferenceCategoryException(
+                    "Too many declared preference categories!");
+        }
+    }
+
+    public void writePreferenceBundle(MethodSpec.Builder builder, AbstractTweakableValue value) {
+
+        String bundleName = "preferenceBundle" + mPreferenceCount;
+        String addString = bundleName + ".putString($S, $S)";
+
+        builder.addStatement("$T " + bundleName + " = new $T()", BUNDLE_TYPE, BUNDLE_TYPE)
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_KEYATTR_KEY, value.getKey())
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_TITLE_KEY, value.getTitle())
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_SUMMARY_KEY,
+                        value.getSummary())
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_CATEGORY_KEY,
+                        getCategoryKey(value.getCategory(), value.getScreen()))
+
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_SCREEN_KEY,
+                        getScreenKey(value.getScreen()))
+                .addStatement(addString, AbstractTweakableValue.BUNDLE_TYPEINFO_KEY,
+                        value.getType().getName());
+
+        if (value.getType().equals(boolean.class)) {
+            builder.addStatement(addString, TweakableBoolean.BUNDLE_OFF_LABEL_KEY,
+                    ((TweakableBoolean) value).getOffLabel())
+                    .addStatement(addString, TweakableBoolean.BUNDLE_ON_LABEL_KEY,
+                            ((TweakableBoolean) value).getOnLabel())
+                    .addStatement(addString, TweakableBoolean.BUNDLE_OFF_SUMMARY_KEY,
+                            ((TweakableBoolean) value).getOffSummary())
+                    .addStatement(addString, TweakableBoolean.BUNDLE_ON_SUMMARY_KEY,
+                            ((TweakableBoolean) value).getOnSummary())
+                    .addStatement(bundleName + ".putBoolean($S, $L)",
+                            TweakableBoolean.BUNDLE_DEFAULT_VALUE_KEY,
+                            ((TweakableBoolean) value).getDefaultValue());
+        }
+
+        builder.addStatement(mPreferenceSetName + ".add(" + bundleName + ")");
+
+        ++mPreferenceCount;
+        if (mPreferenceCount > MAX_TWEAKABLE_VALUES) {
+            throw new FailedToBuildPreferenceException("Too many declared preferences!");
+        }
+    }
+
+
+    private String getCategoryKey(String categoryName, String screenName) {
+        String screenKey = getScreenKey(screenName);
+        if (categoryName == null || categoryName.isEmpty() || categoryName.equals(ROOT_CATEGORY_KEY)) {
+            return screenKey + "." + ROOT_CATEGORY_KEY;
+        } else {
+            return screenKey + "." + normalize(categoryName) + CATEGORY_KEY_POSTFIX;
+        }
+    }
+
+    private String getScreenKey(String screenName) {
+        if (screenName == null || screenName.isEmpty() || screenName.equals(ROOT_SCREEN_KEY)) {
+            return ROOT_SCREEN_KEY;
+        }
+        return normalize(screenName) + SCREEN_KEY_POSTFIX;
+    }
+
+    private String normalize(String str) {
+        return str.replace(' ', '-').replace('.', '-').toLowerCase();
+    }
+
+}

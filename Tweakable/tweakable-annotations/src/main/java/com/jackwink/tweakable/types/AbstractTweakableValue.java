@@ -62,11 +62,6 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
         return bundle;
     }
 
-    @Override
-    public PreferenceEntry[] getChildren() {
-        return null;
-    }
-
     public static String getDefaultString(String value, String defaultValue) {
         if (value == null || value.isEmpty()) {
             return defaultValue;

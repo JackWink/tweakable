@@ -7,10 +7,12 @@ Feature flags and tweakable values for Android.
 v0.0.1
 
 * ~~Generate preference views from bundle~~
+* ~~Make root preferences + categories come before sub-screens~~
 * Inject boolean & Boolean values from shared preferences
 * ~~Parse annotations to generate bundle format for preference generation~~
-* Clean up bundle format
+* ~~Clean up bundle format~~
 * ~~Allow sub-screens~~
+* ~~Generate preferences at compile time~~
 
 v0.0.2
 

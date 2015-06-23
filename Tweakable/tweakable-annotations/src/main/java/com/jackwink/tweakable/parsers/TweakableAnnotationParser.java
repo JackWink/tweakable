@@ -92,6 +92,15 @@ public class TweakableAnnotationParser implements TweaksFragment.PreferenceAnnot
         }
     }
 
+    @Override
+    public Collection<Bundle> getRootPreferences() {
+        return null;
+    }
+
+    @Override
+    public Collection<Bundle> getRootCategories() {
+        return null;
+    }
 
     @Override
     public Collection<Bundle> getDeclaredScreens() {
