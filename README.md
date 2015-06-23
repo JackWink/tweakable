@@ -28,3 +28,4 @@ v0.0.3
 
 - 6/19: Initial bundle structure + preference generation working
 - 6/20: Settings is generated at runtime, no injection yet -- might need to do build-time now
+- 6/23: Preferences generated at compile time, still no injection, and Android Studio is not a fan.
