@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class SharedPreferencesStore implements ValueStore {
     private static final String TAG = SharedPreferencesStore.class.getSimpleName();
-    private static final String STORE_NAME = "Tweakable-" + TAG;
+    public static final String STORE_NAME = "Tweakable-" + TAG;
 
     private static SharedPreferencesStore mInstance;
 

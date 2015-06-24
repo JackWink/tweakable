@@ -21,7 +21,7 @@ import javax.lang.model.element.Modifier;
 import javax.annotation.processing.Filer;
 
 /**
- *
+ *  Generates a java class used by the {@link TweaksFragment}
  */
 public class PreferencesGenerator {
     private static final String TAG = PreferencesGenerator.class.getSimpleName();

@@ -1,5 +1,6 @@
 package com.jackwink.tweakable.controls;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -15,13 +16,14 @@ import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
 import com.jackwink.tweakable.parsers.TweakableAnnotationParser;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
 /**
  *
  */
-public class TweaksFragment extends PreferenceFragment {
+public class TweaksFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = TweaksFragment.class.getSimpleName();
 
     LinkedHashMap<String, PreferenceScreen> mScreens = new LinkedHashMap<>();
@@ -85,6 +87,7 @@ public class TweaksFragment extends PreferenceFragment {
                     .setType(cls)
                     .build();
             root.addPreference(preference);
+            onSharedPreferenceChanged(root.getSharedPreferences(), preference.getKey());
         }
 
         for (Bundle bundle : mProcessor.getRootCategories()) {
@@ -168,10 +171,52 @@ public class TweaksFragment extends PreferenceFragment {
                         + " or screen: "
                         + screenKey);
             }
+            onSharedPreferenceChanged(root.getSharedPreferences(), preference.getKey());
         }
 
         setPreferenceScreen(root);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen()
+                .getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen()
+                .getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.i(TAG, "Preference change: " + key);
+        String fieldName = key.substring(key.lastIndexOf('.') + 1);
+        String clsName = key.substring(0, key.lastIndexOf('.'));
+        Log.i(TAG, "Updating '" + clsName + "' field: " + fieldName);
+
+        Field field = null;
+        try {
+            field = Class.forName(clsName).getDeclaredField(fieldName);
+
+            if (field.getType().getName().equals(boolean.class.getName())) {
+                field.setBoolean(null, sharedPreferences.getBoolean(key, false));
+                Log.i(TAG, "Set value: " + sharedPreferences.getBoolean(key, false));
+            }
+
+        } catch (ClassNotFoundException error) {
+            error.printStackTrace();
+        } catch (NoSuchFieldException error) {
+            error.printStackTrace();
+        } catch (IllegalAccessException error) {
+            error.printStackTrace();
+        }
+    }
 
 }

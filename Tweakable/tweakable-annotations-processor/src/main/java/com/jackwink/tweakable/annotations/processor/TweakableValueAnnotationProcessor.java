@@ -11,20 +11,17 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.SupportedSourceVersion;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-
 /**
- * Created by jackwink on 6/20/15.
+ * Processes TweakableBooleans (and soon more!) to generate a class containing the app preferences
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class TweakableValueAnnotationProcessor extends AbstractProcessor {
@@ -43,7 +40,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         mPreferenceGenerator = new PreferencesGenerator(processingEnv.getFiler());
-
+        Log.init(processingEnv.getMessager());
     }
 
     @Override public boolean process(Set<? extends TypeElement> elements, RoundEnvironment env) {
@@ -57,11 +54,12 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
                         "Only fields can be annotated with @TwkBoolean");
             }
 
+            TypeElement enclosingClass = findEnclosingTypeElement(element);
             TypeMirror type = element.asType();
+
             AbstractTweakableValue value = null;
             if (type.getKind() == TypeKind.BOOLEAN) {
-                Element clazz = element.getEnclosingElement();
-                value = TweakableBoolean.parse(clazz.getSimpleName().toString(),
+                value = TweakableBoolean.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkBoolean.class));
             }
@@ -80,6 +78,13 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
         mPreferenceGenerator.build();
         built = true;
         return true;
+    }
+
+    public static TypeElement findEnclosingTypeElement(Element e) {
+        while (e != null && !(e instanceof TypeElement)) {
+            e = e.getEnclosingElement();
+        }
+        return TypeElement.class.cast(e);
     }
 
 }

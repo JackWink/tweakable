@@ -12,7 +12,11 @@ v0.0.1
 * ~~Clean up bundle format~~
 * ~~Allow sub-screens~~
 * ~~Generate preferences at compile time~~
-* Inject boolean & Boolean values from shared preferences
+* ~~Inject boolean & Boolean values from shared preferences~~
+* "Massive" cleanup, codebase is small
+* Decide on 'PreferenceStore' class
+* Add documentation
+* Add usage samples 
 
 v0.0.2
 
@@ -30,3 +34,4 @@ v0.0.3
 - 6/20: Settings is generated at runtime, no injection yet -- might need to do build-time now
 - 6/23: Preferences generated at compile time, still no injection, and Android Studio is not a fan.
 - 6/23: Android studio has warmed up to the annotation processor
+- 6/23: Preferences are injected now, but only on opening/closing of 'TweaksFragment', need to fix. 
