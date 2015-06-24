@@ -3,6 +3,7 @@ package com.jackwink.tweakabledemo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -31,6 +32,8 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
     TextView featureFlag3View;
     TextView featureFlag4View;
 
+    ShakeDetector shakeDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +43,18 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
         featureFlag2View = (TextView) findViewById(R.id.featureFlag2View);
         featureFlag3View = (TextView) findViewById(R.id.featureFlag3View);
         featureFlag4View = (TextView) findViewById(R.id.featureFlag4View);
-        hearShake();
+
+
+        shakeDetector = new ShakeDetector(this);
+
     }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        shakeDetector.stop();
+    }
 
 
     @Override
@@ -74,11 +86,15 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
         featureFlag2View.setText("featureFlag2: " + Settings.featureFlag2);
         featureFlag3View.setText("featureFlag3: " + Settings.featureFlag3);
         featureFlag4View.setText("featureFlag4: " + Settings.featureFlag4);
+
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        shakeDetector.start(sensorManager);
     }
 
     @Override
     public void hearShake() {
         Log.i(TAG, "Shake!");
+        shakeDetector.stop();
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivity(settingsIntent);
     }
