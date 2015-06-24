@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.controls;
+package com.jackwink.tweakable.binders;
 
 /**
  * Binds a boolean value from shared preferences to a static field

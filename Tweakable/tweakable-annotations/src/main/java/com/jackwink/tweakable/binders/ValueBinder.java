@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.controls;
+package com.jackwink.tweakable.binders;
 
 import android.preference.Preference;
 

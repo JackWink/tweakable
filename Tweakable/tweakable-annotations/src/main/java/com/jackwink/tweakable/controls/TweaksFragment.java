@@ -8,6 +8,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
+import com.jackwink.tweakable.binders.AbstractValueBinder;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
@@ -26,19 +27,49 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
     private static final String TAG = TweaksFragment.class.getSimpleName();
 
     LinkedHashMap<String, PreferenceScreen> mScreens = new LinkedHashMap<>();
-    LinkedHashMap<String, PreferenceCategory> mPreferences = new LinkedHashMap<>();
+    LinkedHashMap<String, PreferenceCategory> mCategories = new LinkedHashMap<>();
+    LinkedHashMap<String, AbstractValueBinder> mPreferences = new LinkedHashMap<>();
+
+    private PreferenceAnnotationProcessor mProcessor;
 
     /* Used in generated code, do not use directly! */
     public interface PreferenceAnnotationProcessor {
-        Collection<Bundle> getRootPreferences();
-        Collection<Bundle> getRootCategories();
         Collection<Bundle> getDeclaredScreens();
         Collection<Bundle> getDeclaredCategories();
         Collection<Bundle> getDeclaredPreferences();
     }
 
-    private PreferenceAnnotationProcessor mProcessor;
 
+    /**
+     * Creates Root preference screen and the root category.
+     */
+    private void createRootElements() {
+        Bundle rootScreenBundle = new Bundle();
+        rootScreenBundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "Tweakable Values");
+        rootScreenBundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
+                AbstractTweakableValue.ROOT_SCREEN_KEY);
+
+        Bundle rootCategoryBundle = new Bundle();
+        rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "");
+        rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
+                AbstractTweakableValue.ROOT_SCREEN_KEY + "."
+                        + AbstractTweakableValue.ROOT_CATEGORY_KEY);
+
+        PreferenceScreen rootScreen = new PreferenceScreenBuilder()
+                .setContext(getActivity())
+                .setPreferenceManager(getPreferenceManager())
+                .setBundle(rootScreenBundle)
+                .build();
+
+        PreferenceCategory rootCategory = new PreferenceCategoryBuilder()
+                .setContext(getActivity())
+                .setBundle(rootCategoryBundle)
+                .build();
+
+        rootScreen.addPreference(rootCategory);
+        mScreens.put(rootScreen.getKey(), rootScreen);
+        mCategories.put(rootCategory.getKey(), rootCategory);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,62 +82,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
             e.printStackTrace();
         }
 
-
-        Bundle screenResources = new Bundle();
-        screenResources.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "Tweakable Values");
-        screenResources.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
-                AbstractTweakableValue.ROOT_SCREEN_KEY);
-        PreferenceScreen root = new PreferenceScreenBuilder()
-                .setContext(getActivity())
-                .setPreferenceManager(getPreferenceManager())
-                .setBundle(screenResources)
-                .build();
-
-        mScreens.put(root.getKey(), root);
-
-        for (Bundle bundle : mProcessor.getRootPreferences()) {
-            Class cls = null;
-            String typeInfo = bundle.getString(AbstractTweakableValue.BUNDLE_TYPEINFO_KEY);
-            try {
-                cls = Class.forName(typeInfo);
-            } catch (ClassNotFoundException e) {
-                if (typeInfo.equals(boolean.class.getName())) {
-                    cls = boolean.class;
-                } else {
-                    Log.e(TAG, "Class not found: " + typeInfo);
-                    e.printStackTrace();
-                    continue;
-                }
-            }
-
-            //noinspection unchecked
-            Preference preference = new PreferenceBuilder()
-                    .setBundle(bundle)
-                    .setContext(getActivity())
-                    .setType(cls)
-                    .build();
-            if (cls.equals(boolean.class)) {
-                if (!root.getSharedPreferences().contains(preference.getKey())) {
-                    Log.i(TAG, "Creating preference...");
-                    root.getSharedPreferences().edit().putBoolean(preference.getKey(),
-                            bundle.getBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
-                            .commit();
-                }
-            }
-            root.addPreference(preference);
-            onSharedPreferenceChanged(root.getSharedPreferences(), preference.getKey());
-        }
-
-        for (Bundle bundle : mProcessor.getRootCategories()) {
-            PreferenceCategory category =  new PreferenceCategoryBuilder()
-                    .setContext(getActivity())
-                    .setBundle(bundle)
-                    .build();
-            Log.d(TAG, "Created category: " + category.getKey());
-            Log.d(TAG, "Adding '" + category.getTitle() + "' to root.");
-            root.addPreference(category);
-            mPreferences.put(category.getKey(), category);
-        }
+        createRootElements();
 
         /* Generate all the subscreens */
         for (Bundle bundle : mProcessor.getDeclaredScreens()) {
@@ -116,21 +92,32 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                     .setBundle(bundle)
                     .build();
             Log.d(TAG, "Created sub-screen: " + screen.getTitle());
-            root.addPreference(screen);
+            getRootScreen().addPreference(screen);
             mScreens.put(screen.getKey(), screen);
+
+            Bundle rootCategoryBundle = new Bundle();
+            rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "");
+            rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
+                    screen.getKey() + "." + AbstractTweakableValue.ROOT_CATEGORY_KEY);
+            PreferenceCategory rootCategory = new PreferenceCategoryBuilder()
+                    .setContext(getActivity())
+                    .setBundle(rootCategoryBundle)
+                    .build();
+            screen.addPreference(rootCategory);
+            mCategories.put(rootCategory.getKey(), rootCategory);
         }
 
         /* Generate all the categories */
         for (Bundle bundle : mProcessor.getDeclaredCategories()) {
             String screenKey = bundle.getString(AbstractTweakableValue.BUNDLE_SCREEN_KEY);
-            PreferenceCategory category =  new PreferenceCategoryBuilder()
+            PreferenceCategory category = new PreferenceCategoryBuilder()
                     .setContext(getActivity())
                     .setBundle(bundle)
                     .build();
             Log.d(TAG, "Created category: " + category.getKey());
             Log.d(TAG, "Adding '" + category.getTitle() + "' to " + screenKey);
             mScreens.get(screenKey).addPreference(category);
-            mPreferences.put(category.getKey(), category);
+            mCategories.put(category.getKey(), category);
         }
 
         /* Generate all the preferences */
@@ -149,7 +136,6 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                 }
             }
 
-
             //noinspection unchecked
             Preference preference = new PreferenceBuilder()
                     .setBundle(bundle)
@@ -158,39 +144,27 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                     .build();
 
             String categoryKey = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
-            String screenKey = categoryKey.split("\\.")[0];
-
-            if (mPreferences.containsKey(categoryKey)) {
-                Log.d(TAG, "Adding preference '"
-                        + preference.getTitle()
-                        + "' to "
-                        + categoryKey);
-                mPreferences.get(categoryKey).addPreference(preference);
-            } else if (mScreens.containsKey(screenKey)) {
-                Log.d(TAG, "Adding preference '"
-                        + preference.getTitle()
-                        + "' to "
-                        + screenKey);
-                mScreens.get(screenKey).addPreference(preference);
-            } else {
-                throw new FailedToBuildPreferenceException("No such category: "
-                        + categoryKey
-                        + " or screen: "
-                        + screenKey);
-            }
+            Log.d(TAG, "Adding preference '" + preference.getTitle() + "' to " + categoryKey);
+            mCategories.get(categoryKey).addPreference(preference);
 
             if (cls.equals(boolean.class)) {
-                if (!root.getSharedPreferences().contains(preference.getKey())) {
+                if (!getRootScreen().getSharedPreferences().contains(preference.getKey())) {
                     Log.i(TAG, "Creating preference...");
-                    root.getSharedPreferences().edit().putBoolean(preference.getKey(),
+                    getRootScreen().getSharedPreferences().edit().putBoolean(preference.getKey(),
                             bundle.getBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
                             .commit();
                 }
             }
-            onSharedPreferenceChanged(root.getSharedPreferences(), preference.getKey());
+            onSharedPreferenceChanged(getRootScreen().getSharedPreferences(), preference.getKey());
         }
 
-        setPreferenceScreen(root);
+        setPreferenceScreen(getRootScreen());
+    }
+
+
+
+    private PreferenceScreen getRootScreen() {
+        return mScreens.get(AbstractTweakableValue.ROOT_SCREEN_KEY);
     }
 
     @Override

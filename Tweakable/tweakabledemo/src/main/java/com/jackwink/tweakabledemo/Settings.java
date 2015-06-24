@@ -20,7 +20,7 @@ public class Settings {
             onSummary = "Some feature 3 enabled", offSummary = "Some feature 3 disabled")
     public static boolean featureFlag3;
 
-    @TwkBoolean(screen = SUBSCREEN, category = SUBCATEGORY, defaultsTo = true,
+    @TwkBoolean(screen = SUBSCREEN, defaultsTo = true,
                 onSummary = "See how easy it is to add options?")
     public static boolean featureFlag4;
 
