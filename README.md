@@ -2,6 +2,8 @@
 
 Feature flags and tweakable values for Android.
 
+See `Tweakable/tweakabledemo` for a usage example.
+
 ## Roadmap
 
 v0.0.1
@@ -21,7 +23,7 @@ v0.0.1
 v0.0.2
 
 * Inject int & Integer types
-* Look in to possibility of generating XML at compile time
+* Look at generating XML prefs at compile time instead of java
 
 v0.0.3
 
