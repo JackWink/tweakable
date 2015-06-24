@@ -1,28 +1,16 @@
 package com.jackwink.tweakabledemo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
-import com.jackwink.tweakable.controls.TweaksFragment;
-import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
-import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
+import com.jackwink.tweakable.Tweakable;
 import com.squareup.seismic.ShakeDetector;
-
 
 public class MainActivity extends Activity implements ShakeDetector.Listener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -44,9 +32,8 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
         featureFlag3View = (TextView) findViewById(R.id.featureFlag3View);
         featureFlag4View = (TextView) findViewById(R.id.featureFlag4View);
 
-
         shakeDetector = new ShakeDetector(this);
-
+        Tweakable.init(this);
     }
 
 

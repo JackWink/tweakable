@@ -1,6 +1,5 @@
 package com.jackwink.tweakable.binders;
 
-
 import android.preference.Preference;
 
 import java.lang.reflect.Field;

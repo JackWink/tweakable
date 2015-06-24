@@ -6,8 +6,8 @@ import com.jackwink.tweakable.annotations.TwkBoolean;
  *
  */
 public class Settings {
-    private static final String SUBSCREEN = "And Subscreens?";
-    private static final String SUBCATEGORY = "With Subcategories?";
+    private static final String SUBSCREEN = "And Subscreens!";
+    private static final String SUBCATEGORY = "With Subcategories!";
 
     @TwkBoolean(title = "Some Feature", defaultsTo = true)
     public static boolean featureFlag;

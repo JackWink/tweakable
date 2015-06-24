@@ -2,12 +2,8 @@ package com.jackwink.tweakabledemo;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.util.Log;
 import android.view.Menu;
 
-/**
- *
- */
 public class SettingsActivity extends PreferenceActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -15,7 +11,6 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        //hearShake();
     }
 
     @Override

@@ -8,8 +8,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
+import com.jackwink.tweakable.Tweakable;
 import com.jackwink.tweakable.binders.AbstractValueBinder;
-import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceBuilder;
@@ -38,7 +38,6 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
         Collection<Bundle> getDeclaredCategories();
         Collection<Bundle> getDeclaredPreferences();
     }
-
 
     /**
      * Creates Root preference screen and the root category.
@@ -75,15 +74,10 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            mProcessor = (PreferenceAnnotationProcessor) Class.forName(
-                    "com.jackwink.tweakable.GeneratedPreferences").newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        mProcessor = Tweakable.getPreferences();
         createRootElements();
-
+        Log.i(TAG, "PrefName: " + getPreferenceManager().getSharedPreferencesName());
+        Log.i(TAG, "PrefMode: " + getPreferenceManager().getSharedPreferencesMode());
         /* Generate all the subscreens */
         for (Bundle bundle : mProcessor.getDeclaredScreens()) {
             PreferenceScreen screen = new PreferenceScreenBuilder()
@@ -146,22 +140,10 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
             String categoryKey = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
             Log.d(TAG, "Adding preference '" + preference.getTitle() + "' to " + categoryKey);
             mCategories.get(categoryKey).addPreference(preference);
-
-            if (cls.equals(boolean.class)) {
-                if (!getRootScreen().getSharedPreferences().contains(preference.getKey())) {
-                    Log.i(TAG, "Creating preference...");
-                    getRootScreen().getSharedPreferences().edit().putBoolean(preference.getKey(),
-                            bundle.getBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
-                            .commit();
-                }
-            }
-            onSharedPreferenceChanged(getRootScreen().getSharedPreferences(), preference.getKey());
         }
 
         setPreferenceScreen(getRootScreen());
     }
-
-
 
     private PreferenceScreen getRootScreen() {
         return mScreens.get(AbstractTweakableValue.ROOT_SCREEN_KEY);
@@ -199,7 +181,6 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                 field.setBoolean(null, sharedPreferences.getBoolean(key, false));
                 Log.i(TAG, "Set value: " + sharedPreferences.getBoolean(key, false));
             }
-
         } catch (ClassNotFoundException error) {
             error.printStackTrace();
         } catch (NoSuchFieldException error) {
@@ -208,5 +189,4 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
             error.printStackTrace();
         }
     }
-
 }
