@@ -86,6 +86,14 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                     .setContext(getActivity())
                     .setType(cls)
                     .build();
+            if (cls.equals(boolean.class)) {
+                if (!root.getSharedPreferences().contains(preference.getKey())) {
+                    Log.i(TAG, "Creating preference...");
+                    root.getSharedPreferences().edit().putBoolean(preference.getKey(),
+                            bundle.getBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
+                            .commit();
+                }
+            }
             root.addPreference(preference);
             onSharedPreferenceChanged(root.getSharedPreferences(), preference.getKey());
         }
@@ -170,6 +178,15 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                         + categoryKey
                         + " or screen: "
                         + screenKey);
+            }
+
+            if (cls.equals(boolean.class)) {
+                if (!root.getSharedPreferences().contains(preference.getKey())) {
+                    Log.i(TAG, "Creating preference...");
+                    root.getSharedPreferences().edit().putBoolean(preference.getKey(),
+                            bundle.getBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
+                            .commit();
+                }
             }
             onSharedPreferenceChanged(root.getSharedPreferences(), preference.getKey());
         }
