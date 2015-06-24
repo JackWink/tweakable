@@ -13,7 +13,6 @@ import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
-import com.jackwink.tweakable.parsers.TweakableAnnotationParser;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 import java.lang.reflect.Field;
@@ -56,7 +55,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
         Bundle screenResources = new Bundle();
         screenResources.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "Tweakable Values");
         screenResources.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
-                TweakableAnnotationParser.ROOT_SCREEN_KEY);
+                AbstractTweakableValue.ROOT_SCREEN_KEY);
         PreferenceScreen root = new PreferenceScreenBuilder()
                 .setContext(getActivity())
                 .setPreferenceManager(getPreferenceManager())
