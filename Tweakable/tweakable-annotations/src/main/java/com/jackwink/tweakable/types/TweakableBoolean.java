@@ -1,12 +1,6 @@
 package com.jackwink.tweakable.types;
 
-import android.os.Bundle;
-import android.util.Log;
-
 import com.jackwink.tweakable.annotations.TwkBoolean;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 /**
  *
@@ -52,30 +46,6 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
         return mParsedAnnotation.defaultsTo();
     }
 
-    @Override
-    public Bundle toBundle() {
-        Bundle base = super.toBundle();
-        base.putBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY,
-                mParsedAnnotation.defaultsTo());
-
-        if (!mParsedAnnotation.offSummary().isEmpty()) {
-            base.putString(BUNDLE_OFF_SUMMARY_KEY, mParsedAnnotation.offSummary());
-        }
-
-        if (!mParsedAnnotation.onSummary().isEmpty()) {
-            base.putString(BUNDLE_ON_SUMMARY_KEY, mParsedAnnotation.onSummary());
-        }
-
-        // TODO: these don't seem to work in Android 5.x, need to test 4.x
-        if (!mParsedAnnotation.onLabel().isEmpty()) {
-            base.putString(BUNDLE_ON_LABEL_KEY, mParsedAnnotation.onLabel());
-        }
-
-        if (!mParsedAnnotation.offLabel().isEmpty()) {
-            base.putString(BUNDLE_OFF_LABEL_KEY, mParsedAnnotation.offLabel());
-        }
-        return base;
-    }
 
     public static TweakableBoolean parse(String className, String fieldName, TwkBoolean annotation) {
         TweakableBoolean returnValue = new TweakableBoolean();

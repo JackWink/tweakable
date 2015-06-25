@@ -1,24 +1,16 @@
 package com.jackwink.tweakable.binders;
 
-import android.preference.Preference;
-
 import java.lang.reflect.Field;
 
 /**
  *
  */
-public abstract class AbstractValueBinder implements ValueBinder {
+public abstract class AbstractValueBinder<T> implements ValueBinder<T> {
     protected Field mField;
-    protected Preference mPreference;
 
     @Override
     public void setField(Field field) {
         mField = field;
-    }
-
-    @Override
-    public void setPreference(Preference preference) {
-        mPreference = preference;
     }
 
 }

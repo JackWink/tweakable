@@ -1,7 +1,5 @@
 package com.jackwink.tweakable.types;
 
-import android.os.Bundle;
-
 /**
  *
  */
@@ -14,8 +12,6 @@ public interface PreferenceEntry {
     String getSummary();
 
     String getScreen();
-
-    Bundle toBundle();
 
     String getCategory();
 }

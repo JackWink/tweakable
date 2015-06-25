@@ -1,13 +1,12 @@
 package com.jackwink.tweakable.binders;
 
-import android.preference.Preference;
-
 import java.lang.reflect.Field;
 
-public interface ValueBinder {
-    void setPreference(Preference preference);
+public interface ValueBinder<T> {
 
     void setField(Field field);
 
-    void bindValue();
+    void bindValue(T value);
+
+    Class<T> getType();
 }

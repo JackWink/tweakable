@@ -50,17 +50,7 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
         return mScreen;
     }
 
-    @Override
-    public Bundle toBundle() {
-        Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_KEYATTR_KEY, mKey);
-        bundle.putString(BUNDLE_TITLE_KEY, mTitle);
-        bundle.putString(BUNDLE_SUMMARY_KEY, mSummary);
-        bundle.putString(BUNDLE_TYPEINFO_KEY, getType().getName());
-        bundle.putString(BUNDLE_CATEGORY_KEY, getCategory());
-        bundle.putString(BUNDLE_SCREEN_KEY, getScreen());
-        return bundle;
-    }
+
 
     public static String getDefaultString(String value, String defaultValue) {
         if (value == null || value.isEmpty()) {

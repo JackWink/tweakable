@@ -7,7 +7,7 @@ import android.preference.SwitchPreference;
 import android.test.ApplicationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import java.util.LinkedHashMap;
+import com.jackwink.tweakable.types.*;
 
 public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
     public PreferenceBuilderTest() {
@@ -26,14 +26,14 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         boolean defaultValue = true;
 
         Bundle bundle = new Bundle();
-        bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
-        bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
-        bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
-        bundle.putBoolean(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
-        bundle.putString(PreferenceBuilder.ON_SUMMARY_ATTRIBUTE, onSummary);
-        bundle.putString(PreferenceBuilder.OFF_SUMMARY_ATTRIBUTE, offSummary);
-        bundle.putString(PreferenceBuilder.ON_LABEL_ATTRIBUTE, onLabel);
-        bundle.putString(PreferenceBuilder.OFF_LABEL_ATTRIBUTE, offLabel);
+        bundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY, key);
+        bundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, title);
+        bundle.putString(AbstractTweakableValue.BUNDLE_SUMMARY_KEY, summary);
+        bundle.putBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
+        bundle.putString(TweakableBoolean.BUNDLE_ON_SUMMARY_KEY, onSummary);
+        bundle.putString(TweakableBoolean.BUNDLE_OFF_SUMMARY_KEY, offSummary);
+        bundle.putString(TweakableBoolean.BUNDLE_ON_LABEL_KEY, onLabel);
+        bundle.putString(TweakableBoolean.BUNDLE_OFF_LABEL_KEY, offLabel);
         Preference preference = new PreferenceBuilder()
                 .setType(boolean.class)
                 .setBundle(bundle)
