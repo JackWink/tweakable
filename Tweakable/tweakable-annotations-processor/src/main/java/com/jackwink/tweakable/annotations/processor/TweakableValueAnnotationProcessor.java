@@ -49,7 +49,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
         }
 
         for (Element element : env.getElementsAnnotatedWith(TwkBoolean.class)) {
-            if (element.getKind() != ElementKind.FIELD) {
+            if (!element.getKind().isField()) {
                 throw new FailedToBuildPreferenceException(
                         "Only fields can be annotated with @TwkBoolean");
             }
@@ -58,10 +58,13 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
             TypeMirror type = element.asType();
 
             AbstractTweakableValue value = null;
-            if (type.getKind() == TypeKind.BOOLEAN) {
+            if (type.getKind() == TypeKind.BOOLEAN || type.toString().equals(Boolean.class.getName())) {
                 value = TweakableBoolean.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkBoolean.class));
+            } else {
+                throw new FailedToBuildPreferenceException("Unsupported type: " +
+                        type.toString());
             }
 
             if (!mPreferenceGenerator.hasScreen(value.getScreen())) {

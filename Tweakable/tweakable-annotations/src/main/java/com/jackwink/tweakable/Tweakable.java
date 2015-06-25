@@ -43,7 +43,7 @@ public class Tweakable {
             String preferenceKey = bundle.getString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
             if (!mSharedPreferences.contains(preferenceKey)) {
                 // Create entry
-                if (cls.equals(boolean.class)) {
+                if (cls.equals(boolean.class) || cls.equals(Boolean.class)) {
                     mSharedPreferences.edit()
                             .putBoolean(preferenceKey, bundle.getBoolean(
                                     AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
@@ -62,6 +62,8 @@ public class Tweakable {
 
                 if (field.getType().getName().equals(boolean.class.getName())) {
                     field.setBoolean(null, mSharedPreferences.getBoolean(preferenceKey, false));
+                } else if (field.getType().getName().equals(Boolean.class.getName())) {
+                    field.set(null, (Boolean) mSharedPreferences.getBoolean(preferenceKey, false));
                 }
             } catch (ClassNotFoundException error) {
                 error.printStackTrace();

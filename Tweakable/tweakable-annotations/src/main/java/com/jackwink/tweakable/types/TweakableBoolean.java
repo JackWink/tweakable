@@ -77,27 +77,6 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
         return base;
     }
 
-    public static TweakableBoolean parse(Class cls, Field field) {
-        if (!field.isAnnotationPresent(TwkBoolean.class) ||
-                !Modifier.isStatic(field.getModifiers())) {
-            throw new IllegalArgumentException("Field is not annotated with TwkBoolean annotation.");
-        }
-        TwkBoolean annotation = field.getAnnotation(TwkBoolean.class);
-
-        TweakableBoolean returnValue = new TweakableBoolean();
-
-        /* Abstract Tweakable Values */
-        returnValue.mKey = cls.getName() + "-" + field.getName();
-        returnValue.mTitle = getDefaultString(annotation.title(), field.getName());
-        returnValue.mSummary = annotation.summary();
-        returnValue.mCategory = getDefaultString(annotation.category(), null);
-        returnValue.mScreen = getDefaultString(annotation.screen(), null);
-
-        /* TweakableBoolean */
-        returnValue.mParsedAnnotation = annotation;
-        return returnValue;
-    }
-
     public static TweakableBoolean parse(String className, String fieldName, TwkBoolean annotation) {
         TweakableBoolean returnValue = new TweakableBoolean();
 
