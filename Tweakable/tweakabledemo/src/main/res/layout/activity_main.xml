@@ -35,10 +35,17 @@
 
 
     <TextView
-        android:id="@+id/stringOptions1"
+        android:id="@+id/stringOptions1View"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@+id/featureFlag4View"
+        android:paddingTop="20dp" />
+
+    <TextView
+        android:id="@+id/stringOptions2View"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/stringOptions1View"
         android:paddingTop="20dp" />
 
 </RelativeLayout>

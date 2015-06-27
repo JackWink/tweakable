@@ -25,7 +25,6 @@ public class TweakableString  extends AbstractTweakableValue<String> {
         return mParsedAnnotation.options();
     }
 
-
     public static TweakableString parse(String className, String fieldName, TwkString annotation) {
         TweakableString returnValue = new TweakableString();
 

@@ -2,6 +2,7 @@ package com.jackwink.tweakable.generators.java;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
@@ -14,7 +15,7 @@ import com.jackwink.tweakable.types.TweakableString;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 /**
  * Builds a preference from a Bundle
@@ -29,14 +30,14 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
     public static final String BUNDLE_DEFAULT_VALUE_KEY =
             AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY;
 
-    private static LinkedHashMap<Class, Class> mTypeToElementMap = new LinkedHashMap<>();
+    private static LinkedHashSet<Class> mSupportedTypes = new LinkedHashSet<>(2);
 
     private Context mContext = null;
     private Class<T> mType = null;
 
     static {
-        mTypeToElementMap.put(boolean.class, SwitchPreference.class);
-        mTypeToElementMap.put(String.class, ListPreference.class);
+        mSupportedTypes.add(boolean.class);
+        mSupportedTypes.add(String.class);
     }
 
     public PreferenceBuilder() {
@@ -61,12 +62,23 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
 
     /** {@link JavaBuilder#build()} */
     public Preference build() {
-        if (!mTypeToElementMap.containsKey(mType)) {
+        if (!mSupportedTypes.contains(mType)) {
             throw new IllegalArgumentException(
                     "Type: " + mType.getSimpleName() + " is not supported yet.");
         }
 
-        Class cls = mTypeToElementMap.get(mType);
+        if (mType.equals(boolean.class)) {
+            return build(SwitchPreference.class);
+        } else if (mType.equals(String.class) &&
+                ((String[]) getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY)).length != 0) {
+            return build(ListPreference.class);
+        } else if (mType.equals(String.class)) {
+            return build(EditTextPreference.class);
+        }
+        return null;
+    }
+
+    private Preference build(Class cls) {
         Constructor constructor = null;
         Preference preference = null;
         try {
@@ -82,7 +94,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             /* Optional Attributes */
 
             // Set the initial state to the default value
-            if (preference instanceof SwitchPreference) {
+            if (cls.equals(SwitchPreference.class)) {
                 ((SwitchPreference) preference).setChecked(
                         (boolean) getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
 
@@ -96,7 +108,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
 
                 ((SwitchPreference) preference).setSwitchTextOff(
                         (String) getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_LABEL_KEY));
-            } else if (preference instanceof ListPreference) {
+            } else if (cls.equals(ListPreference.class)) {
                 ListPreference lp = (ListPreference) preference;
                 lp.setValue((String) getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
                 lp.setEntries((String[]) getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));

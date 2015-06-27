@@ -28,6 +28,9 @@ public class Settings {
 
     @TwkString(category = STRINGS_CATEGORY, title = "Selectable Strings",
             options = {"Thing 1", "Thing 2", "Thing 3"}, defaultsTo = "Thing 1")
-    public static String stringOptions;
+    public static String stringOptions1;
+
+    @TwkString(category = STRINGS_CATEGORY, title = "Editable Strings", defaultsTo = "Edit me!")
+    public static String stringOptions2;
 
 }
