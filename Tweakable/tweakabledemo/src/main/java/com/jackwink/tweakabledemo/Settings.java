@@ -7,25 +7,26 @@ import com.jackwink.tweakable.annotations.TwkString;
  *
  */
 public class Settings {
-    private static final String SUBSCREEN = "And Subscreens!";
-    private static final String SUBCATEGORY = "With Subcategories!";
+    private static final String SUBSCREEN = "Nested Screen";
+    private static final String SUBCATEGORY = "Subscreen Feature Flags";
+    private static final String FEATURE_FLAG_CATEGORY = "Feature Flags";
+    private static final String STRINGS_CATEGORY = "String Options";
 
-    @TwkBoolean(title = "Some Feature", defaultsTo = true)
+    @TwkBoolean(category = FEATURE_FLAG_CATEGORY, title = "Feature Flag 1", defaultsTo = true)
     public static boolean featureFlag;
 
-    @TwkBoolean(category = "Categories are cool too!", title = "Some Feature 2",
-            onSummary = "Some feature 2 enabled", offSummary = "Some feature 2 disabled")
+    @TwkBoolean(category = FEATURE_FLAG_CATEGORY, title = "Feature Flag 2",
+            onSummary = "Feature 2 enabled!", offSummary = "feature 2 disabled :(")
     public static boolean featureFlag2;
 
-    @TwkBoolean(screen = SUBSCREEN, category = SUBCATEGORY, title = "Some Feature 3",
-            onSummary = "Some feature 3 enabled", offSummary = "Some feature 3 disabled")
+    @TwkBoolean(screen = SUBSCREEN, category = SUBCATEGORY, title = "Feature Flag 3",
+            onSummary = "Feature 3 enabled!", offSummary = "Feature 3 disabled :(")
     public static Boolean featureFlag3;
 
-    @TwkBoolean(screen = SUBSCREEN, defaultsTo = true,
-            onSummary = "See how easy it is to add options?")
+    @TwkBoolean(screen = SUBSCREEN, category = SUBCATEGORY, defaultsTo = true)
     public static boolean featureFlag4;
 
-    @TwkString(screen = SUBSCREEN, category = SUBCATEGORY, title = "Selectable Things",
+    @TwkString(category = STRINGS_CATEGORY, title = "Selectable Strings",
             options = {"Thing 1", "Thing 2", "Thing 3"}, defaultsTo = "Thing 1")
     public static String stringOptions;
 
