@@ -56,21 +56,26 @@ Here's a sample gradle file including the project locally:
 
 Once in your Android app, you can annotate any public static boolean or String field:
 
-    @TwkBoolean(screen = "Subscreen 1", category = "Category 1", title = "Enable Cool Feature",
-                onSummary = "Cool feature enabled!", offSummary = "Cool feature disabled",
-                defaultsTo = true)
+    @TwkBoolean(screen = "Subscreen 1", category = "Category 1", 
+                title = "Feature 1", onSummary = "Feature 1 Enabled!", 
+                offSummary = "Feature 1 Disabled", defaultsTo = true)
     public static boolean defaultsTo;
 
-    @TwkString(screen = "Subscreen 1", Category = "Category 1", title = "Pick One",
+    @TwkString(screen = "Subscreen 1", Category = "Category 1", title = "Selectable String",
                 options = {"Pick me!", "Or me!", "No, me!"}, defaultsTo = "Pick me!")
-    public static String tweakableString;
+    public static String selectableString;
+    
+    @TwkString(screen = "Subscreen 1", Category = "Category 1", title = "Editable String",
+                defaultsTo = "Edit Me!")
+    public static String editableString;
 
 Call `Tweakable.init(Context context)` when the app starts, then display an instance of the 
 `TweaksFragment` and your preferences will have been generated.
 
 When you call init, all the default values (or present values) will be injected statically, so
-you can access them whenever.  For example, if the above annotations were in a class called `Settings`,
-accessing `Settings.tweakableString` would contain "Pick me!" or the current value stored in shared preferences.
+you can access them whenever. For example, if the above annotations were in a class called `Settings`,
+accessing `Settings.selectableString` would contain "Pick me!" or the current value stored in 
+shared preferences.
 
 ## Roadmap
 
