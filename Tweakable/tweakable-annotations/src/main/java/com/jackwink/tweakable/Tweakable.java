@@ -48,6 +48,11 @@ public class Tweakable {
                             .putBoolean(preferenceKey, bundle.getBoolean(
                                     AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
                             .commit();
+                } else if (cls.equals(String.class)) {
+                    mSharedPreferences.edit()
+                            .putString(preferenceKey, bundle.getString(
+                                    AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
+                            .commit();
                 }
             }
 
@@ -60,10 +65,12 @@ public class Tweakable {
             try {
                 field = Class.forName(clsName).getDeclaredField(fieldName);
 
-                if (field.getType().getName().equals(boolean.class.getName())) {
+                if (field.getType().equals(boolean.class)) {
                     field.setBoolean(null, mSharedPreferences.getBoolean(preferenceKey, false));
-                } else if (field.getType().getName().equals(Boolean.class.getName())) {
+                } else if (field.getType().equals(Boolean.class)) {
                     field.set(null, (Boolean) mSharedPreferences.getBoolean(preferenceKey, false));
+                } else if (field.getType().equals(String.class)) {
+                    field.set(null, mSharedPreferences.getString(preferenceKey, ""));
                 }
             } catch (ClassNotFoundException error) {
                 error.printStackTrace();
