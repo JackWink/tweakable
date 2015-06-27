@@ -98,8 +98,9 @@ v0.0.1
 v0.0.2
 
 * Inject String Arrays (multi-select)
+* Support injection for non-static fields
 * Look into generating XML instead of java
-* ... or look to generate more efficient java 
+* Or look to generate more efficient java 
 
 ## Progress
 
