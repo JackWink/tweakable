@@ -1,7 +1,5 @@
 package com.jackwink.tweakable.types;
 
-import android.os.Bundle;
-
 /**
  *
  */

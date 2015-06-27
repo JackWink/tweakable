@@ -7,7 +7,6 @@ import android.preference.SwitchPreference;
 import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
-import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
 
 import java.lang.reflect.Constructor;
@@ -20,12 +19,12 @@ import java.util.LinkedHashMap;
 public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
 
-    public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
-    public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
-    public static final String BUNDLE_SUMMARY_KEY = AbstractTweakableValue.BUNDLE_SUMMARY_KEY;
-    public static final String BUNDLE_TYPEINFO_KEY = AbstractTweakableValue.BUNDLE_TYPEINFO_KEY;
+    public static final String BUNDLE_KEYATTR_KEY = com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
+    public static final String BUNDLE_TITLE_KEY = com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_TITLE_KEY;
+    public static final String BUNDLE_SUMMARY_KEY = com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_SUMMARY_KEY;
+    public static final String BUNDLE_TYPEINFO_KEY = com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_TYPEINFO_KEY;
     public static final String BUNDLE_DEFAULT_VALUE_KEY =
-            AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY;
+            com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY;
 
     private static LinkedHashMap<Class, Class> mTypeToElementMap = new LinkedHashMap<>();
 

@@ -13,8 +13,9 @@ import com.jackwink.tweakable.binders.AbstractValueBinder;
 
 import com.jackwink.tweakable.binders.BooleanValueBinder;
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
-import com.jackwink.tweakable.generators.java.AbstractTweakableValue;
+import com.jackwink.tweakable.generators.java.PreferenceBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
+import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -59,9 +60,9 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
             mScreens.put(screen.getKey(), screen);
 
             Bundle rootCategoryBundle = new Bundle();
-            rootCategoryBundle.putString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_TITLE_KEY, "");
-            rootCategoryBundle.putString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
-                    screen.getKey() + "." + com.jackwink.tweakable.types.AbstractTweakableValue.ROOT_CATEGORY_KEY);
+            rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "");
+            rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
+                    screen.getKey() + "." + AbstractTweakableValue.ROOT_CATEGORY_KEY);
             PreferenceCategory rootCategory = new PreferenceCategoryBuilder()
                     .setContext(getActivity())
                     .setBundle(rootCategoryBundle)
@@ -72,7 +73,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
 
         /* Generate all the categories */
         for (Bundle bundle : mProcessor.getDeclaredCategories()) {
-            String screenKey = bundle.getString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_SCREEN_KEY);
+            String screenKey = bundle.getString(AbstractTweakableValue.BUNDLE_SCREEN_KEY);
             PreferenceCategory category = new PreferenceCategoryBuilder()
                     .setContext(getActivity())
                     .setBundle(bundle)
@@ -86,7 +87,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
         /* Generate all the preferences */
         for (Bundle bundle : mProcessor.getDeclaredPreferences()) {
             Class cls = null;
-            String typeInfo = bundle.getString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_TYPEINFO_KEY);
+            String typeInfo = bundle.getString(AbstractTweakableValue.BUNDLE_TYPEINFO_KEY);
             try {
                 cls = Class.forName(typeInfo);
             } catch (ClassNotFoundException e) {
@@ -100,16 +101,16 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
             }
 
             //noinspection unchecked
-            Preference preference = new AbstractTweakableValue()
+            Preference preference = new PreferenceBuilder()
                     .setBundle(bundle)
                     .setContext(getActivity())
                     .setType(cls)
                     .build();
 
-            String categoryKey = bundle.getString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
+            String categoryKey = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
             Log.d(TAG, "Adding preference '" + preference.getTitle() + "' to " + categoryKey);
             mCategories.get(categoryKey).addPreference(preference);
-            createValueBinder(bundle.getString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_KEYATTR_KEY));
+            createValueBinder(bundle.getString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY));
         }
 
         setPreferenceScreen(getRootScreen());
@@ -160,15 +161,15 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
      */
     private void createRootElements() {
         Bundle rootScreenBundle = new Bundle();
-        rootScreenBundle.putString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_TITLE_KEY, "Tweakable Values");
-        rootScreenBundle.putString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
-                com.jackwink.tweakable.types.AbstractTweakableValue.ROOT_SCREEN_KEY);
+        rootScreenBundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "Tweakable Values");
+        rootScreenBundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
+                AbstractTweakableValue.ROOT_SCREEN_KEY);
 
         Bundle rootCategoryBundle = new Bundle();
-        rootCategoryBundle.putString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_TITLE_KEY, "");
-        rootCategoryBundle.putString(com.jackwink.tweakable.types.AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
-                com.jackwink.tweakable.types.AbstractTweakableValue.ROOT_SCREEN_KEY + "."
-                        + com.jackwink.tweakable.types.AbstractTweakableValue.ROOT_CATEGORY_KEY);
+        rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, "");
+        rootCategoryBundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY,
+                AbstractTweakableValue.ROOT_SCREEN_KEY + "."
+                        + AbstractTweakableValue.ROOT_CATEGORY_KEY);
 
         PreferenceScreen rootScreen = new PreferenceScreenBuilder()
                 .setContext(getActivity())
