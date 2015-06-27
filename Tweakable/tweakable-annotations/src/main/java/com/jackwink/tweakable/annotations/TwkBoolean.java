@@ -5,6 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Declares a user configurable Boolean or boolean field.
+ *
+ * Note:  On Android 5.x, and possibly 4.x, the {@link #onLabel()} and {@link #offLabel()}
+ * do not seem to work.
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface TwkBoolean {

@@ -18,7 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashSet;
 
 /**
- * Builds a preference from a Bundle
+ * Builds a {@link Preference} from a {@link Bundle}
  */
 public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
@@ -43,24 +43,63 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
     public PreferenceBuilder() {
     }
 
+    /**
+     * Sets the annotated field type to decide which preference to build.
+     * @param type Type of the annotated field.
+     * @return The updated builder
+     */
     public PreferenceBuilder setType(Class<T> type) {
         mType = type;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * Also uses the following for all preferences:
+     *
+     * <ul>
+     *     <li>{@link AbstractTweakableValue#BUNDLE_DEFAULT_VALUE_KEY}</li>
+     *     <li>{@link AbstractTweakableValue#BUNDLE_SUMMARY_KEY}</li>
+     * </ul>
+     *
+     * And the following for boolean preferences:
+     *
+     * <ul>
+     *     <li>{@link TweakableBoolean#BUNDLE_ON_LABEL_KEY}</li>
+     *     <li>{@link TweakableBoolean#BUNDLE_OFF_LABEL_KEY}</li>
+     *     <li>{@link TweakableBoolean#BUNDLE_ON_SUMMARY_KEY}</li>
+     *     <li>{@link TweakableBoolean#BUNDLE_OFF_SUMMARY_KEY}</li>
+     * </ul>
+     *
+     * And the following for Strings:
+     * <ul>
+     *     <li>{@link TweakableString#BUNDLE_OPTIONS_KEY}</li>
+     * </ul>
+     */
     @Override
     public PreferenceBuilder setBundle(Bundle attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
 
+    /** {@inheritDoc}*/
     @Override
     public PreferenceBuilder setContext(Context context) {
         mContext = context;
         return this;
     }
 
-    /** {@link JavaBuilder#build()} */
+    /**
+     * Builds a Preference object, can be any of the following types:
+     * <ul>
+     *     <li>{@link EditTextPreference}</li>
+     *     <li>{@link ListPreference}</li>
+     *     <li>{@link SwitchPreference}</li>
+     * </ul>
+     * @return An android preference.
+     */
+    @Override
     public Preference build() {
         if (!mSupportedTypes.contains(mType)) {
             throw new IllegalArgumentException(
@@ -78,6 +117,12 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
         return null;
     }
 
+    /**
+     * Internal builder to be used to build specific preference types.
+     *
+     * @param cls Type of preference to be built
+     * @return fully configured {@link Preference} object
+     */
     private Preference build(Class cls) {
         Constructor constructor = null;
         Preference preference = null;

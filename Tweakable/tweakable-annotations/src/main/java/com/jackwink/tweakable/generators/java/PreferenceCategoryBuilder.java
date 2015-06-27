@@ -7,7 +7,7 @@ import android.preference.PreferenceCategory;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 /**
- *
+ * Builds a {@link PreferenceCategory} from a {@link Bundle}
  */
 public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     private static final String TAG = PreferenceCategoryBuilder.class.getSimpleName();
@@ -18,12 +18,14 @@ public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     public PreferenceCategoryBuilder() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public PreferenceCategoryBuilder setBundle(Bundle attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PreferenceCategoryBuilder setContext(Context context) {
         mContext = context;
@@ -31,6 +33,7 @@ public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     }
 
     /** {@inheritDoc} */
+    @Override
     public PreferenceCategory build() {
         PreferenceCategory category = new PreferenceCategory(mContext);
         category.setKey((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY));

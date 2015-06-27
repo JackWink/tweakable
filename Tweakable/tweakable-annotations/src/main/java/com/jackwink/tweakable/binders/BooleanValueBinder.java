@@ -4,7 +4,7 @@ package com.jackwink.tweakable.binders;
 import java.lang.reflect.Field;
 
 /**
- * Binds a boolean value from shared preferences to a static field
+ * Binds a boolean value to a given field
  */
 public class BooleanValueBinder extends AbstractValueBinder<Boolean> {
 

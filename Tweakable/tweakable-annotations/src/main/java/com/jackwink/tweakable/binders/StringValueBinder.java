@@ -3,7 +3,7 @@ package com.jackwink.tweakable.binders;
 import java.lang.reflect.Field;
 
 /**
- *
+ * Binds a String value to a given {@link Field}.
  */
 public class StringValueBinder extends AbstractValueBinder<String> {
 

@@ -5,14 +5,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.jackwink.tweakable.controls.TweaksFragment;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 import java.lang.reflect.Field;
 
 /**
+ * Tweakable values and Feature Flags for Android.
  *
+ * <h2>Usage Instructions</h2>
+ *
+ * <p>Call {@link Tweakable#init(Context)} to inject the default values
+ * (or saved values from Preferences) on the start of your application or main activity.</p>
+ *
+ * <p>Later, show an instance of {@link TweaksFragment} to the user.  Upon updating the values
+ * in the fragment, the updated values will be saved to {@link SharedPreferences} and the annotated
+ * fields will be updated immediately.</p>
  */
 public class Tweakable {
     private static final String TAG = Tweakable.class.getSimpleName();
@@ -20,6 +28,11 @@ public class Tweakable {
     private static String mSharedPreferencesName;
     private static SharedPreferences mSharedPreferences;
 
+    /**
+     * Binds the default values (or saved values) to all annotated fields.
+     *
+     * @param context Application or activity context used to retrieve the shared preferences file.
+     */
     public static void init(Context context) {
         mSharedPreferencesName = context.getPackageName() + "_preferences";
         mSharedPreferences = context.getSharedPreferences(mSharedPreferencesName,
@@ -82,7 +95,12 @@ public class Tweakable {
         }
     }
 
-    public static TweaksFragment.PreferenceAnnotationProcessor getPreferences() {
+    /**
+     * <p>Returns an instance of the generated preferences class, or throws an exception if it can't
+     * be found. For internal use only!</p>
+     * @return The generated {@link TweaksFragment.PreferenceAnnotationProcessor}
+     */
+    static protected TweaksFragment.PreferenceAnnotationProcessor getPreferences() {
         try {
             return (TweaksFragment.PreferenceAnnotationProcessor)
                     Class.forName("com.jackwink.tweakable.GeneratedPreferences").newInstance();

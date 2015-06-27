@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.controls;
+package com.jackwink.tweakable;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
-import com.jackwink.tweakable.Tweakable;
 import com.jackwink.tweakable.binders.AbstractValueBinder;
 
 import com.jackwink.tweakable.binders.BooleanValueBinder;

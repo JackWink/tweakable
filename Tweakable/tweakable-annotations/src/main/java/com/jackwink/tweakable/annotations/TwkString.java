@@ -6,7 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ *  Declares a user configurable String field.
  *
+ *  If {@link #options()} is an empty array, the user will be shown an
+ *  {@link android.preference.EditTextPreference}, otherwise, the user will see a
+ *  {@link android.preference.ListPreference} with the provided options.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.SOURCE)

@@ -44,11 +44,30 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
         return mAttributeMap.get(attributeName);
     }
 
+    /**
+     * Sets the internal {@link Bundle} used to generate the preference object.
+     * <p>The following values are required for all preferences:</p>
+     * <ul>
+     *     <li>
+     *         {@link com.jackwink.tweakable.types.AbstractTweakableValue#BUNDLE_KEYATTR_KEY}
+     *     </li>
+     *     <li>
+     *         {@link com.jackwink.tweakable.types.AbstractTweakableValue#BUNDLE_TITLE_KEY}
+     *     </li>
+     * </ul>
+     * @param attributeMap Bundle containing values used to construct the preference
+     * @return The updated builder
+     */
     public BaseBuilder setBundle(Bundle attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
 
+    /**
+     * Sets a context used to generate the preference object
+     * @param context
+     * @return The updated builder
+     */
     public BaseBuilder setContext(Context context) {
         mContext = context;
         return this;

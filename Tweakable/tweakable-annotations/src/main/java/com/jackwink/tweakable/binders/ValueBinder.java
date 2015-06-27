@@ -1,10 +1,11 @@
 package com.jackwink.tweakable.binders;
 
-import java.lang.reflect.Field;
-
+/**
+ * Binds a value type to a given to a field.
+ *
+ * @param <T> Type of value that will be bound
+ */
 public interface ValueBinder<T> {
-
-    void setField(Field field);
 
     void bindValue(T value);
 

@@ -1,6 +1,6 @@
 package com.jackwink.tweakable.annotations.processor.generators;
 
-import com.jackwink.tweakable.controls.TweaksFragment;
+import com.jackwink.tweakable.TweaksFragment;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceCategoryException;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceScreenException;
