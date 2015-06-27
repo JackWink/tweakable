@@ -1,11 +1,14 @@
 package com.jackwink.tweakable.annotations.processor;
 
 import com.jackwink.tweakable.annotations.TwkBoolean;
+import com.jackwink.tweakable.annotations.TwkString;
 import com.jackwink.tweakable.annotations.processor.generators.PreferencesGenerator;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
+import com.jackwink.tweakable.types.TweakableString;
 
+import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -33,6 +36,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
     @Override public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new LinkedHashSet<>();
         types.add(TwkBoolean.class.getCanonicalName());
+        types.add(TwkString.class.getCanonicalName());
         return types;
     }
 
@@ -48,20 +52,33 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
             return true;
         }
 
-        for (Element element : env.getElementsAnnotatedWith(TwkBoolean.class)) {
+        process(TwkBoolean.class, env);
+        process(TwkString.class, env);
+        mPreferenceGenerator.build();
+        built = true;
+        return true;
+    }
+
+    private void process(Class annotationType, RoundEnvironment env) {
+        for (Element element : env.getElementsAnnotatedWith((Class<Annotation>)annotationType)) {
             if (!element.getKind().isField()) {
                 throw new FailedToBuildPreferenceException(
-                        "Only fields can be annotated with @TwkBoolean");
+                        "Only fields can be annotated with @" + annotationType.getName());
             }
 
             TypeElement enclosingClass = findEnclosingTypeElement(element);
             TypeMirror type = element.asType();
 
             AbstractTweakableValue value = null;
-            if (type.getKind() == TypeKind.BOOLEAN || type.toString().equals(Boolean.class.getName())) {
+            if (type.getKind() == TypeKind.BOOLEAN
+                    || type.toString().equals(Boolean.class.getName())) {
                 value = TweakableBoolean.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkBoolean.class));
+            } else if (type.toString().equals(String.class.getName())) {
+                value = TweakableString.parse(enclosingClass.getQualifiedName().toString(),
+                        element.getSimpleName().toString(),
+                        element.getAnnotation(TwkString.class));
             } else {
                 throw new FailedToBuildPreferenceException("Unsupported type: " +
                         type.toString());
@@ -77,10 +94,6 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
 
             mPreferenceGenerator.addTweakableValue(value);
         }
-
-        mPreferenceGenerator.build();
-        built = true;
-        return true;
     }
 
     public static TypeElement findEnclosingTypeElement(Element e) {

@@ -6,6 +6,7 @@ import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceScreenException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
+import com.jackwink.tweakable.types.TweakableString;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -57,6 +58,7 @@ public class PreferencesGenerator {
     private int mScreenCount = 0;
     private int mCategoryCount = 0;
     private int mPreferenceCount = 0;
+    private int mStrArrayCount = 0;
 
     private Filer mFiler;
 
@@ -220,7 +222,12 @@ public class PreferencesGenerator {
                             ((TweakableBoolean) value).getOnSummary())
                     .addStatement(bundleName + ".putBoolean($S, $L)",
                             TweakableBoolean.BUNDLE_DEFAULT_VALUE_KEY,
-                            ((TweakableBoolean) value).getDefaultValue());
+                            ((TweakableBoolean) value).getValue());
+        } else if (value.getType().equals(String.class)) {
+            addStringArrayToBundle(builder, bundleName, TweakableString.BUNDLE_OPTIONS_KEY,
+                    ((TweakableString) value).getOptions());
+            builder.addStatement(addString, TweakableString.BUNDLE_DEFAULT_VALUE_KEY,
+                    ((TweakableString) value).getValue());
         }
 
         builder.addStatement(mPreferenceSetName + ".add(" + bundleName + ")");
@@ -231,6 +238,20 @@ public class PreferencesGenerator {
         }
     }
 
+    private void addStringArrayToBundle(MethodSpec.Builder builder, String bundleName, String key,
+                                        String[] array) {
+        StringBuilder b = new StringBuilder("{ ");
+        for (int i = 0; i < array.length; ++i) {
+            b.append('"' + array[i] + '"');
+            if (i < array.length - 1) {
+                b.append(", ");
+            }
+        }
+        String arrayName = "strArray" + mStrArrayCount;
+        builder.addStatement("String[] " + arrayName + " = " + b.append("}").toString());
+        builder.addStatement(bundleName + ".putStringArray($S, " + arrayName + ")", key);
+        ++mStrArrayCount;
+    }
 
     private String getCategoryKey(String categoryName, String screenName) {
         String screenKey = getScreenKey(screenName);

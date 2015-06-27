@@ -32,18 +32,14 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
         return mParsedAnnotation.offSummary();
     }
 
-    public boolean getDefaultValue() {
+    @Override
+    public Boolean getValue() {
         return mParsedAnnotation.defaultsTo();
     }
 
     @Override
     public Class<Boolean> getType() {
         return boolean.class;
-    }
-
-    @Override
-    public Boolean getValue() {
-        return mParsedAnnotation.defaultsTo();
     }
 
 

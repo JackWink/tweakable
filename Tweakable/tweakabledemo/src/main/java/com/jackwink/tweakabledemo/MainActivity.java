@@ -19,6 +19,7 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
     TextView featureFlag2View;
     TextView featureFlag3View;
     TextView featureFlag4View;
+    TextView strOptions1View;
 
     ShakeDetector shakeDetector;
 
@@ -31,9 +32,11 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
         featureFlag2View = (TextView) findViewById(R.id.featureFlag2View);
         featureFlag3View = (TextView) findViewById(R.id.featureFlag3View);
         featureFlag4View = (TextView) findViewById(R.id.featureFlag4View);
+        strOptions1View = (TextView) findViewById(R.id.stringOptions1);
 
         shakeDetector = new ShakeDetector(this);
         Tweakable.init(this);
+        hearShake();
     }
 
 
@@ -73,6 +76,7 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
         featureFlag2View.setText("featureFlag2: " + Settings.featureFlag2);
         featureFlag3View.setText("featureFlag3: " + Settings.featureFlag3);
         featureFlag4View.setText("featureFlag4: " + Settings.featureFlag4);
+        strOptions1View.setText("Selected option: " + Settings.stringOptions);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         shakeDetector.start(sensorManager);

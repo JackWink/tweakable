@@ -12,6 +12,7 @@ import com.jackwink.tweakable.Tweakable;
 import com.jackwink.tweakable.binders.AbstractValueBinder;
 
 import com.jackwink.tweakable.binders.BooleanValueBinder;
+import com.jackwink.tweakable.binders.StringValueBinder;
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
@@ -142,6 +143,8 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
 
             if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
                 mPreferences.put(key, new BooleanValueBinder(field));
+            } else if (field.getType().equals(String.class)) {
+                mPreferences.put(key, new StringValueBinder(field));
             }
         } catch (Exception error) {
             error.printStackTrace();
@@ -153,6 +156,8 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
        AbstractValueBinder binder = mPreferences.get(key);
         if (binder.getType().equals(Boolean.class)) {
             ((BooleanValueBinder) binder).bindValue(sharedPreferences.getBoolean(key, false));
+        } else if (binder.getType().equals(String.class)) {
+            ((StringValueBinder) binder).bindValue(sharedPreferences.getString(key, ""));
         }
     }
 

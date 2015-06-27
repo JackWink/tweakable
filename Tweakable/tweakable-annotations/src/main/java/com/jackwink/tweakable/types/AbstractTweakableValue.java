@@ -49,7 +49,6 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     }
 
 
-
     public static String getDefaultString(String value, String defaultValue) {
         if (value == null || value.isEmpty()) {
             return defaultValue;

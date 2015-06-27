@@ -2,6 +2,7 @@ package com.jackwink.tweakable.generators.java;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.util.Log;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
+import com.jackwink.tweakable.types.TweakableString;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -34,6 +36,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
 
     static {
         mTypeToElementMap.put(boolean.class, SwitchPreference.class);
+        mTypeToElementMap.put(String.class, ListPreference.class);
     }
 
     public PreferenceBuilder() {
@@ -93,6 +96,12 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
 
                 ((SwitchPreference) preference).setSwitchTextOff(
                         (String) getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_LABEL_KEY));
+            } else if (preference instanceof ListPreference) {
+                ListPreference lp = (ListPreference) preference;
+                lp.setValue((String) getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+                lp.setEntries((String[]) getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
+                lp.setEntryValues((String[])
+                        getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
             }
 
             /* Non-User-Configurable Attributes */
