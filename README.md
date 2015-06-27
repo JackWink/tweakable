@@ -89,7 +89,7 @@ v0.0.1
 * ~~Generate preferences at compile time~~
 * ~~Inject boolean & Boolean values from shared preferences~~
 * ~~Inject Strings~~
-* "Massive" cleanup, codebase is small
+* ~~"Massive" cleanup, codebase is small~~ 
 * Decide on 'PreferenceStore' class
 * Add documentation
 * Add usage samples 
@@ -97,7 +97,8 @@ v0.0.1
 v0.0.2
 
 * Inject int & Integer types
-* Look at generating XML prefs at compile time instead of java
+* Look into generating XML instead of java
+* ... or look to generate more efficient java 
 
 ## Progress
 
@@ -108,3 +109,4 @@ v0.0.2
 - 6/23: Preferences are injected now, but only on opening/closing of 'TweaksFragment', need to fix. 
 - 6/27: Preferences are injected on init, library supports strings and boolean types, preferences are 
         updated as they change.
+- 6/27: Most dead/redundent code is removed, still room for improvement.
