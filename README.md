@@ -54,15 +54,23 @@ Here's a sample gradle file including the project locally:
         compile 'com.squareup:seismic:1.0.1'
     }
 
-Once in your Android app, you can annotate any public static boolean field:
+Once in your Android app, you can annotate any public static boolean or String field:
 
     @TwkBoolean(screen = "Subscreen 1", category = "Category 1", title = "Enable Cool Feature",
                 onSummary = "Cool feature enabled!", offSummary = "Cool feature disabled",
                 defaultsTo = true)
     public static boolean defaultsTo;
 
+    @TwkString(screen = "Subscreen 1", Category = "Category 1", title = "Pick One",
+                options = {"Pick me!", "Or me!", "No, me!"}, defaultsTo = "Pick me!")
+    public static String tweakableString;
+
 Call `Tweakable.init(Context context)` when the app starts, then display an instance of the 
 `TweaksFragment` and your preferences will have been generated.
+
+When you call init, all the default values (or present values) will be injected statically, so
+you can access them whenever.  For example, if the above annotations were in a class called `Settings`,
+accessing `Settings.tweakableString` would contain "Pick me!" or the current value stored in shared preferences.
 
 ## Roadmap
 
@@ -75,6 +83,7 @@ v0.0.1
 * ~~Allow sub-screens~~
 * ~~Generate preferences at compile time~~
 * ~~Inject boolean & Boolean values from shared preferences~~
+* ~~Inject Strings~~
 * "Massive" cleanup, codebase is small
 * Decide on 'PreferenceStore' class
 * Add documentation
@@ -85,11 +94,6 @@ v0.0.2
 * Inject int & Integer types
 * Look at generating XML prefs at compile time instead of java
 
-v0.0.3
-
-* Inject Strings
-
-
 ## Progress
 
 - 6/19: Initial bundle structure + preference generation working
@@ -97,3 +101,5 @@ v0.0.3
 - 6/23: Preferences generated at compile time, still no injection, and Android Studio is not a fan.
 - 6/23: Android studio has warmed up to the annotation processor
 - 6/23: Preferences are injected now, but only on opening/closing of 'TweaksFragment', need to fix. 
+- 6/27: Preferences are injected on init, library supports strings and boolean types, preferences are 
+        updated as they change.
