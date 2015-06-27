@@ -91,9 +91,8 @@ v0.0.1
 * ~~Inject Strings~~
 * Inject int & Integer types
 * Inject float types 
-* Decide on 'PreferenceStore' class
 * Add documentation
-* Add usage samples 
+* ~~Add usage samples~~
 
 v0.0.2
 
