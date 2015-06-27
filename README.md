@@ -89,14 +89,15 @@ v0.0.1
 * ~~Generate preferences at compile time~~
 * ~~Inject boolean & Boolean values from shared preferences~~
 * ~~Inject Strings~~
-* ~~"Massive" cleanup, codebase is small~~ 
+* Inject int & Integer types
+* Inject float types 
 * Decide on 'PreferenceStore' class
 * Add documentation
 * Add usage samples 
 
 v0.0.2
 
-* Inject int & Integer types
+* Inject String Arrays (multi-select)
 * Look into generating XML instead of java
 * ... or look to generate more efficient java 
 
