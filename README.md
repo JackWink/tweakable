@@ -54,7 +54,7 @@ Here's a sample gradle file including the project locally:
         compile 'com.squareup:seismic:1.0.1'
     }
 
-Once in your Android app, you can annotate any public static boolean or String field:
+Once in your Android app, you can annotate any public static boolean or string or integer field:
 
     @TwkBoolean(screen = "Subscreen 1", category = "Category 1", 
                 title = "Feature 1", onSummary = "Feature 1 Enabled!", 
@@ -68,6 +68,10 @@ Once in your Android app, you can annotate any public static boolean or String f
     @TwkString(screen = "Subscreen 1", Category = "Category 1", title = "Editable String",
                 defaultsTo = "Edit Me!")
     public static String editableString;
+    
+    @TwkInteger(Category = "Integer Category", title = "Pick a number", defaultsTo = 50, 
+                minValue = 0, maxValue = 100)
+    public static int someInteger;
 
 Call `Tweakable.init(Context context)` when the app starts, then display an instance of the 
 `TweaksFragment` and your preferences will have been generated.
@@ -112,7 +116,9 @@ v0.0.2
 * 6/27: Preferences are injected on init, library supports strings and boolean types, preferences are 
         updated as they change.
 * 6/27: Most dead/redundent code is removed, still room for improvement.
+* 6/27: Tweakable integers are a thing now 
 
 ## Thanks / Attributions
 
+* [Tweaks](https://github.com/facebook/Tweaks) for the initial inspiration. 
 * [Number picker](https://github.com/vanniktech/VNTNumberPickerPreference) taken and modified, thanks Vanniktech/Niklas Baudy!
