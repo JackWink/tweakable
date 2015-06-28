@@ -104,11 +104,15 @@ v0.0.2
 
 ## Progress
 
-- 6/19: Initial bundle structure + preference generation working
-- 6/20: Settings is generated at runtime, no injection yet -- might need to do build-time now
-- 6/23: Preferences generated at compile time, still no injection, and Android Studio is not a fan.
-- 6/23: Android studio has warmed up to the annotation processor
-- 6/23: Preferences are injected now, but only on opening/closing of 'TweaksFragment', need to fix. 
-- 6/27: Preferences are injected on init, library supports strings and boolean types, preferences are 
+* 6/19: Initial bundle structure + preference generation working
+* 6/20: Settings is generated at runtime, no injection yet -- might need to do build-time now
+* 6/23: Preferences generated at compile time, still no injection, and Android Studio is not a fan.
+* 6/23: Android studio has warmed up to the annotation processor
+* 6/23: Preferences are injected now, but only on opening/closing of 'TweaksFragment', need to fix. 
+* 6/27: Preferences are injected on init, library supports strings and boolean types, preferences are 
         updated as they change.
-- 6/27: Most dead/redundent code is removed, still room for improvement.
+* 6/27: Most dead/redundent code is removed, still room for improvement.
+
+## Thanks / Attributions
+
+* [Number picker](https://github.com/vanniktech/VNTNumberPickerPreference) taken and modified, thanks Vanniktech/Niklas Baudy!
