@@ -2,6 +2,8 @@ package com.jackwink.tweakable.generators.java;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.test.ApplicationTestCase;
@@ -83,6 +85,70 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         assertEquals(null, cast.getSummaryOff());
         assertEquals(null, cast.getSwitchTextOff());
         assertEquals(null, cast.getSwitchTextOn());
+        assertEquals(true, cast.isPersistent());
+    }
+
+
+    @SmallTest
+    public void testNewStringWithOptions() {
+        String key = "test";
+        String title = "I am a title!";
+        String summary = "I am a summary";
+        String defaultValue = "option 1";
+        String[] options = {"option 1", "option 2", "option 3"};
+
+        Bundle bundle = new Bundle();
+        bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
+        bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
+        bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
+        bundle.putString(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
+        bundle.putStringArray(TweakableString.BUNDLE_OPTIONS_KEY, options);
+        Preference preference = new PreferenceBuilder()
+                .setType(String.class)
+                .setBundle(bundle)
+                .setContext(getContext())
+                .build();
+
+        assertEquals(preference instanceof ListPreference, true);
+
+        ListPreference cast = (ListPreference) preference;
+        assertEquals(key, cast.getKey());
+        assertEquals(title, cast.getTitle());
+        assertEquals(summary, cast.getSummary());
+        assertEquals(defaultValue, cast.getValue());
+        assertEquals(options, cast.getEntries());
+        assertEquals(options, cast.getEntryValues());
+        assertEquals(true, cast.isPersistent());
+    }
+
+
+    @SmallTest
+    public void testNewTweakableString() {
+        String key = "test";
+        String title = "I am a title!";
+        String summary = "I am a summary";
+        String defaultValue = "option 1";
+        String[] options = {};
+
+        Bundle bundle = new Bundle();
+        bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
+        bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
+        bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
+        bundle.putString(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
+        bundle.putStringArray(TweakableString.BUNDLE_OPTIONS_KEY, options);
+        Preference preference = new PreferenceBuilder()
+                .setType(String.class)
+                .setBundle(bundle)
+                .setContext(getContext())
+                .build();
+
+        assertEquals(preference instanceof EditTextPreference, true);
+
+        EditTextPreference cast = (EditTextPreference) preference;
+        assertEquals(key, cast.getKey());
+        assertEquals(title, cast.getTitle());
+        assertEquals(summary, cast.getSummary());
+        assertEquals(defaultValue, cast.getText());
         assertEquals(true, cast.isPersistent());
     }
 }

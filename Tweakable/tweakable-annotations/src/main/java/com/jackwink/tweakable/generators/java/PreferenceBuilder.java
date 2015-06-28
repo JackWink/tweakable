@@ -17,7 +17,6 @@ import com.jackwink.tweakable.types.TweakableString;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedHashSet;
 
 /**
  * Builds a {@link Preference} from a {@link Bundle}
@@ -28,20 +27,12 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
     public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
     public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
     public static final String BUNDLE_SUMMARY_KEY = AbstractTweakableValue.BUNDLE_SUMMARY_KEY;
-    public static final String BUNDLE_TYPEINFO_KEY = AbstractTweakableValue.BUNDLE_TYPEINFO_KEY;
     public static final String BUNDLE_DEFAULT_VALUE_KEY =
             AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY;
-
-    private static LinkedHashSet<Class> mSupportedTypes = new LinkedHashSet<>(2);
 
     private Context mContext = null;
     private Class<T> mType = null;
 
-    static {
-        mSupportedTypes.add(boolean.class);
-        mSupportedTypes.add(String.class);
-        mSupportedTypes.add(Integer.class);
-    }
 
     public PreferenceBuilder() {
     }
@@ -98,30 +89,56 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
      * <ul>
      *     <li>{@link EditTextPreference}</li>
      *     <li>{@link ListPreference}</li>
+     *     <li>{@link NumberPickerPreference}</li>
      *     <li>{@link SwitchPreference}</li>
      * </ul>
      * @return An android preference.
      */
     @Override
     public Preference build() {
-        if (!mSupportedTypes.contains(mType)) {
-            throw new IllegalArgumentException(
-                    "Type: " + mType.getSimpleName() + " is not supported yet.");
+        if (mType == null) {
+            throw new FailedToBuildPreferenceException("Type is null!");
         }
 
-        if (mType.equals(boolean.class)) {
-            return build(SwitchPreference.class);
-        } else if (mType.equals(String.class) &&
-                ((String[]) getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY)).length != 0) {
-            return build(ListPreference.class);
+        Preference preference = null;
+        if (mType.equals(Boolean.class) || mType.equals(boolean.class)) {
+            preference = build(SwitchPreference.class);
+            ((SwitchPreference) preference).setChecked((boolean)
+                    getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+            ((SwitchPreference) preference).setSummaryOn((String)
+                    getOptionalAttribute(TweakableBoolean.BUNDLE_ON_SUMMARY_KEY));
+            ((SwitchPreference) preference).setSummaryOff((String)
+                    getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_SUMMARY_KEY));
+            ((SwitchPreference) preference).setSwitchTextOn((String)
+                    getOptionalAttribute(TweakableBoolean.BUNDLE_ON_LABEL_KEY));
+            ((SwitchPreference) preference).setSwitchTextOff((String)
+                    getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_LABEL_KEY));
         } else if (mType.equals(String.class)) {
-            return build(EditTextPreference.class);
-        } else if (mType.equals(Integer.class)) {
-            return build(NumberPickerPreference.class);
+            String[] options = (String[]) getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY);
+            if (options.length != 0) {
+                preference = build(ListPreference.class);
+                ((ListPreference) preference).setValue((String)
+                        getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+                ((ListPreference) preference).setEntries((String[])
+                        getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
+                ((ListPreference) preference).setEntryValues((String[])
+                        getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
+            } else {
+                preference = build(EditTextPreference.class);
+                ((EditTextPreference) preference).setText((String)
+                        getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+            }
+        } else if (mType.equals(Integer.class) || mType.equals(int.class)) {
+            preference = build(NumberPickerPreference.class);
+            ((NumberPickerPreference) preference).setMaxValue((Integer)
+                    getRequiredAttribute(TweakableInteger.BUNDLE_MAX_VALUE_KEY));
+            ((NumberPickerPreference) preference).setMinValue((Integer)
+                    getRequiredAttribute(TweakableInteger.BUNDLE_MIN_VALUE_KEY));
+            ((NumberPickerPreference) preference).setWraps(true);
+        } else {
+            throw new FailedToBuildPreferenceException("Type: " + mType.getName() + " not supported.");
         }
-
-        Log.i(TAG, "What?: " + mType.getName());
-        return null;
+        return preference;
     }
 
     /**
@@ -142,42 +159,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             preference.setTitle((CharSequence) getRequiredAttribute(BUNDLE_TITLE_KEY));
             preference.setSummary((String) getRequiredAttribute(BUNDLE_SUMMARY_KEY));
             preference.setDefaultValue(getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
-
-            /* Optional Attributes */
-
-            // Set the initial state to the default value
-            if (cls.equals(SwitchPreference.class)) {
-                ((SwitchPreference) preference).setChecked(
-                        (boolean) getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
-
-                ((SwitchPreference) preference).setSummaryOn(
-                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_ON_SUMMARY_KEY));
-                ((SwitchPreference) preference).setSummaryOff(
-                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_SUMMARY_KEY));
-
-                ((SwitchPreference) preference).setSwitchTextOn(
-                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_ON_LABEL_KEY));
-
-                ((SwitchPreference) preference).setSwitchTextOff(
-                        (String) getOptionalAttribute(TweakableBoolean.BUNDLE_OFF_LABEL_KEY));
-            } else if (cls.equals(ListPreference.class)) {
-                ListPreference lp = (ListPreference) preference;
-                lp.setValue((String) getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
-                lp.setEntries((String[]) getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
-                lp.setEntryValues((String[])
-                        getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
-            } else if (cls.equals(NumberPickerPreference.class)) {
-                NumberPickerPreference pref = (NumberPickerPreference) preference;
-                pref.setMaxValue((Integer)
-                        getRequiredAttribute(TweakableInteger.BUNDLE_MAX_VALUE_KEY));
-                pref.setMinValue((Integer)
-                        getRequiredAttribute(TweakableInteger.BUNDLE_MIN_VALUE_KEY));
-                pref.setWraps(true);
-            }
-
-            /* Non-User-Configurable Attributes */
             preference.setPersistent(true);
-
         } catch (InstantiationException error) {
             Log.e(TAG, "InstantiationException!");
             throw new FailedToBuildPreferenceException(

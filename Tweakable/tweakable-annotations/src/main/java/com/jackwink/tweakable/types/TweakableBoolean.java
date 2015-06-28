@@ -39,9 +39,8 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
 
     @Override
     public Class<Boolean> getType() {
-        return boolean.class;
+        return Boolean.class;
     }
-
 
     public static TweakableBoolean parse(String className, String fieldName, TwkBoolean annotation) {
         TweakableBoolean returnValue = new TweakableBoolean();
