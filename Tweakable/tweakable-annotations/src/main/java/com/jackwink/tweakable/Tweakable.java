@@ -45,6 +45,8 @@ public class Tweakable {
             } catch (ClassNotFoundException e) {
                 if (typeInfo.equals(boolean.class.getName())) {
                     cls = boolean.class;
+                } else if (typeInfo.equals(int.class.getName())) {
+                    cls = int.class;
                 } else {
                     Log.e(TAG, "Class not found: " + typeInfo);
                     e.printStackTrace();
@@ -59,6 +61,11 @@ public class Tweakable {
                 if (cls.equals(boolean.class) || cls.equals(Boolean.class)) {
                     mSharedPreferences.edit()
                             .putBoolean(preferenceKey, bundle.getBoolean(
+                                    AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
+                            .commit();
+                } else if (cls.equals(int.class) || cls.equals(Integer.class)) {
+                    mSharedPreferences.edit()
+                            .putInt(preferenceKey, bundle.getInt(
                                     AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
                             .commit();
                 } else if (cls.equals(String.class)) {
@@ -81,7 +88,11 @@ public class Tweakable {
                 if (field.getType().equals(boolean.class)) {
                     field.setBoolean(null, mSharedPreferences.getBoolean(preferenceKey, false));
                 } else if (field.getType().equals(Boolean.class)) {
-                    field.set(null, (Boolean) mSharedPreferences.getBoolean(preferenceKey, false));
+                    field.set(null, mSharedPreferences.getBoolean(preferenceKey, false));
+                } else if (field.getType().equals(int.class)) {
+                    field.setInt(null, mSharedPreferences.getInt(preferenceKey, 0));
+                } else if (field.getType().equals(Integer.class)) {
+                    field.set(null, mSharedPreferences.getInt(preferenceKey, 0));
                 } else if (field.getType().equals(String.class)) {
                     field.set(null, mSharedPreferences.getString(preferenceKey, ""));
                 }

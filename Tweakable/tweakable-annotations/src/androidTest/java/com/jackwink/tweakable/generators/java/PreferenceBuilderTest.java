@@ -37,7 +37,7 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         bundle.putString(TweakableBoolean.BUNDLE_ON_LABEL_KEY, onLabel);
         bundle.putString(TweakableBoolean.BUNDLE_OFF_LABEL_KEY, offLabel);
         Preference preference = new PreferenceBuilder()
-                .setType(boolean.class)
+                .setType(Boolean.class)
                 .setBundle(bundle)
                 .setContext(getContext())
                 .build();
@@ -69,7 +69,7 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
         bundle.putBoolean(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
         Preference preference = new PreferenceBuilder()
-                .setType(boolean.class)
+                .setType(Boolean.class)
                 .setBundle(bundle)
                 .setContext(getContext())
                 .build();

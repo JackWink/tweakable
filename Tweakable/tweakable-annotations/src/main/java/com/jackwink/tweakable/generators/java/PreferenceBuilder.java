@@ -33,7 +33,6 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
     private Context mContext = null;
     private Class<T> mType = null;
 
-
     public PreferenceBuilder() {
     }
 

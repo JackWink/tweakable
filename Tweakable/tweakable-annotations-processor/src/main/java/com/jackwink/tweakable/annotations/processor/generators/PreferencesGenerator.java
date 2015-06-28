@@ -212,7 +212,7 @@ public class PreferencesGenerator {
                 .addStatement(addString, AbstractTweakableValue.BUNDLE_TYPEINFO_KEY,
                         value.getType().getName());
 
-        if (value.getType().equals(boolean.class)) {
+        if (value.getType().equals(Boolean.class)) {
             builder.addStatement(addString, TweakableBoolean.BUNDLE_OFF_LABEL_KEY,
                     ((TweakableBoolean) value).getOffLabel())
                     .addStatement(addString, TweakableBoolean.BUNDLE_ON_LABEL_KEY,
