@@ -89,7 +89,7 @@ v0.0.1
 * ~~Generate preferences at compile time~~
 * ~~Inject boolean & Boolean values from shared preferences~~
 * ~~Inject Strings~~
-* Inject int & Integer types
+* ~~Inject int & Integer types~~
 * Inject float types 
 * Add documentation
 * ~~Add usage samples~~

@@ -1,6 +1,7 @@
 package com.jackwink.tweakabledemo;
 
 import com.jackwink.tweakable.annotations.TwkBoolean;
+import com.jackwink.tweakable.annotations.TwkInteger;
 import com.jackwink.tweakable.annotations.TwkString;
 
 /**
@@ -11,6 +12,7 @@ public class Settings {
     private static final String SUBCATEGORY = "Subscreen Feature Flags";
     private static final String FEATURE_FLAG_CATEGORY = "Feature Flags";
     private static final String STRINGS_CATEGORY = "String Options";
+    private static final String INTS_CATEGORY = "Integer Options";
 
     @TwkBoolean(category = FEATURE_FLAG_CATEGORY, title = "Feature Flag 1", defaultsTo = true)
     public static boolean featureFlag;
@@ -32,5 +34,12 @@ public class Settings {
 
     @TwkString(category = STRINGS_CATEGORY, title = "Editable Strings", defaultsTo = "Edit me!")
     public static String stringOptions2;
+
+    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer", defaultsTo = 100)
+    public static int intOptions1;
+
+    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer with range", defaultsTo = 15,
+                maxValue = 100, minValue = 10)
+    public static Integer intOptions2;
 
 }

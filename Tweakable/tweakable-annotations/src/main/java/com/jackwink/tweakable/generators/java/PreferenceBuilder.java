@@ -8,9 +8,11 @@ import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.util.Log;
 
+import com.jackwink.tweakable.controls.NumberPickerPreference;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
+import com.jackwink.tweakable.types.TweakableInteger;
 import com.jackwink.tweakable.types.TweakableString;
 
 import java.lang.reflect.Constructor;
@@ -38,6 +40,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
     static {
         mSupportedTypes.add(boolean.class);
         mSupportedTypes.add(String.class);
+        mSupportedTypes.add(Integer.class);
     }
 
     public PreferenceBuilder() {
@@ -113,7 +116,11 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             return build(ListPreference.class);
         } else if (mType.equals(String.class)) {
             return build(EditTextPreference.class);
+        } else if (mType.equals(Integer.class)) {
+            return build(NumberPickerPreference.class);
         }
+
+        Log.i(TAG, "What?: " + mType.getName());
         return null;
     }
 
@@ -159,6 +166,13 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
                 lp.setEntries((String[]) getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
                 lp.setEntryValues((String[])
                         getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
+            } else if (cls.equals(NumberPickerPreference.class)) {
+                NumberPickerPreference pref = (NumberPickerPreference) preference;
+                pref.setMaxValue((Integer)
+                        getRequiredAttribute(TweakableInteger.BUNDLE_MAX_VALUE_KEY));
+                pref.setMinValue((Integer)
+                        getRequiredAttribute(TweakableInteger.BUNDLE_MIN_VALUE_KEY));
+                pref.setWraps(true);
             }
 
             /* Non-User-Configurable Attributes */

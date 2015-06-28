@@ -1,7 +1,5 @@
 package com.jackwink.tweakable.types;
 
-import java.lang.annotation.Annotation;
-
 /**
  *
  */

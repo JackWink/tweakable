@@ -11,7 +11,9 @@ import android.util.Log;
 import com.jackwink.tweakable.binders.AbstractValueBinder;
 
 import com.jackwink.tweakable.binders.BooleanValueBinder;
+import com.jackwink.tweakable.binders.IntegerValueBinder;
 import com.jackwink.tweakable.binders.StringValueBinder;
+import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
@@ -144,6 +146,11 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                 mPreferences.put(key, new BooleanValueBinder(field));
             } else if (field.getType().equals(String.class)) {
                 mPreferences.put(key, new StringValueBinder(field));
+            } else if (field.getType().equals(Integer.class) || field.getType().equals(int.class)) {
+                mPreferences.put(key, new IntegerValueBinder(field));
+            } else {
+                throw new FailedToBuildPreferenceException(
+                        "Could not create value binder for " + field.getType().toString());
             }
         } catch (Exception error) {
             error.printStackTrace();
@@ -157,6 +164,8 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
             ((BooleanValueBinder) binder).bindValue(sharedPreferences.getBoolean(key, false));
         } else if (binder.getType().equals(String.class)) {
             ((StringValueBinder) binder).bindValue(sharedPreferences.getString(key, ""));
+        } else if (binder.getType().equals(Integer.class)) {
+            ((IntegerValueBinder) binder).bindValue(sharedPreferences.getInt(key, 0));
         }
     }
 

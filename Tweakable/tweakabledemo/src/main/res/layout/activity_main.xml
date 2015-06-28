@@ -48,4 +48,18 @@
         android:layout_below="@+id/stringOptions1View"
         android:paddingTop="20dp" />
 
+    <TextView
+        android:id="@+id/intOptions1View"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/stringOptions2View"
+        android:paddingTop="20dp" />
+
+    <TextView
+        android:id="@+id/intOptions2View"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/intOptions1View"
+        android:paddingTop="20dp" />
+
 </RelativeLayout>
