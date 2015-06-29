@@ -61,15 +61,14 @@ Once in your Android app, you can annotate any public static boolean or string o
                 offSummary = "Feature 1 Disabled", defaultsTo = true)
     public static boolean defaultsTo;
 
-    @TwkString(screen = "Subscreen 1", Category = "Category 1", title = "Selectable String",
+    @TwkString(category = "Category 1", title = "Selectable String",
                 options = {"Pick me!", "Or me!", "No, me!"}, defaultsTo = "Pick me!")
     public static String selectableString;
     
-    @TwkString(screen = "Subscreen 1", Category = "Category 1", title = "Editable String",
-                defaultsTo = "Edit Me!")
+    @TwkString(category = "Category 1", title = "Editable String", defaultsTo = "Edit Me!")
     public static String editableString;
     
-    @TwkInteger(Category = "Integer Category", title = "Pick a number", defaultsTo = 50, 
+    @TwkInteger(category = "Integer Category", title = "Pick a number", defaultsTo = 50, 
                 minValue = 0, maxValue = 100)
     public static int someInteger;
 
