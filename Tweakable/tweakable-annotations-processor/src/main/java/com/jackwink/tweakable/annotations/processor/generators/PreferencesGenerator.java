@@ -26,11 +26,8 @@ import javax.annotation.processing.Filer;
  *  Generates a java class used by the {@link TweaksFragment}
  */
 public class PreferencesGenerator {
-    private static final String TAG = PreferencesGenerator.class.getSimpleName();
-
     private static TypeName BUNDLE_TYPE = ClassName.get("android.os", "Bundle");
 
-    public static final String ROOT_SCREEN_TITLE = "Tweakable Values";
     public static final String ROOT_SCREEN_KEY = "tweakable-values-root-screen";
     public static final String ROOT_CATEGORY_KEY = "tweakable-values-root-category";
 

@@ -47,7 +47,6 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
 
         shakeDetector = new ShakeDetector(this);
         Tweakable.init(this);
-        hearShake();
     }
 
 
