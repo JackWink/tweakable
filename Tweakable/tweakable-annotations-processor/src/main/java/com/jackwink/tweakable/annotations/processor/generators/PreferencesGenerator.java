@@ -217,19 +217,11 @@ public class PreferencesGenerator {
                     .addStatement(addString, TweakableBoolean.BUNDLE_OFF_SUMMARY_KEY,
                             ((TweakableBoolean) value).getOffSummary())
                     .addStatement(addString, TweakableBoolean.BUNDLE_ON_SUMMARY_KEY,
-                            ((TweakableBoolean) value).getOnSummary())
-                    .addStatement(bundleName + ".putBoolean($S, $L)",
-                            TweakableBoolean.BUNDLE_DEFAULT_VALUE_KEY,
-                            ((TweakableBoolean) value).getValue());
+                            ((TweakableBoolean) value).getOnSummary());
         } else if (value.getType().equals(String.class)) {
             addStringArrayToBundle(builder, bundleName, TweakableString.BUNDLE_OPTIONS_KEY,
                     ((TweakableString) value).getOptions());
-            builder.addStatement(addString, TweakableString.BUNDLE_DEFAULT_VALUE_KEY,
-                    ((TweakableString) value).getValue());
         } else if (value.getType().equals(Integer.class)) {
-            builder.addStatement(bundleName + ".putInt($S, $L)",
-                    AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY,
-                    ((TweakableInteger) value).getValue());
             builder.addStatement(bundleName + ".putInt($S, $L)",
                     TweakableInteger.BUNDLE_MAX_VALUE_KEY, ((TweakableInteger) value).getMaxValue());
             builder.addStatement(bundleName + ".putInt($S, $L)",

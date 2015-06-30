@@ -4,7 +4,6 @@ package com.jackwink.tweakable.types;
  *
  */
 public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
-    public static final String BUNDLE_DEFAULT_VALUE_KEY = "defaultsTo";
     public static final String BUNDLE_KEYATTR_KEY = "key";
     public static final String BUNDLE_TITLE_KEY = "title";
     public static final String BUNDLE_SUMMARY_KEY = "summary";

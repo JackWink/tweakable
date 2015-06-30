@@ -8,18 +8,11 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
-import com.jackwink.tweakable.binders.AbstractValueBinder;
-
-import com.jackwink.tweakable.binders.BooleanValueBinder;
-import com.jackwink.tweakable.binders.IntegerValueBinder;
-import com.jackwink.tweakable.binders.StringValueBinder;
-import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
@@ -31,7 +24,6 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
 
     LinkedHashMap<String, PreferenceScreen> mScreens = new LinkedHashMap<>();
     LinkedHashMap<String, PreferenceCategory> mCategories = new LinkedHashMap<>();
-    LinkedHashMap<String, AbstractValueBinder> mPreferences = new LinkedHashMap<>();
 
     private PreferenceAnnotationProcessor mProcessor;
 
@@ -88,31 +80,17 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
 
         /* Generate all the preferences */
         for (Bundle bundle : mProcessor.getDeclaredPreferences()) {
-            Class cls = null;
-            String typeInfo = bundle.getString(AbstractTweakableValue.BUNDLE_TYPEINFO_KEY);
-            try {
-                cls = Class.forName(typeInfo);
-            } catch (ClassNotFoundException e) {
-                if (typeInfo.equals(boolean.class.getName())) {
-                    cls = boolean.class;
-                } else {
-                    Log.e(TAG, "Class not found: " + typeInfo);
-                    e.printStackTrace();
-                    continue;
-                }
-            }
-
+            String key = bundle.getString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
             //noinspection unchecked
             Preference preference = new PreferenceBuilder()
                     .setBundle(bundle)
                     .setContext(getActivity())
-                    .setType(cls)
+                    .setType(Tweakable.getType(key))
                     .build();
 
             String categoryKey = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
             Log.d(TAG, "Adding preference '" + preference.getTitle() + "' to " + categoryKey);
             mCategories.get(categoryKey).addPreference(preference);
-            createValueBinder(bundle.getString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY));
         }
 
         setPreferenceScreen(getRootScreen());
@@ -134,39 +112,9 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    private void createValueBinder(String key) {
-        String fieldName = key.substring(key.lastIndexOf('.') + 1);
-        String clsName = key.substring(0, key.lastIndexOf('.'));
-
-        Field field = null;
-        try {
-            field = Class.forName(clsName).getDeclaredField(fieldName);
-
-            if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
-                mPreferences.put(key, new BooleanValueBinder(field));
-            } else if (field.getType().equals(String.class)) {
-                mPreferences.put(key, new StringValueBinder(field));
-            } else if (field.getType().equals(Integer.class) || field.getType().equals(int.class)) {
-                mPreferences.put(key, new IntegerValueBinder(field));
-            } else {
-                throw new FailedToBuildPreferenceException(
-                        "Could not create value binder for " + field.getType().toString());
-            }
-        } catch (Exception error) {
-            error.printStackTrace();
-        }
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-       AbstractValueBinder binder = mPreferences.get(key);
-        if (binder.getType().equals(Boolean.class)) {
-            ((BooleanValueBinder) binder).bindValue(sharedPreferences.getBoolean(key, false));
-        } else if (binder.getType().equals(String.class)) {
-            ((StringValueBinder) binder).bindValue(sharedPreferences.getString(key, ""));
-        } else if (binder.getType().equals(Integer.class)) {
-            ((IntegerValueBinder) binder).bindValue(sharedPreferences.getInt(key, 0));
-        }
+       Tweakable.bindValue(key, sharedPreferences.getAll().get(key));
     }
 
     /**

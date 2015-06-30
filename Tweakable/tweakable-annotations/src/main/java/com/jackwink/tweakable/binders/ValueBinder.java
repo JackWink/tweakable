@@ -10,4 +10,6 @@ public interface ValueBinder<T> {
     void bindValue(T value);
 
     Class<T> getType();
+
+    T getValue();
 }

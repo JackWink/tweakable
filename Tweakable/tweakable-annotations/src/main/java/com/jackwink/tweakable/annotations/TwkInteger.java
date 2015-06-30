@@ -25,9 +25,6 @@ public @interface TwkInteger {
     // Description of the value
     String summary() default "";
 
-    // Default value of the object
-    int defaultsTo() default 0;
-
     int maxValue() default Integer.MAX_VALUE;
 
     // Note: Cannot be negative :(

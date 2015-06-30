@@ -5,10 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.jackwink.tweakable.binders.AbstractValueBinder;
+import com.jackwink.tweakable.binders.BooleanValueBinder;
+import com.jackwink.tweakable.binders.IntegerValueBinder;
+import com.jackwink.tweakable.binders.StringValueBinder;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
 
 /**
  * Tweakable values and Feature Flags for Android.
@@ -28,6 +33,9 @@ public class Tweakable {
     private static String mSharedPreferencesName;
     private static SharedPreferences mSharedPreferences;
 
+    private static LinkedHashMap<String, AbstractValueBinder> mValueBinders =
+            new LinkedHashMap<>();
+
     /**
      * Binds the default values (or saved values) to all annotated fields.
      *
@@ -38,72 +46,55 @@ public class Tweakable {
         mSharedPreferences = context.getSharedPreferences(mSharedPreferencesName,
                 Context.MODE_PRIVATE);
         for (Bundle bundle: getPreferences().getDeclaredPreferences()) {
-            Class cls = null;
-            String typeInfo = bundle.getString(AbstractTweakableValue.BUNDLE_TYPEINFO_KEY);
-            try {
-                cls = Class.forName(typeInfo);
-            } catch (ClassNotFoundException e) {
-                if (typeInfo.equals(boolean.class.getName())) {
-                    cls = boolean.class;
-                } else if (typeInfo.equals(int.class.getName())) {
-                    cls = int.class;
-                } else {
-                    Log.e(TAG, "Class not found: " + typeInfo);
-                    e.printStackTrace();
-                    continue;
-                }
-            }
-
-            /* Create default entries if they don't exist */
             String preferenceKey = bundle.getString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
-            if (!mSharedPreferences.contains(preferenceKey)) {
-                // Create entry
-                if (cls.equals(boolean.class) || cls.equals(Boolean.class)) {
-                    mSharedPreferences.edit()
-                            .putBoolean(preferenceKey, bundle.getBoolean(
-                                    AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
-                            .commit();
-                } else if (cls.equals(int.class) || cls.equals(Integer.class)) {
-                    mSharedPreferences.edit()
-                            .putInt(preferenceKey, bundle.getInt(
-                                    AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
-                            .commit();
-                } else if (cls.equals(String.class)) {
-                    mSharedPreferences.edit()
-                            .putString(preferenceKey, bundle.getString(
-                                    AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY))
-                            .commit();
-                }
-            }
 
             /* Set default / saved values init */
             String fieldName = preferenceKey.substring(preferenceKey.lastIndexOf('.') + 1);
             String clsName = preferenceKey.substring(0, preferenceKey.lastIndexOf('.'));
             Log.i(TAG, "Updating '" + clsName + "' field: " + fieldName);
 
+            AbstractValueBinder binder = null;
             Field field = null;
             try {
                 field = Class.forName(clsName).getDeclaredField(fieldName);
 
-                if (field.getType().equals(boolean.class)) {
-                    field.setBoolean(null, mSharedPreferences.getBoolean(preferenceKey, false));
-                } else if (field.getType().equals(Boolean.class)) {
-                    field.set(null, mSharedPreferences.getBoolean(preferenceKey, false));
-                } else if (field.getType().equals(int.class)) {
-                    field.setInt(null, mSharedPreferences.getInt(preferenceKey, 0));
-                } else if (field.getType().equals(Integer.class)) {
-                    field.set(null, mSharedPreferences.getInt(preferenceKey, 0));
+                if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
+                    binder = new BooleanValueBinder(field);
+                    ((BooleanValueBinder) binder).bindValue(mSharedPreferences.getBoolean(
+                            preferenceKey, (boolean) binder.getValue()));
+                } else if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
+                    binder = new IntegerValueBinder(field);
+                    ((IntegerValueBinder) binder).bindValue(mSharedPreferences.getInt(preferenceKey,
+                            (int) binder.getValue()));
                 } else if (field.getType().equals(String.class)) {
-                    field.set(null, mSharedPreferences.getString(preferenceKey, ""));
+                    binder = new StringValueBinder(field);
+                    ((StringValueBinder) binder).bindValue(mSharedPreferences.getString(
+                            preferenceKey, (String) binder.getValue()));
+                } else {
+                    throw new FailedToBuildPreferenceException(
+                            "No value binder exists for: " + field.getType().toString());
                 }
-            } catch (ClassNotFoundException error) {
-                error.printStackTrace();
-            } catch (NoSuchFieldException error) {
-                error.printStackTrace();
-            } catch (IllegalAccessException error) {
-                error.printStackTrace();
+                Log.i(TAG, "Value: " + binder.getValue());
+                mValueBinders.put(preferenceKey, binder);
+            } catch (Exception error) {
+                throw new FailedToBuildPreferenceException("Failed to build value binders.", error);
             }
         }
+    }
+
+    protected static void bindValue(String key, Object value) {
+        if (mValueBinders.containsKey(key)) {
+            //noinspection unchecked
+            mValueBinders.get(key).bindValue(value);
+        }
+    }
+
+    public static Class getType(String key) {
+        return mValueBinders.get(key).getType();
+    }
+
+    public static Object getValue(String key) {
+        return mValueBinders.get(key).getValue();
     }
 
     /**

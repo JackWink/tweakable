@@ -58,19 +58,19 @@ Once in your Android app, you can annotate any public static boolean or string o
 
     @TwkBoolean(screen = "Subscreen 1", category = "Category 1", 
                 title = "Feature 1", onSummary = "Feature 1 Enabled!", 
-                offSummary = "Feature 1 Disabled", defaultsTo = true)
-    public static boolean defaultsTo;
+                offSummary = "Feature 1 Disabled")
+    public static boolean defaultsTo = true;
 
     @TwkString(category = "Category 1", title = "Selectable String",
-                options = {"Pick me!", "Or me!", "No, me!"}, defaultsTo = "Pick me!")
-    public static String selectableString;
+                options = {"Pick me!", "Or me!", "No, me!"})
+    public static String selectableString = "Pick me!";
     
-    @TwkString(category = "Category 1", title = "Editable String", defaultsTo = "Edit Me!")
-    public static String editableString;
+    @TwkString(category = "Category 1", title = "Editable String")
+    public static String editableString = "Edit me!";
     
-    @TwkInteger(category = "Integer Category", title = "Pick a number", defaultsTo = 50, 
+    @TwkInteger(category = "Integer Category", title = "Pick a number", 
                 minValue = 0, maxValue = 100)
-    public static int someInteger;
+    public static int someInteger = 50;
 
 Call `Tweakable.init(Context context)` when the app starts, then display an instance of the 
 `TweaksFragment` and your preferences will have been generated.
@@ -115,6 +115,7 @@ v0.0.2
         updated as they change.
 * 6/27: Most dead/redundent code is removed, still room for improvement.
 * 6/27: Tweakable integers are a thing now 
+* 6/29: API Change - default values are the values of the field at runtime
 
 ## Thanks / Attributions
 

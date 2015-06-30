@@ -8,6 +8,7 @@ import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.util.Log;
 
+import com.jackwink.tweakable.Tweakable;
 import com.jackwink.tweakable.controls.NumberPickerPreference;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
@@ -27,8 +28,6 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
     public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
     public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
     public static final String BUNDLE_SUMMARY_KEY = AbstractTweakableValue.BUNDLE_SUMMARY_KEY;
-    public static final String BUNDLE_DEFAULT_VALUE_KEY =
-            AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY;
 
     private Context mContext = null;
     private Class<T> mType = null;
@@ -52,7 +51,6 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
      * Also uses the following for all preferences:
      *
      * <ul>
-     *     <li>{@link AbstractTweakableValue#BUNDLE_DEFAULT_VALUE_KEY}</li>
      *     <li>{@link AbstractTweakableValue#BUNDLE_SUMMARY_KEY}</li>
      * </ul>
      *
@@ -103,7 +101,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
         if (mType.equals(Boolean.class) || mType.equals(boolean.class)) {
             preference = build(SwitchPreference.class);
             ((SwitchPreference) preference).setChecked((boolean)
-                    getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+                    Tweakable.getValue((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY)));
             ((SwitchPreference) preference).setSummaryOn((String)
                     getOptionalAttribute(TweakableBoolean.BUNDLE_ON_SUMMARY_KEY));
             ((SwitchPreference) preference).setSummaryOff((String)
@@ -117,7 +115,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             if (options.length != 0) {
                 preference = build(ListPreference.class);
                 ((ListPreference) preference).setValue((String)
-                        getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+                        Tweakable.getValue((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY)));
                 ((ListPreference) preference).setEntries((String[])
                         getRequiredAttribute(TweakableString.BUNDLE_OPTIONS_KEY));
                 ((ListPreference) preference).setEntryValues((String[])
@@ -125,7 +123,7 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             } else {
                 preference = build(EditTextPreference.class);
                 ((EditTextPreference) preference).setText((String)
-                        getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+                        Tweakable.getValue((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY)));
             }
         } else if (mType.equals(Integer.class) || mType.equals(int.class)) {
             preference = build(NumberPickerPreference.class);
@@ -157,7 +155,8 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             preference.setKey((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY));
             preference.setTitle((CharSequence) getRequiredAttribute(BUNDLE_TITLE_KEY));
             preference.setSummary((String) getRequiredAttribute(BUNDLE_SUMMARY_KEY));
-            preference.setDefaultValue(getRequiredAttribute(BUNDLE_DEFAULT_VALUE_KEY));
+            preference.setDefaultValue(Tweakable.getValue((String)
+                    getRequiredAttribute(BUNDLE_KEYATTR_KEY)));
             preference.setPersistent(true);
         } catch (InstantiationException error) {
             Log.e(TAG, "InstantiationException!");

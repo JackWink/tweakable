@@ -14,32 +14,32 @@ public class Settings {
     private static final String STRINGS_CATEGORY = "String Options";
     private static final String INTS_CATEGORY = "Integer Options";
 
-    @TwkBoolean(category = FEATURE_FLAG_CATEGORY, title = "Feature Flag 1", defaultsTo = true)
-    public static boolean featureFlag;
+    @TwkBoolean(category = FEATURE_FLAG_CATEGORY, title = "Feature Flag 1")
+    public static boolean featureFlag = false;
 
     @TwkBoolean(category = FEATURE_FLAG_CATEGORY, title = "Feature Flag 2",
             onSummary = "Feature 2 enabled!", offSummary = "feature 2 disabled :(")
-    public static boolean featureFlag2;
+    public static boolean featureFlag2 = true;
 
     @TwkBoolean(screen = SUBSCREEN, category = SUBCATEGORY, title = "Feature Flag 3",
             onSummary = "Feature 3 enabled!", offSummary = "Feature 3 disabled :(")
-    public static Boolean featureFlag3;
+    public static Boolean featureFlag3 = true;
 
-    @TwkBoolean(screen = SUBSCREEN, category = SUBCATEGORY, defaultsTo = true)
-    public static boolean featureFlag4;
+    @TwkBoolean(screen = SUBSCREEN, category = SUBCATEGORY)
+    public static boolean featureFlag4 = false;
 
     @TwkString(category = STRINGS_CATEGORY, title = "Selectable Strings",
-            options = {"Thing 1", "Thing 2", "Thing 3"}, defaultsTo = "Thing 1")
-    public static String stringOptions1;
+            options = {"Thing 1", "Thing 2", "Thing 3"})
+    public static String stringOptions1 = "Thing 2";
 
-    @TwkString(category = STRINGS_CATEGORY, title = "Editable Strings", defaultsTo = "Edit me!")
-    public static String stringOptions2;
+    @TwkString(category = STRINGS_CATEGORY, title = "Editable Strings")
+    public static String stringOptions2 = "woooo!";
 
-    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer", defaultsTo = 100)
-    public static int intOptions1;
+    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer")
+    public static int intOptions1 = 20;
 
-    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer with range", defaultsTo = 15,
-                maxValue = 100, minValue = 10)
-    public static Integer intOptions2;
+    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer with range", maxValue = 100,
+            minValue = 10)
+    public static Integer intOptions2 = 30;
 
 }

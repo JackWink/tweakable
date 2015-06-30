@@ -28,9 +28,6 @@ public @interface TwkString {
 
     String summary() default "";
 
-    // Default value of the object
-    String defaultsTo() default "";
-
     // If left to an empty array, this will be an editable text field.
     String[] options() default {};
 }

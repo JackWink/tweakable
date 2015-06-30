@@ -33,11 +33,6 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
     }
 
     @Override
-    public Boolean getValue() {
-        return mParsedAnnotation.defaultsTo();
-    }
-
-    @Override
     public Class<Boolean> getType() {
         return Boolean.class;
     }

@@ -25,9 +25,6 @@ public @interface TwkBoolean {
     // If string is empty, this will use the field name.
     String title() default "";
 
-    // Default value of the object
-    boolean defaultsTo() default false;
-
     String summary() default "";
 
     String onSummary() default "";

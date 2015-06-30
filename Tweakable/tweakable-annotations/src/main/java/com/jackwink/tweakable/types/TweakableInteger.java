@@ -25,11 +25,6 @@ public class TweakableInteger extends AbstractTweakableValue<Integer> {
         return Integer.class;
     }
 
-    @Override
-    public Integer getValue() {
-        return mParsedAnnotation.defaultsTo();
-    }
-
     public static TweakableInteger parse(String className, String fieldName, TwkInteger annotation) {
         TweakableInteger returnValue = new TweakableInteger();
 

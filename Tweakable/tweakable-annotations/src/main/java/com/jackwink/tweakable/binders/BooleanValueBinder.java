@@ -1,6 +1,8 @@
 package com.jackwink.tweakable.binders;
 
 
+import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
+
 import java.lang.reflect.Field;
 
 /**
@@ -14,6 +16,22 @@ public class BooleanValueBinder extends AbstractValueBinder<Boolean> {
 
     public Class<Boolean> getType() {
         return Boolean.class;
+    }
+
+    @Override
+    public Boolean getValue() {
+        try {
+            if (mField.getType().equals(boolean.class)) {
+                return mField.getBoolean(null);
+            } else if (mField.getType().equals(Boolean.class)) {
+                return (Boolean) mField.get(null);
+            }
+            throw new FailedToBuildPreferenceException(
+                    "Field " + mField.getName() + " is not a boolean.");
+        } catch (IllegalAccessException e) {
+            throw new FailedToBuildPreferenceException(
+                    "Field " + mField.getName() + " is protected.", e);
+        }
     }
 
     @Override

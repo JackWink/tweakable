@@ -16,11 +16,6 @@ public class TweakableString  extends AbstractTweakableValue<String> {
         return String.class;
     }
 
-    @Override
-    public String getValue() {
-        return mParsedAnnotation.defaultsTo();
-    }
-
     public String[] getOptions() {
         return mParsedAnnotation.options();
     }
