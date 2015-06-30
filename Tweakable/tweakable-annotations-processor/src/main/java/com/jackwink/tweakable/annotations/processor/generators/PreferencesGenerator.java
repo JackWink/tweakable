@@ -203,11 +203,8 @@ public class PreferencesGenerator {
                         value.getSummary())
                 .addStatement(addString, AbstractTweakableValue.BUNDLE_CATEGORY_KEY,
                         getCategoryKey(value.getCategory(), value.getScreen()))
-
                 .addStatement(addString, AbstractTweakableValue.BUNDLE_SCREEN_KEY,
-                        getScreenKey(value.getScreen()))
-                .addStatement(addString, AbstractTweakableValue.BUNDLE_TYPEINFO_KEY,
-                        value.getType().getName());
+                        getScreenKey(value.getScreen()));
 
         if (value.getType().equals(Boolean.class)) {
             builder.addStatement(addString, TweakableBoolean.BUNDLE_OFF_LABEL_KEY,

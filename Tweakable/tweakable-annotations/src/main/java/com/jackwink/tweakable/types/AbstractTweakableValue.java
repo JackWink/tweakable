@@ -7,7 +7,6 @@ public abstract class AbstractTweakableValue<T> implements TweakableValue<T> {
     public static final String BUNDLE_KEYATTR_KEY = "key";
     public static final String BUNDLE_TITLE_KEY = "title";
     public static final String BUNDLE_SUMMARY_KEY = "summary";
-    public static final String BUNDLE_TYPEINFO_KEY = "type_information";
 
     public static final String BUNDLE_CATEGORY_KEY = "category";
     public static final String BUNDLE_SCREEN_KEY = "screen";
