@@ -86,6 +86,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
                     .setBundle(bundle)
                     .setContext(getActivity())
                     .setType(Tweakable.getType(key))
+                    .setDefaultValue(Tweakable.getValue(key))
                     .build();
 
             String categoryKey = bundle.getString(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);

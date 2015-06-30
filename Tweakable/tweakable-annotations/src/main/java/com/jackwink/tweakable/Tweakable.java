@@ -89,11 +89,11 @@ public class Tweakable {
         }
     }
 
-    public static Class getType(String key) {
+    protected static Class getType(String key) {
         return mValueBinders.get(key).getType();
     }
 
-    public static Object getValue(String key) {
+    protected static Object getValue(String key) {
         return mValueBinders.get(key).getValue();
     }
 
@@ -102,7 +102,7 @@ public class Tweakable {
      * be found. For internal use only!</p>
      * @return The generated {@link TweaksFragment.PreferenceAnnotationProcessor}
      */
-    static protected TweaksFragment.PreferenceAnnotationProcessor getPreferences() {
+    protected static TweaksFragment.PreferenceAnnotationProcessor getPreferences() {
         try {
             return (TweaksFragment.PreferenceAnnotationProcessor)
                     Class.forName("com.jackwink.tweakable.GeneratedPreferences").newInstance();
