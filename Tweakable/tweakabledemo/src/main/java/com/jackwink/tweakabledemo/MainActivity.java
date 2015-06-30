@@ -1,18 +1,14 @@
 package com.jackwink.tweakabledemo;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jackwink.tweakable.Tweakable;
-import com.squareup.seismic.ShakeDetector;
 
-public class MainActivity extends Activity implements ShakeDetector.Listener {
+public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     TextView featureFlagView;
@@ -27,7 +23,6 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
     TextView intOptions1View;
     TextView intOptions2View;
 
-    ShakeDetector shakeDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +40,8 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
         intOptions1View = (TextView) findViewById(R.id.intOptions1View);
         intOptions2View = (TextView) findViewById(R.id.intOptions2View);
 
-        shakeDetector = new ShakeDetector(this);
         Tweakable.init(this);
-        hearShake();
     }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        shakeDetector.stop();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,17 +78,6 @@ public class MainActivity extends Activity implements ShakeDetector.Listener {
 
         intOptions1View.setText("Value: " + Settings.intOptions1);
         intOptions2View.setText("Value: " + Settings.intOptions2);
-
-        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        shakeDetector.start(sensorManager);
-    }
-
-    @Override
-    public void hearShake() {
-        Log.i(TAG, "Shake!");
-        shakeDetector.stop();
-        Intent settingsIntent = new Intent(this, SettingsActivity.class);
-        startActivity(settingsIntent);
     }
 
 }

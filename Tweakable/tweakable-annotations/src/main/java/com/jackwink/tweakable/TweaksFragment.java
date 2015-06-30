@@ -40,8 +40,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
 
         mProcessor = Tweakable.getPreferences();
         createRootElements();
-        Log.i(TAG, "PrefName: " + getPreferenceManager().getSharedPreferencesName());
-        Log.i(TAG, "PrefMode: " + getPreferenceManager().getSharedPreferencesMode());
+
         /* Generate all the subscreens */
         for (Bundle bundle : mProcessor.getDeclaredScreens()) {
             PreferenceScreen screen = new PreferenceScreenBuilder()

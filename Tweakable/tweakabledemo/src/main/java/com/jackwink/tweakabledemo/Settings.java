@@ -4,9 +4,6 @@ import com.jackwink.tweakable.annotations.TwkBoolean;
 import com.jackwink.tweakable.annotations.TwkInteger;
 import com.jackwink.tweakable.annotations.TwkString;
 
-/**
- *
- */
 public class Settings {
     private static final String SUBSCREEN = "Nested Screen";
     private static final String SUBCATEGORY = "Subscreen Feature Flags";

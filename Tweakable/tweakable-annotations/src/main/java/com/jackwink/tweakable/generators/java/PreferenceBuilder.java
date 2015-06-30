@@ -142,7 +142,8 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
                     getRequiredAttribute(TweakableInteger.BUNDLE_MIN_VALUE_KEY));
             ((NumberPickerPreference) preference).setWraps(true);
         } else {
-            throw new FailedToBuildPreferenceException("Type: " + mType.getName() + " not supported.");
+            throw new FailedToBuildPreferenceException(
+                    "Type: " + mType.getName() + " not supported.");
         }
         return preference;
     }

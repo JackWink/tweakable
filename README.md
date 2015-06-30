@@ -50,8 +50,6 @@ Here's a sample gradle file including the project locally:
 
         compile project(':tweakable-annotations')
         apt project(':tweakable-annotations-processor')
-
-        compile 'com.squareup:seismic:1.0.1'
     }
 
 Once in your Android app, you can annotate any public static boolean or string or integer field:
@@ -72,8 +70,8 @@ Once in your Android app, you can annotate any public static boolean or string o
                 minValue = 0, maxValue = 100)
     public static int someInteger = 50;
 
-Call `Tweakable.init(Context context)` when the app starts, then display an instance of the 
-`TweaksFragment` and your preferences will have been generated.
+Call `Tweakable.init(Context context)` when the app starts and then shake your phone to bring up the
+tweakable value menu.
 
 When you call init, all the default values (or present values) will be injected statically, so
 you can access them whenever. For example, if the above annotations were in a class called `Settings`,
@@ -116,8 +114,10 @@ v0.0.2
 * 6/27: Most dead/redundent code is removed, still room for improvement.
 * 6/27: Tweakable integers are a thing now 
 * 6/29: API Change - default values are the values of the field at runtime
+* 6/29: API Change - Bring shake detection into library instead of leaving it to the end-user.
 
 ## Thanks / Attributions
 
 * [Tweaks](https://github.com/facebook/Tweaks) for the initial inspiration. 
 * [Number picker](https://github.com/vanniktech/VNTNumberPickerPreference) taken and modified, thanks Vanniktech/Niklas Baudy!
+* [Seismic](https://github.com/square/seismic) for shake detection
