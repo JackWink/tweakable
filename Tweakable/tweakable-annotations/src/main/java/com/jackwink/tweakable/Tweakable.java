@@ -121,14 +121,14 @@ public class Tweakable {
         return mValueBinders.get(key).getValue();
     }
 
-    protected static void disableShakeListener() {
+    protected static synchronized void disableShakeListener() {
         mShakeDetector.stop();
+        mOnShakeEnabled = false;
     }
 
-    protected static void startShakeListener() {
-        if (mOnShakeEnabled) {
-            mShakeDetector.start(mSensorManager);
-        }
+    protected static synchronized void startShakeListener() {
+        mOnShakeEnabled = true;
+        mShakeDetector.start(mSensorManager);
     }
 
     /**
@@ -147,7 +147,7 @@ public class Tweakable {
 
     private static class TweakShakeListener implements ShakeDetector.Listener {
         @Override
-        public void hearShake() {
+        public synchronized void hearShake() {
             if (mOnShakeEnabled) {
                 Tweakable.disableShakeListener();
                 Intent settingsIntent = new Intent(mContext, TweaksActivity.class);

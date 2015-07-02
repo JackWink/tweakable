@@ -13,7 +13,7 @@ public class TweaksActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-    
+
     protected boolean isValidFragment(String fragment) {
         return fragment.equals("com.jackwink.tweakable.TweaksFragment");
     }
