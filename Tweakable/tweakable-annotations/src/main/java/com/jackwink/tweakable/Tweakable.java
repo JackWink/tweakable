@@ -109,8 +109,6 @@ public class Tweakable {
                 throw new FailedToBuildPreferenceException("Failed to build value binders.", error);
             }
         }
-
-        mShakeListener.hearShake();
     }
 
     protected static void bindValue(String key, Object value) {
