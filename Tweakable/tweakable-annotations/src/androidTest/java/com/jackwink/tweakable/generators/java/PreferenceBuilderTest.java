@@ -31,7 +31,6 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         bundle.putString(AbstractTweakableValue.BUNDLE_KEYATTR_KEY, key);
         bundle.putString(AbstractTweakableValue.BUNDLE_TITLE_KEY, title);
         bundle.putString(AbstractTweakableValue.BUNDLE_SUMMARY_KEY, summary);
-        bundle.putBoolean(AbstractTweakableValue.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
         bundle.putString(TweakableBoolean.BUNDLE_ON_SUMMARY_KEY, onSummary);
         bundle.putString(TweakableBoolean.BUNDLE_OFF_SUMMARY_KEY, offSummary);
         bundle.putString(TweakableBoolean.BUNDLE_ON_LABEL_KEY, onLabel);
@@ -39,6 +38,7 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         Preference preference = new PreferenceBuilder()
                 .setType(Boolean.class)
                 .setBundle(bundle)
+                .setDefaultValue(defaultValue)
                 .setContext(getContext())
                 .build();
 
@@ -67,10 +67,10 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
         bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
         bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
-        bundle.putBoolean(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
         Preference preference = new PreferenceBuilder()
                 .setType(Boolean.class)
                 .setBundle(bundle)
+                .setDefaultValue(defaultValue)
                 .setContext(getContext())
                 .build();
 
@@ -101,11 +101,11 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
         bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
         bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
-        bundle.putString(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
         bundle.putStringArray(TweakableString.BUNDLE_OPTIONS_KEY, options);
         Preference preference = new PreferenceBuilder()
                 .setType(String.class)
                 .setBundle(bundle)
+                .setDefaultValue(defaultValue)
                 .setContext(getContext())
                 .build();
 
@@ -134,11 +134,11 @@ public class PreferenceBuilderTest extends ApplicationTestCase<Application> {
         bundle.putString(PreferenceBuilder.BUNDLE_KEYATTR_KEY, key);
         bundle.putString(PreferenceBuilder.BUNDLE_TITLE_KEY, title);
         bundle.putString(PreferenceBuilder.BUNDLE_SUMMARY_KEY, summary);
-        bundle.putString(PreferenceBuilder.BUNDLE_DEFAULT_VALUE_KEY, defaultValue);
         bundle.putStringArray(TweakableString.BUNDLE_OPTIONS_KEY, options);
         Preference preference = new PreferenceBuilder()
                 .setType(String.class)
                 .setBundle(bundle)
+                .setDefaultValue(defaultValue)
                 .setContext(getContext())
                 .build();
 
