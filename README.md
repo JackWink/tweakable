@@ -84,7 +84,7 @@ shared preferences.
 
 ## Roadmap
 
-v0.0.1
+v0.0.1 - POC
 
 * ~~Generate preference views from bundle~~
 * ~~Make root preferences + categories come before sub-screens~~
