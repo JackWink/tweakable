@@ -9,9 +9,11 @@ import android.preference.SwitchPreference;
 import android.util.Log;
 
 import com.jackwink.tweakable.controls.NumberPickerPreference;
+import com.jackwink.tweakable.controls.SliderPreference;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
+import com.jackwink.tweakable.types.TweakableFloat;
 import com.jackwink.tweakable.types.TweakableInteger;
 import com.jackwink.tweakable.types.TweakableString;
 
@@ -141,6 +143,12 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             ((NumberPickerPreference) preference).setMinValue((Integer)
                     getRequiredAttribute(TweakableInteger.BUNDLE_MIN_VALUE_KEY));
             ((NumberPickerPreference) preference).setWraps(true);
+        } else if (mType.equals(Float.class) || mType.equals(float.class)) {
+            preference = build(SliderPreference.class);
+            ((SliderPreference) preference).setMaxValue((Float)
+                    getRequiredAttribute(TweakableFloat.BUNDLE_MAX_VALUE_KEY));
+            ((SliderPreference) preference).setMinValue((Float)
+                    getRequiredAttribute(TweakableFloat.BUNDLE_MIN_VALUE_KEY));
         } else {
             throw new FailedToBuildPreferenceException(
                     "Type: " + mType.getName() + " not supported.");

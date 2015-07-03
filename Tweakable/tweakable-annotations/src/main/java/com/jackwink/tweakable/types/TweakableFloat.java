@@ -1,32 +1,32 @@
 package com.jackwink.tweakable.types;
 
-import com.jackwink.tweakable.annotations.TwkInteger;
+import com.jackwink.tweakable.annotations.TwkFloat;
 
 /**
  *
  */
-public class TweakableInteger extends AbstractTweakableValue<Integer> {
+public class TweakableFloat extends AbstractTweakableValue<Float> {
 
     public static final String BUNDLE_MIN_VALUE_KEY = "min_value";
     public static final String BUNDLE_MAX_VALUE_KEY = "max_value";
 
-    private TwkInteger mParsedAnnotation;
+    private TwkFloat mParsedAnnotation;
 
-    public Integer getMaxValue() {
+    public Float getMaxValue() {
         return mParsedAnnotation.maxValue();
     }
 
-    public Integer getMinValue() {
+    public Float getMinValue() {
         return mParsedAnnotation.minValue();
     }
 
     @Override
-    public Class<Integer> getType() {
-        return Integer.class;
+    public Class<Float> getType() {
+        return Float.class;
     }
 
-    public static TweakableInteger parse(String className, String fieldName, TwkInteger annotation) {
-        TweakableInteger returnValue = new TweakableInteger();
+    public static TweakableFloat parse(String className, String fieldName, TwkFloat annotation) {
+        TweakableFloat returnValue = new TweakableFloat();
 
         /* Abstract Tweakable Values */
         returnValue.mKey = className + "." + fieldName;
@@ -35,7 +35,7 @@ public class TweakableInteger extends AbstractTweakableValue<Integer> {
         returnValue.mCategory = getDefaultString(annotation.category(), null);
         returnValue.mScreen = getDefaultString(annotation.screen(), null);
 
-        /* TweakableInteger */
+        /* TweakableFloat */
         returnValue.mParsedAnnotation = annotation;
         return returnValue;
     }

@@ -62,4 +62,11 @@
         android:layout_below="@+id/intOptions1View"
         android:paddingTop="20dp" />
 
+    <TextView
+        android:id="@+id/floatOptions1View"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/intOptions2View"
+        android:paddingTop="20dp" />
+
 </RelativeLayout>

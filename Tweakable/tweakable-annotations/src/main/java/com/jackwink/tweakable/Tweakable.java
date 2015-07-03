@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.jackwink.tweakable.binders.AbstractValueBinder;
 import com.jackwink.tweakable.binders.BooleanValueBinder;
+import com.jackwink.tweakable.binders.FloatValueBinder;
 import com.jackwink.tweakable.binders.IntegerValueBinder;
 import com.jackwink.tweakable.binders.StringValueBinder;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
@@ -94,6 +95,10 @@ public class Tweakable {
                     binder = new StringValueBinder(field);
                     ((StringValueBinder) binder).bindValue(mSharedPreferences.getString(
                             preferenceKey, (String) binder.getValue()));
+                } else if (field.getType().equals(Float.class) || field.getType().equals(float.class)) {
+                    binder = new FloatValueBinder(field);
+                    ((FloatValueBinder) binder).bindValue(mSharedPreferences.getFloat(
+                            preferenceKey, (Float) binder.getValue()));
                 } else {
                     throw new FailedToBuildPreferenceException(
                             "No value binder exists for: " + field.getType().toString());
@@ -104,6 +109,8 @@ public class Tweakable {
                 throw new FailedToBuildPreferenceException("Failed to build value binders.", error);
             }
         }
+
+        mShakeListener.hearShake();
     }
 
     protected static void bindValue(String key, Object value) {

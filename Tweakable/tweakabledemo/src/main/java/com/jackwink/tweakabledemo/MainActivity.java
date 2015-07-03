@@ -2,6 +2,7 @@ package com.jackwink.tweakabledemo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -23,6 +24,8 @@ public class MainActivity extends Activity {
     TextView intOptions1View;
     TextView intOptions2View;
 
+    TextView floatOptions1View;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,9 @@ public class MainActivity extends Activity {
 
         intOptions1View = (TextView) findViewById(R.id.intOptions1View);
         intOptions2View = (TextView) findViewById(R.id.intOptions2View);
+
+
+        floatOptions1View = (TextView) findViewById(R.id.floatOptions1View);
 
         Tweakable.init(this);
     }
@@ -76,8 +82,10 @@ public class MainActivity extends Activity {
         strOptions1View.setText("Selected option: " + Settings.stringOptions1);
         strOptions2View.setText("Written Value: " + Settings.stringOptions2);
 
-        intOptions1View.setText("Value: " + Settings.intOptions1);
-        intOptions2View.setText("Value: " + Settings.intOptions2);
+        intOptions1View.setText("Int 1: " + Settings.intOptions1);
+        intOptions2View.setText("Int 2: " + Settings.intOptions2);
+
+        floatOptions1View.setText("Float 1: " + Settings.floatOption1);
     }
 
 }

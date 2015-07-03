@@ -1,6 +1,7 @@
 package com.jackwink.tweakabledemo;
 
 import com.jackwink.tweakable.annotations.TwkBoolean;
+import com.jackwink.tweakable.annotations.TwkFloat;
 import com.jackwink.tweakable.annotations.TwkInteger;
 import com.jackwink.tweakable.annotations.TwkString;
 
@@ -10,6 +11,7 @@ public class Settings {
     private static final String FEATURE_FLAG_CATEGORY = "Feature Flags";
     private static final String STRINGS_CATEGORY = "String Options";
     private static final String INTS_CATEGORY = "Integer Options";
+    private static final String FLOATS_CATEGORY = "Float Options";
 
     @TwkBoolean(category = FEATURE_FLAG_CATEGORY, title = "Feature Flag 1")
     public static boolean featureFlag = false;
@@ -38,5 +40,9 @@ public class Settings {
     @TwkInteger(category = INTS_CATEGORY, title = "Select Integer with range", maxValue = 100,
             minValue = 10)
     public static Integer intOptions2 = 30;
+
+
+    @TwkFloat(category = FLOATS_CATEGORY, title = "Float Slider")
+    public static float floatOption1 = 0.0f;
 
 }

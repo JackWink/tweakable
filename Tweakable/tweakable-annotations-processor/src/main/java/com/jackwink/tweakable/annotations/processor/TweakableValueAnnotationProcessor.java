@@ -1,12 +1,14 @@
 package com.jackwink.tweakable.annotations.processor;
 
 import com.jackwink.tweakable.annotations.TwkBoolean;
+import com.jackwink.tweakable.annotations.TwkFloat;
 import com.jackwink.tweakable.annotations.TwkInteger;
 import com.jackwink.tweakable.annotations.TwkString;
 import com.jackwink.tweakable.annotations.processor.generators.PreferencesGenerator;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
+import com.jackwink.tweakable.types.TweakableFloat;
 import com.jackwink.tweakable.types.TweakableInteger;
 import com.jackwink.tweakable.types.TweakableString;
 
@@ -25,7 +27,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * Processes TweakableBooleans (and soon more!) to generate a class containing the app preferences
+ * Processes 'Twk' annotations to generate a class containing the app preferences
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class TweakableValueAnnotationProcessor extends AbstractProcessor {
@@ -39,6 +41,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
         types.add(TwkBoolean.class.getCanonicalName());
         types.add(TwkString.class.getCanonicalName());
         types.add(TwkInteger.class.getCanonicalName());
+        types.add(TwkFloat.class.getCanonicalName());
         return types;
     }
 
@@ -57,6 +60,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
         process(TwkBoolean.class, env);
         process(TwkString.class, env);
         process(TwkInteger.class, env);
+        process(TwkFloat.class, env);
         mPreferenceGenerator.build();
         built = true;
         return true;
@@ -87,6 +91,11 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
                 value = TweakableInteger.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkInteger.class));
+            } else if (type.getKind() == TypeKind.FLOAT
+                    || type.toString().equals(Float.class.getName())) {
+                value = TweakableFloat.parse(enclosingClass.getQualifiedName().toString(),
+                        element.getSimpleName().toString(),
+                        element.getAnnotation(TwkFloat.class));
             } else {
                 throw new FailedToBuildPreferenceException("Unsupported type: " +
                         type.toString());

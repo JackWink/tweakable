@@ -91,7 +91,7 @@ v0.0.1
 * ~~Inject boolean & Boolean values from shared preferences~~
 * ~~Inject Strings~~
 * ~~Inject int & Integer types~~
-* Inject float types 
+* ~~Inject float types~~
 * Add documentation
 * ~~Add usage samples~~
 

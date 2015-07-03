@@ -6,6 +6,7 @@ import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceScreenException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.jackwink.tweakable.types.TweakableBoolean;
+import com.jackwink.tweakable.types.TweakableFloat;
 import com.jackwink.tweakable.types.TweakableInteger;
 import com.jackwink.tweakable.types.TweakableString;
 import com.squareup.javapoet.ClassName;
@@ -223,6 +224,11 @@ public class PreferencesGenerator {
                     TweakableInteger.BUNDLE_MAX_VALUE_KEY, ((TweakableInteger) value).getMaxValue());
             builder.addStatement(bundleName + ".putInt($S, $L)",
                     TweakableInteger.BUNDLE_MIN_VALUE_KEY, ((TweakableInteger) value).getMinValue());
+        } else if (value.getType().equals(Float.class)) {
+            builder.addStatement(bundleName + ".putFloat($S, $Lf)",
+                    TweakableFloat.BUNDLE_MAX_VALUE_KEY, ((TweakableFloat) value).getMaxValue());
+            builder.addStatement(bundleName + ".putFloat($S, $Lf)",
+                    TweakableFloat.BUNDLE_MIN_VALUE_KEY, ((TweakableFloat) value).getMinValue());
         }
 
         builder.addStatement(mPreferenceSetName + ".add(" + bundleName + ")");
