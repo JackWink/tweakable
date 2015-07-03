@@ -52,7 +52,7 @@ Here's a sample gradle file including the project locally:
         apt project(':tweakable-annotations-processor')
     }
 
-Once in your Android app, you can annotate any public static boolean or string or integer field:
+Once in your Android app, you can annotate any public static boolean, string, integer or float field:
 
     @TwkBoolean(screen = "Subscreen 1", category = "Category 1", 
                 title = "Feature 1", onSummary = "Feature 1 Enabled!", 
@@ -69,6 +69,10 @@ Once in your Android app, you can annotate any public static boolean or string o
     @TwkInteger(category = "Integer Category", title = "Pick a number", 
                 minValue = 0, maxValue = 100)
     public static int someInteger = 50;
+
+    @TwkFloat(category = "Float Category", title = "Slide me", 
+                minValue = 0f, maxValue = 10f)
+    public static float someFloat = 2.5f;
 
 Call `Tweakable.init(Context context)` when the app starts and then shake your phone to bring up the
 tweakable value menu.
@@ -92,29 +96,26 @@ v0.0.1
 * ~~Inject Strings~~
 * ~~Inject int & Integer types~~
 * ~~Inject float types~~
-* Add documentation
+* Inject double types
+* Actions (call static methods)
 * ~~Add usage samples~~
+* Add documentation
+* Release?
 
-v0.0.2
+v0.0.2 - Stability
+
+* Minor refactors to make extensibility easier
+* Increase test coverage
+* Investigate/Implement small Java performance wins
+    * Cache bundles rather than generating each time
+    * Generate preference builders instead of bundles?
+* Investigate performance of XML vs Java generation
+
+v0.0.3 - Features
 
 * Inject String Arrays (multi-select)
 * Support injection for non-static fields
-* Actions (call static methods, or possibly non-static methods) 
-* Look into generating XML instead of java or look to generate more efficient java 
-
-## Progress
-
-* 6/19: Initial bundle structure + preference generation working
-* 6/20: Settings is generated at runtime, no injection yet -- might need to do build-time now
-* 6/23: Preferences generated at compile time, still no injection, and Android Studio is not a fan.
-* 6/23: Android studio has warmed up to the annotation processor
-* 6/23: Preferences are injected now, but only on opening/closing of 'TweaksFragment', need to fix. 
-* 6/27: Preferences are injected on init, library supports strings and boolean types, preferences are 
-        updated as they change.
-* 6/27: Most dead/redundent code is removed, still room for improvement.
-* 6/27: Tweakable integers are a thing now 
-* 6/29: API Change - default values are the values of the field at runtime
-* 6/29: API Change - Bring shake detection into library instead of leaving it to the end-user.
+* XML support?
 
 ## Thanks / Attributions
 
