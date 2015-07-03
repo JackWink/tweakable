@@ -1,4 +1,5 @@
 #Tweakable
+[![Build Status](https://travis-ci.org/JackWink/tweakable.svg?branch=master)](https://travis-ci.org/JackWink/tweakable)
 
 Feature flags and tweakable values for Android.
 
