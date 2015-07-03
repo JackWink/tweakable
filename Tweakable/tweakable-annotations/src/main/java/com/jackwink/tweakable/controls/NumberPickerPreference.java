@@ -20,12 +20,18 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 
 public class NumberPickerPreference extends DialogPreference {
+    private static final String TAG = NumberPickerPreference.class.getSimpleName();
+
     private static final int MIN_VALUE = 0;
     private static final int MAX_VALUE = 100;
     private static final boolean WRAP_SELECTOR_WHEEL = false;
@@ -33,6 +39,7 @@ public class NumberPickerPreference extends DialogPreference {
     private int mSelectedValue;
     private int mMinValue = MIN_VALUE;
     private int mMaxValue = MAX_VALUE;
+    private int mOriginalValue;
     private boolean mWrapSelectorWheel = WRAP_SELECTOR_WHEEL;
     private NumberPicker mNumberPicker;
 
@@ -54,8 +61,8 @@ public class NumberPickerPreference extends DialogPreference {
 
     @Override
     protected void onSetInitialValue(final boolean restoreValue, final Object defaultValue) {
-        mSelectedValue = restoreValue ? this.getPersistedInt(0) : (Integer) defaultValue;
-        this.updateSummary();
+        setSelectedValue(restoreValue ? getPersistedInt(0) : (Integer) defaultValue, false);
+        mOriginalValue = mSelectedValue;
     }
 
     @Override
@@ -66,16 +73,23 @@ public class NumberPickerPreference extends DialogPreference {
     @Override
     protected void onPrepareDialogBuilder(final Builder builder) {
         super.onPrepareDialogBuilder(builder);
-
-        mNumberPicker = new NumberPicker(this.getContext());
+        mNumberPicker = new NumberPicker(getContext());
         mNumberPicker.setMinValue(mMinValue);
         mNumberPicker.setMaxValue(mMaxValue);
         mNumberPicker.setValue(mSelectedValue);
         mNumberPicker.setWrapSelectorWheel(mWrapSelectorWheel);
-        mNumberPicker.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        mNumberPicker.setLayoutParams(new LinearLayout.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
+        for (int i = 0; i < mNumberPicker.getChildCount(); i++) {
+            View v = mNumberPicker.getChildAt(i);
+            if (v instanceof EditText) {
+                v.setOnKeyListener(new KeyListener());
+            }
+        }
         final LinearLayout linearLayout = new LinearLayout(this.getContext());
-        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         linearLayout.setGravity(Gravity.CENTER);
         linearLayout.addView(mNumberPicker);
 
@@ -84,14 +98,40 @@ public class NumberPickerPreference extends DialogPreference {
 
     @Override
     protected void onDialogClosed(final boolean positiveResult) {
-        if (positiveResult && this.shouldPersist()) {
-            mSelectedValue = mNumberPicker.getValue();
-            this.persistInt(mSelectedValue);
-            this.updateSummary();
+        if (positiveResult && shouldPersist()) {
+            setSelectedValue(mNumberPicker.getValue(), true);
+        } else {
+            setSelectedValue(getPersistedInt(mOriginalValue), false);
         }
     }
 
-    private void updateSummary() {
-        this.setSummary(Integer.toString(mSelectedValue));
+    private void setSelectedValue(int value, boolean persist) {
+        mSelectedValue = value;
+        if (persist) {
+            persistInt(mSelectedValue);
+        }
+        setSummary(Integer.toString(mSelectedValue));
     }
+
+    private class KeyListener implements View.OnKeyListener {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                String number = ((EditText) v).getText().toString();
+                if (number.isEmpty()) {
+                    setSelectedValue(mMinValue, false);
+                } else {
+                    int currentValue = Integer.valueOf(number);
+                    if (currentValue >= mMinValue) {
+                        setSelectedValue(Integer.valueOf(number), false);
+                        mNumberPicker.setValue(mSelectedValue);
+                    } else {
+                        setSelectedValue(mMinValue, false);
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
 }

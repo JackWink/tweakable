@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -107,6 +108,7 @@ public class Tweakable {
                 throw new FailedToBuildPreferenceException("Failed to build value binders.", error);
             }
         }
+
     }
 
     protected static void bindValue(String key, Object value) {

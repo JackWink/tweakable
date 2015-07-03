@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
+import com.jackwink.tweakable.Tweakable;
+
 /**
  *
  */
@@ -20,6 +22,8 @@ public class SliderPreference extends DialogPreference {
     private SeekBar mSlider;
     private int mSelectedValue;
 
+
+    private float mOriginalValue;
     private float mValue;
     private float mMinValue;
     private float mMaxValue;
@@ -42,6 +46,7 @@ public class SliderPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(final boolean restoreValue, final Object defaultValue) {
         setValue(restoreValue ? getPersistedFloat(0f) : (Float) defaultValue, false);
+        mOriginalValue = mValue;
     }
 
     @Override
@@ -70,10 +75,10 @@ public class SliderPreference extends DialogPreference {
 
     @Override
     protected void onDialogClosed(final boolean positiveResult) {
-        if (positiveResult && this.shouldPersist()) {
+        if (positiveResult && shouldPersist()) {
             setSelectedValue(mSlider.getProgress(), true);
         } else {
-            setValue(getPersistedFloat(0f), false);
+            setValue(getPersistedFloat(mOriginalValue), false);
         }
     }
 

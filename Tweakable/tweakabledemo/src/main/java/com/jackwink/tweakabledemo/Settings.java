@@ -42,7 +42,7 @@ public class Settings {
     public static Integer intOptions2 = 30;
 
 
-    @TwkFloat(category = FLOATS_CATEGORY, title = "Float Slider")
-    public static float floatOption1 = 0.0f;
+    @TwkFloat(category = FLOATS_CATEGORY, title = "Float Slider", minValue = 0f, maxValue = 200f)
+    public static float floatOption1 = 100f;
 
 }
