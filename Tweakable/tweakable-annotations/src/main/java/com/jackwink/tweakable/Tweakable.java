@@ -27,9 +27,7 @@ import java.util.LinkedHashMap;
  * <p>Call {@link Tweakable#init(Context)} to inject the default values
  * (or saved values from Preferences) on the start of your application or main activity.</p>
  *
- * <p>Later, show an instance of {@link TweaksFragment} to the user.  Upon updating the values
- * in the fragment, the updated values will be saved to {@link SharedPreferences} and the annotated
- * fields will be updated immediately.</p>
+ * <p>Shake your phone to pull up the generated settings!</p>
  */
 public class Tweakable {
     private static final String TAG = Tweakable.class.getSimpleName();
