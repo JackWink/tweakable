@@ -1,6 +1,7 @@
 package com.jackwink.tweakabledemo;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jackwink.tweakable.annotations.TwkAction;
 import com.jackwink.tweakable.annotations.TwkBoolean;
@@ -53,6 +54,6 @@ public class Settings {
 
     @TwkAction(category = "Actions", title = "Log something")
     public static void doSomething() {
-        Log.i(TAG, "doSomething called!");
+        Toast.makeText(App.getInstance(), "You did something!", Toast.LENGTH_LONG).show();
     }
 }

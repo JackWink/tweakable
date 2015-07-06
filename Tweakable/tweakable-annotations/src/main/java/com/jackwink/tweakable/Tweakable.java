@@ -171,6 +171,7 @@ public class Tweakable {
                 Intent settingsIntent = new Intent(mContext, TweaksActivity.class);
                 settingsIntent.putExtra(TweaksActivity.EXTRA_SHOW_FRAGMENT,
                         TweaksFragment.class.getCanonicalName());
+                settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(settingsIntent);
             }
         }

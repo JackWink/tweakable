@@ -45,8 +45,6 @@ public class MainActivity extends Activity {
 
 
         floatOptions1View = (TextView) findViewById(R.id.floatOptions1View);
-
-        Tweakable.init(this);
     }
 
     @Override
