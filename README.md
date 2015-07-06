@@ -87,7 +87,7 @@ These values will be updated any time the user changes them in shared preference
 will be restored any time `Tweakable.init(Context)` is called... however this function should only be called once in the 
 app's lifecycle.
 
-## Method Annotations - Actions
+#### Method Annotations - Actions
 
 Actions are supported! Annotate any public static method with `TwkAction` and the user will be able to 
 call that method from the tweak menu.
