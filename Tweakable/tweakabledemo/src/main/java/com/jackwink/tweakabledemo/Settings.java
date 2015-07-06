@@ -1,6 +1,5 @@
 package com.jackwink.tweakabledemo;
 
-import android.util.Log;
 import android.widget.Toast;
 
 import com.jackwink.tweakable.annotations.TwkAction;

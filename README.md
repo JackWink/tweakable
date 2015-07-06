@@ -96,7 +96,7 @@ call that method from the tweak menu.
     public static void loadSeedData() {
         // stub: Load data
         // assuming App.getContext is a static reference to a Context
-        Toast.makeText(App.getContext(), "Seed data loaded!");
+        Toast.makeText(App.getContext(), "Seed data loaded!", Toast.LENGTH_LONG).show();
     }
 
 Actions support the `screen`, `category`, and `title` attributes.
