@@ -2,6 +2,7 @@ package com.jackwink.tweakable.generators.java;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -146,18 +147,23 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             ((NumberPickerPreference) preference).setMinValue((Integer)
                     getRequiredAttribute(TweakableInteger.BUNDLE_MIN_VALUE_KEY));
             ((NumberPickerPreference) preference).setWraps(true);
+            ((DialogPreference) preference).setDialogMessage((String)
+                    getRequiredAttribute(BUNDLE_SUMMARY_KEY));
         } else if (mType.equals(Float.class) || mType.equals(float.class)) {
             preference = build(SliderPreference.class);
             ((SliderPreference) preference).setMaxValue((Float)
                     getRequiredAttribute(TweakableFloat.BUNDLE_MAX_VALUE_KEY));
             ((SliderPreference) preference).setMinValue((Float)
                     getRequiredAttribute(TweakableFloat.BUNDLE_MIN_VALUE_KEY));
+            ((DialogPreference) preference).setDialogMessage((String)
+                    getRequiredAttribute(BUNDLE_SUMMARY_KEY));
         } else if (mType.equals(Method.class)) {
             preference = build(ActionPreference.class);
         } else {
             throw new FailedToBuildPreferenceException(
                     "Type: " + mType.getName() + " not supported.");
         }
+
         return preference;
     }
 
@@ -180,6 +186,10 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
             preference.setSummary((String) getRequiredAttribute(BUNDLE_SUMMARY_KEY));
             preference.setDefaultValue(mDefaultValue);
             preference.setPersistent(true);
+            if (preference instanceof DialogPreference) {
+                ((DialogPreference) preference).setDialogTitle((String)
+                        getRequiredAttribute(BUNDLE_TITLE_KEY));
+            }
         } catch (InstantiationException error) {
             Log.e(TAG, "InstantiationException!");
             throw new FailedToBuildPreferenceException(

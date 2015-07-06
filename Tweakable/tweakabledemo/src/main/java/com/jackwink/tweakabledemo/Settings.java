@@ -1,8 +1,6 @@
 package com.jackwink.tweakabledemo;
 
-import android.app.Application;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.jackwink.tweakable.annotations.TwkAction;
 import com.jackwink.tweakable.annotations.TwkBoolean;
@@ -41,15 +39,16 @@ public class Settings {
     @TwkString(category = STRINGS_CATEGORY, title = "Editable Strings")
     public static String stringOptions2 = "woooo!";
 
-    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer")
+    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer", summary = "Pick any number!")
     public static int intOptions1 = 20;
 
-    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer with range", maxValue = 100,
-            minValue = 10)
+    @TwkInteger(category = INTS_CATEGORY, title = "Select Integer with range",
+            summary = "Pick a number 10 - 100", maxValue = 100, minValue = 10)
     public static Integer intOptions2 = 30;
 
 
-    @TwkFloat(category = FLOATS_CATEGORY, title = "Float Slider", minValue = 0f, maxValue = 200f)
+    @TwkFloat(category = FLOATS_CATEGORY, title = "Float Slider",
+            summary = "Slides between 0 and 200", minValue = 0f, maxValue = 200f)
     public static float floatOption1 = 100f;
 
     @TwkAction(category = "Actions", title = "Log something")
