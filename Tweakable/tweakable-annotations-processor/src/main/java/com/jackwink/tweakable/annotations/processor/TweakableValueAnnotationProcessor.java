@@ -1,5 +1,6 @@
 package com.jackwink.tweakable.annotations.processor;
 
+import com.jackwink.tweakable.annotations.TwkAction;
 import com.jackwink.tweakable.annotations.TwkBoolean;
 import com.jackwink.tweakable.annotations.TwkFloat;
 import com.jackwink.tweakable.annotations.TwkInteger;
@@ -7,6 +8,7 @@ import com.jackwink.tweakable.annotations.TwkString;
 import com.jackwink.tweakable.annotations.processor.generators.PreferencesGenerator;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
+import com.jackwink.tweakable.types.TweakableAction;
 import com.jackwink.tweakable.types.TweakableBoolean;
 import com.jackwink.tweakable.types.TweakableFloat;
 import com.jackwink.tweakable.types.TweakableInteger;
@@ -42,6 +44,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
         types.add(TwkString.class.getCanonicalName());
         types.add(TwkInteger.class.getCanonicalName());
         types.add(TwkFloat.class.getCanonicalName());
+        types.add(TwkAction.class.getCanonicalName());
         return types;
     }
 
@@ -61,6 +64,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
         process(TwkString.class, env);
         process(TwkInteger.class, env);
         process(TwkFloat.class, env);
+        process(TwkAction.class, env);
         mPreferenceGenerator.build();
         built = true;
         return true;
@@ -68,7 +72,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
 
     private void process(Class annotationType, RoundEnvironment env) {
         for (Element element : env.getElementsAnnotatedWith((Class<Annotation>)annotationType)) {
-            if (!element.getKind().isField()) {
+            if (!element.getKind().isField() && !annotationType.equals(TwkAction.class)) {
                 throw new FailedToBuildPreferenceException(
                         "Only fields can be annotated with @" + annotationType.getName());
             }
@@ -77,25 +81,26 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
             TypeMirror type = element.asType();
 
             AbstractTweakableValue value = null;
-            if (type.getKind() == TypeKind.BOOLEAN
-                    || type.toString().equals(Boolean.class.getName())) {
+            if (annotationType.equals(TwkBoolean.class)) {
                 value = TweakableBoolean.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkBoolean.class));
-            } else if (type.toString().equals(String.class.getName())) {
+            } else if (annotationType.equals(TwkString.class)) {
                 value = TweakableString.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkString.class));
-            } else if (type.getKind() == TypeKind.INT
-                    || type.toString().equals(Integer.class.getName())) {
+            } else if (annotationType.equals(TwkInteger.class)) {
                 value = TweakableInteger.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkInteger.class));
-            } else if (type.getKind() == TypeKind.FLOAT
-                    || type.toString().equals(Float.class.getName())) {
+            } else if (annotationType.equals(TwkFloat.class)) {
                 value = TweakableFloat.parse(enclosingClass.getQualifiedName().toString(),
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkFloat.class));
+            } else if (annotationType.equals(TwkAction.class)) {
+                value = TweakableAction.parse(enclosingClass.getQualifiedName().toString(),
+                        element.getSimpleName().toString(),
+                        element.getAnnotation(TwkAction.class));
             } else {
                 throw new FailedToBuildPreferenceException("Unsupported type: " +
                         type.toString());

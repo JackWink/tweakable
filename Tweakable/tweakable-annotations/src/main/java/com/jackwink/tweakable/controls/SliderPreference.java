@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
-import com.jackwink.tweakable.Tweakable;
-
 /**
  *
  */
@@ -57,7 +55,7 @@ public class SliderPreference extends DialogPreference {
     @Override
     protected void onPrepareDialogBuilder(final AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
-        mSlider = new SeekBar(this.getContext());
+        mSlider = new SeekBar(getContext());
         mSlider.setMax(MAX_VALUE);
         mSlider.setProgress(mSelectedValue);
         mSlider.setOnSeekBarChangeListener(new ValueChangeListener());
@@ -65,7 +63,7 @@ public class SliderPreference extends DialogPreference {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 
-        final LinearLayout linearLayout = new LinearLayout(this.getContext());
+        final LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         linearLayout.setGravity(Gravity.CENTER);

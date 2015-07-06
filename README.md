@@ -1,7 +1,7 @@
 #Tweakable
 [![Build Status](https://travis-ci.org/JackWink/tweakable.svg?branch=master)](https://travis-ci.org/JackWink/tweakable)
 
-Feature flags and tweakable values for Android.
+Feature flags, tweakable values, and actions for Android.
 
 See `Tweakable/tweakabledemo` for a full usage example, below is a quick usage guide:
 
@@ -53,6 +53,14 @@ Here's a sample gradle file including the project locally:
         apt project(':tweakable-annotations-processor')
     }
 
+#### Setup
+
+Call `Tweakable.init(Context context)` when the app starts to inject the present values (or 
+default values) from shared preferences to static fields. Tweakable will start
+listening for the phone to shake and show a preferences screen to the user.
+
+#### Field Annotations - Tweakable Values
+
 Once in your Android app, you can annotate any public static boolean, string, integer or float field:
 
     @TwkBoolean(screen = "Subscreen 1", category = "Category 1", 
@@ -75,13 +83,23 @@ Once in your Android app, you can annotate any public static boolean, string, in
                 minValue = 0f, maxValue = 10f)
     public static float someFloat = 2.5f;
 
-Call `Tweakable.init(Context context)` when the app starts and then shake your phone to bring up the
-tweakable value menu.
+These values will be updated any time the user changes them in shared preferences. The saved value from shared preferences
+will be restored any time `Tweakable.init(Context)` is called... however this function should only be called once in the 
+app's lifecycle.
 
-When you call init, all the default values (or present values) will be injected statically, so
-you can access them whenever. For example, if the above annotations were in a class called `Settings`,
-accessing `Settings.selectableString` would contain "Pick me!" or the current value stored in 
-shared preferences.
+## Method Annotations - Actions
+
+Actions are supported! Annotate any public static method with `TwkAction` and the user will be able to 
+call that method from the tweak menu.
+
+    @TwkAction(category = "Actions", title = "Load seed data")
+    public static void loadSeedData() {
+        // stub: Load data
+        // assuming App.getContext is a static reference to a Context
+        Toast.makeText(App.getContext(), "Seed data loaded!");
+    }
+
+Actions support the `screen`, `category`, and `title` attributes.
 
 ## Roadmap
 
@@ -98,7 +116,7 @@ v0.0.1 - POC
 * ~~Inject int & Integer types~~
 * ~~Inject float types~~
 * Inject double types
-* Actions (call static methods)
+* ~~Actions (call static methods)~~
 * ~~Add usage samples~~
 * Add documentation
 * Release?

@@ -31,6 +31,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
     public interface PreferenceAnnotationProcessor {
         Collection<Bundle> getDeclaredScreens();
         Collection<Bundle> getDeclaredCategories();
+
         Collection<Bundle> getDeclaredPreferences();
     }
 

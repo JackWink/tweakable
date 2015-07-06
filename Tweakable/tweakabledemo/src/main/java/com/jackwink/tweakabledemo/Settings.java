@@ -1,11 +1,18 @@
 package com.jackwink.tweakabledemo;
 
+import android.app.Application;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.jackwink.tweakable.annotations.TwkAction;
 import com.jackwink.tweakable.annotations.TwkBoolean;
 import com.jackwink.tweakable.annotations.TwkFloat;
 import com.jackwink.tweakable.annotations.TwkInteger;
 import com.jackwink.tweakable.annotations.TwkString;
 
 public class Settings {
+    private static final String TAG = Settings.class.getSimpleName();
+
     private static final String SUBSCREEN = "Nested Screen";
     private static final String SUBCATEGORY = "Subscreen Feature Flags";
     private static final String FEATURE_FLAG_CATEGORY = "Feature Flags";
@@ -45,4 +52,8 @@ public class Settings {
     @TwkFloat(category = FLOATS_CATEGORY, title = "Float Slider", minValue = 0f, maxValue = 200f)
     public static float floatOption1 = 100f;
 
+    @TwkAction(category = "Actions", title = "Log something")
+    public static void doSomething() {
+        Log.i(TAG, "doSomething called!");
+    }
 }

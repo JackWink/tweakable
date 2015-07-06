@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.jackwink.tweakable.binders.AbstractValueBinder;
+import com.jackwink.tweakable.binders.ActionBinder;
 import com.jackwink.tweakable.binders.BooleanValueBinder;
 import com.jackwink.tweakable.binders.FloatValueBinder;
 import com.jackwink.tweakable.binders.IntegerValueBinder;
@@ -18,6 +18,7 @@ import com.jackwink.tweakable.types.AbstractTweakableValue;
 import com.squareup.seismic.ShakeDetector;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 
 /**
@@ -79,6 +80,7 @@ public class Tweakable {
 
             AbstractValueBinder binder = null;
             Field field = null;
+            Method action = null;
             try {
                 field = Class.forName(clsName).getDeclaredField(fieldName);
 
@@ -104,17 +106,28 @@ public class Tweakable {
                 }
                 Log.i(TAG, "Value: " + binder.getValue());
                 mValueBinders.put(preferenceKey, binder);
+            } catch (NoSuchFieldException e) {
+                try {
+                    Method method = Class.forName(clsName).getMethod(fieldName);
+                    binder = new ActionBinder(method);
+                    mValueBinders.put(preferenceKey, binder);
+                } catch (Exception methodError) {
+                    throw new FailedToBuildPreferenceException("No such method", methodError);
+                }
             } catch (Exception error) {
                 throw new FailedToBuildPreferenceException("Failed to build value binders.", error);
             }
         }
-
     }
 
     protected static void bindValue(String key, Object value) {
         if (mValueBinders.containsKey(key)) {
-            //noinspection unchecked
-            mValueBinders.get(key).bindValue(value);
+            AbstractValueBinder binder = mValueBinders.get(key);
+            if (binder.getType().equals(Method.class)) {
+                binder.bindValue(binder.getValue());
+            } else {
+                binder.bindValue(value);
+            }
         }
     }
 
