@@ -101,42 +101,6 @@ call that method from the tweak menu.
 
 Actions support the `screen`, `category`, and `title` attributes.
 
-## Roadmap
-
-v0.0.1 - POC
-
-* ~~Generate preference views from bundle~~
-* ~~Make root preferences + categories come before sub-screens~~
-* ~~Parse annotations to generate bundle format for preference generation~~
-* ~~Clean up bundle format~~
-* ~~Allow sub-screens~~
-* ~~Generate preferences at compile time~~
-* ~~Inject boolean & Boolean values from shared preferences~~
-* ~~Inject Strings~~
-* ~~Inject int & Integer types~~
-* ~~Inject float types~~
-* ~~Inject double types~~ maybe later, no way to persist doubles, unless casting 
-  to long is acceptable
-* ~~Actions (call static methods)~~
-* ~~Add usage samples~~
-* Add documentation
-* Release?
-
-v0.0.2 - Stability
-
-* Minor refactors to make extensibility easier
-* Increase test coverage
-* Investigate/Implement small Java performance wins
-    * Cache bundles rather than generating each time
-    * Generate preference builders instead of bundles?
-* Investigate performance of XML vs Java generation
-
-v0.0.3 - Features
-
-* Inject String Arrays (multi-select)
-* Support injection for non-static fields
-* XML support?
-
 ## Thanks / Attributions
 
 * [Tweaks](https://github.com/facebook/Tweaks) for the initial inspiration. 
