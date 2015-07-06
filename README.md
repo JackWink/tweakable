@@ -115,7 +115,8 @@ v0.0.1 - POC
 * ~~Inject Strings~~
 * ~~Inject int & Integer types~~
 * ~~Inject float types~~
-* Inject double types
+* ~~Inject double types~~ maybe later, no way to persist doubles, unless casting 
+  to long is acceptable
 * ~~Actions (call static methods)~~
 * ~~Add usage samples~~
 * Add documentation
