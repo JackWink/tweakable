@@ -10,3 +10,5 @@
 * 6/29: API Change - default values are the values of the field at runtime
 * 6/29: API Change - Bring shake detection into library instead of leaving it to the end-user.
 * 7/3: Floats supported, decided doubles + actions needed for 0.0.1 too... updated roadmap
+* 7/5: Actions supported, could let the user configure more, but will save for
+       later.
