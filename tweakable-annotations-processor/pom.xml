@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.jackwink.tweakable</groupId>
+    <artifactId>tweakable-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>tweakable-annotation-processor</artifactId>
+  <name>Tweakable Compiler</name>
+  <description>
+    Tools to generate value injection and module adapters from annotated code and validate them.
+  </description>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>tweakable-annotations</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup</groupId>
+      <artifactId>javapoet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.testing.compile</groupId>
+      <artifactId>compile-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <goals><goal>compile</goal></goals>
+            <configuration>
+              <annotationProcessors>
+                <annotationProcessor>com.google.auto.service.processor.AutoServiceProcessor</annotationProcessor>
+              </annotationProcessors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-test-compile</id>
+            <goals><goal>testCompile</goal></goals>
+            <configuration>
+              <annotationProcessors>
+              </annotationProcessors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <minimizeJar>true</minimizeJar>
+              <artifactSet>
+                  <includes>
+                    <include>com.jackwink.tweakable:tweakable-annotations</include>
+                    <include>com.jackwink.tweakable:tweakable-annotations-processor</include>
+                    <include>com.squareup:javapoet</include>
+                  </includes>
+                <excludes>
+                  <!-- projects should depend on api projects directly -->
+                  <exclude>com.jackwink.tweakable:tweakable</exclude>
+                  <exclude>javax.inject</exclude>
+                </excludes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

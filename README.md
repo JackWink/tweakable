@@ -46,11 +46,10 @@ Here's a sample gradle file including the project locally:
     }
 
     dependencies {
-        compile fileTree(dir: 'libs', include: ['*.jar'])
         compile 'com.android.support:appcompat-v7:22.2.0'
 
-        compile project(':tweakable-annotations')
-        apt project(':tweakable-annotations-processor')
+        compile files('libs/tweakable-0.0.1-SNAPSHOT.jar')
+        apt files('libs/tweakable-annotation-processor.jar')
     }
 
 #### Setup
@@ -58,6 +57,11 @@ Here's a sample gradle file including the project locally:
 Call `Tweakable.init(Context context)` when the app starts to inject the present values (or 
 default values) from shared preferences to static fields. Tweakable will start
 listening for the phone to shake and show a preferences screen to the user.
+
+Be sure to add the TweakActivity to your AndroidManifest.xml:
+
+    <activity android:name="com.jackwink.tweakable.TweaksActivity">
+    </activity>
 
 #### Field Annotations - Tweakable Values
 
