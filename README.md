@@ -3,17 +3,16 @@
 
 Feature flags, tweakable values, and actions for Android.
 
-See `Tweakable/tweakabledemo` for a full usage example, below is a quick usage guide:
+## Getting the Jars 
 
-## Known Issues / Untested cases
+The latest build is available in the `release/` folder.
 
-* Untested: Using with other preference resources defined in app 
+Run `mvn clean package` to build from source. The resulting jar files will be in tweakable/target/tweakable-{version}.jar 
+and tweakable-annotations-processor/target/tweakable-annotations-processor-{version}.jar.
 
 ## Usage
 
-Here's a sample gradle file including the project locally:
-
-#### Gradle
+#### Gradle Setup 
 
     buildscript {
         repositories {
@@ -49,19 +48,23 @@ Here's a sample gradle file including the project locally:
         compile 'com.android.support:appcompat-v7:22.2.0'
 
         compile files('libs/tweakable-0.0.1-SNAPSHOT.jar')
-        apt files('libs/tweakable-annotation-processor.jar')
+        apt files('libs/tweakable-annotation-processor-0.0.1-SNAPSHOT.jar')
     }
 
-#### Setup
 
-Call `Tweakable.init(Context context)` when the app starts to inject the present values (or 
-default values) from shared preferences to static fields. Tweakable will start
-listening for the phone to shake and show a preferences screen to the user.
+#### Android Manifest Setup
 
 Be sure to add the TweakActivity to your AndroidManifest.xml:
 
     <activity android:name="com.jackwink.tweakable.TweaksActivity">
     </activity>
+
+
+#### Application Setup 
+
+Call `Tweakable.init(Context context)` when the app starts to inject the present values (or 
+default values) from shared preferences to static fields. Tweakable will start
+listening for the phone to shake and show a preferences screen to the user.
 
 #### Field Annotations - Tweakable Values
 
