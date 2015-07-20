@@ -37,7 +37,8 @@ public class TweakableBoolean extends AbstractTweakableValue<Boolean> {
         return Boolean.class;
     }
 
-    public static TweakableBoolean parse(String className, String fieldName, TwkBoolean annotation) {
+    public static TweakableBoolean parse(String className, String fieldName,
+                                         TwkBoolean annotation) {
         TweakableBoolean returnValue = new TweakableBoolean();
 
         /* Abstract Tweakable Values */

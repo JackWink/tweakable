@@ -28,5 +28,5 @@ public @interface TwkString {
     String summary() default "";
 
     // If left to an empty array, this will be an editable text field.
-    String[] options() default {};
+    String[] options() default { };
 }

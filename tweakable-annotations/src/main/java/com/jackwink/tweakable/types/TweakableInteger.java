@@ -25,7 +25,8 @@ public class TweakableInteger extends AbstractTweakableValue<Integer> {
         return Integer.class;
     }
 
-    public static TweakableInteger parse(String className, String fieldName, TwkInteger annotation) {
+    public static TweakableInteger parse(String className, String fieldName,
+                                         TwkInteger annotation) {
         TweakableInteger returnValue = new TweakableInteger();
 
         /* Abstract Tweakable Values */

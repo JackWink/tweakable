@@ -1,6 +1,10 @@
 package com.jackwink.tweakable.annotations.processor;
 
-import com.jackwink.tweakable.annotations.*;
+import com.jackwink.tweakable.annotations.TwkBoolean;
+import com.jackwink.tweakable.annotations.TwkInteger;
+import com.jackwink.tweakable.annotations.TwkString;
+import com.jackwink.tweakable.annotations.TwkFloat;
+import com.jackwink.tweakable.annotations.TwkAction;
 import com.jackwink.tweakable.annotations.processor.generators.PreferencesGenerator;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
@@ -16,10 +20,8 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -29,7 +31,7 @@ import com.google.auto.service.AutoService;
 /**
  * Processes 'Twk' annotations to generate a class containing the app preferences
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @AutoService(Processor.class)
 public class TweakableValueAnnotationProcessor extends AbstractProcessor {
     private static final String TAG = TweakableValueAnnotationProcessor.class.getSimpleName();
@@ -70,7 +72,7 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
     }
 
     private void process(Class annotationType, RoundEnvironment env) {
-        for (Element element : env.getElementsAnnotatedWith((Class<Annotation>)annotationType)) {
+        for (Element element : env.getElementsAnnotatedWith((Class<Annotation>) annotationType)) {
             if (!element.getKind().isField() && !annotationType.equals(TwkAction.class)) {
                 throw new FailedToBuildPreferenceException(
                         "Only fields can be annotated with @" + annotationType.getName());
@@ -101,8 +103,8 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
                         element.getSimpleName().toString(),
                         element.getAnnotation(TwkAction.class));
             } else {
-                throw new FailedToBuildPreferenceException("Unsupported type: " +
-                        type.toString());
+                throw new FailedToBuildPreferenceException(
+                        "Unsupported type: " + type.toString());
             }
 
             if (!mPreferenceGenerator.hasScreen(value.getScreen())) {

@@ -5,6 +5,8 @@ package com.jackwink.tweakable.exceptions;
  * create an object.
  */
 public class FailedToBuildPreferenceException extends RuntimeException {
+    public static final long serialVersionUID = 0L;
+
     public FailedToBuildPreferenceException(String reason) {
         super(reason);
     }

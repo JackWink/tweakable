@@ -28,12 +28,13 @@ import javax.annotation.processing.Filer;
 /**
  *  Creates a java class used to generate preferences
  */
+@SuppressWarnings("rawtypes")
 public class PreferencesGenerator {
-    private static TypeName INTERFACE_BUNDLE_TYPE = ParameterizedTypeName.get(
+    private static final TypeName INTERFACE_BUNDLE_TYPE = ParameterizedTypeName.get(
             ClassName.get("java.util", "Map"),
             ClassName.get("java.lang", "String"),
             ClassName.get("java.lang", "Object"));
-    private static TypeName BUNDLE_TYPE = ParameterizedTypeName.get(
+    private static final TypeName BUNDLE_TYPE = ParameterizedTypeName.get(
             ClassName.get("java.util", "LinkedHashMap"),
             ClassName.get("java.lang", "String"),
             ClassName.get("java.lang", "Object"));
@@ -89,9 +90,10 @@ public class PreferencesGenerator {
 
     public boolean hasCategory(String categoryName, String screenName) {
         // Need to explicitly check since mCategories will NOT contain the root screen info
-        return categoryName == null || categoryName.isEmpty() ||
-                categoryName.equals(ROOT_CATEGORY_KEY) ||
-                mCategories.containsKey(getCategoryKey(categoryName, screenName));
+        return categoryName == null
+                || categoryName.isEmpty()
+                || categoryName.equals(ROOT_CATEGORY_KEY)
+                || mCategories.containsKey(getCategoryKey(categoryName, screenName));
     }
 
     public void addCategory(String categoryName, String screenName) {
@@ -230,10 +232,10 @@ public class PreferencesGenerator {
             addStringArrayToBundle(builder, bundleName, TweakableString.BUNDLE_OPTIONS_KEY,
                     ((TweakableString) value).getOptions());
         } else if (value.getType().equals(Integer.class)) {
-            builder.addStatement(bundleName + ".put($S, $L)",
-                    TweakableInteger.BUNDLE_MAX_VALUE_KEY, ((TweakableInteger) value).getMaxValue());
-            builder.addStatement(bundleName + ".put($S, $L)",
-                    TweakableInteger.BUNDLE_MIN_VALUE_KEY, ((TweakableInteger) value).getMinValue());
+            builder.addStatement(bundleName + ".put($S, $L)", TweakableInteger.BUNDLE_MAX_VALUE_KEY,
+                    ((TweakableInteger) value).getMaxValue());
+            builder.addStatement(bundleName + ".put($S, $L)", TweakableInteger.BUNDLE_MIN_VALUE_KEY,
+                    ((TweakableInteger) value).getMinValue());
         } else if (value.getType().equals(Float.class)) {
             builder.addStatement(bundleName + ".put($S, $Lf)",
                     TweakableFloat.BUNDLE_MAX_VALUE_KEY, ((TweakableFloat) value).getMaxValue());
@@ -266,7 +268,8 @@ public class PreferencesGenerator {
 
     private String getCategoryKey(String categoryName, String screenName) {
         String screenKey = getScreenKey(screenName);
-        if (categoryName == null || categoryName.isEmpty() || categoryName.equals(ROOT_CATEGORY_KEY)) {
+        if (categoryName == null || categoryName.isEmpty()
+                || categoryName.equals(ROOT_CATEGORY_KEY)) {
             return screenKey + "." + ROOT_CATEGORY_KEY;
         } else {
             return screenKey + "." + normalize(categoryName) + CATEGORY_KEY_POSTFIX;
