@@ -20,7 +20,8 @@ import java.util.Map;
  *
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class TweaksFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class TweaksFragment extends PreferenceFragment implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = TweaksFragment.class.getSimpleName();
 
     LinkedHashMap<String, PreferenceScreen> mScreens = new LinkedHashMap<>();

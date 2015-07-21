@@ -24,7 +24,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
      * @return Value of the provided {@code attributeName}
      * @throws FailedToBuildPreferenceException if bundle is missing an attribute
      */
-    protected Object getRequiredAttribute(String attributeName) throws FailedToBuildPreferenceException {
+    protected Object getRequiredAttribute(String attributeName) {
         if (!mAttributeMap.containsKey(attributeName)) {
             throw new FailedToBuildPreferenceException(
                     "Missing required attribute: " + attributeName);

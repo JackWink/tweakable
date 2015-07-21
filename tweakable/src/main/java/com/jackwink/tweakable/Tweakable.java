@@ -71,7 +71,7 @@ public class Tweakable {
         mShakeListener = new TweakShakeListener();
         mShakeDetector = new ShakeDetector(mShakeListener);
 
-        for (Map<String, Object> bundle: getPreferences().getDeclaredPreferences()) {
+        for (Map<String, Object> bundle : getPreferences().getDeclaredPreferences()) {
             String preferenceKey = (String) bundle.get(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
 
             /* Set default / saved values init */
@@ -85,11 +85,13 @@ public class Tweakable {
             try {
                 field = Class.forName(clsName).getDeclaredField(fieldName);
 
-                if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
+                if (field.getType().equals(boolean.class)
+                        || field.getType().equals(Boolean.class)) {
                     binder = new BooleanValueBinder(field);
                     ((BooleanValueBinder) binder).bindValue(mSharedPreferences.getBoolean(
                             preferenceKey, (boolean) binder.getValue()));
-                } else if (field.getType().equals(int.class) || field.getType().equals(Integer.class)) {
+                } else if (field.getType().equals(int.class)
+                        || field.getType().equals(Integer.class)) {
                     binder = new IntegerValueBinder(field);
                     ((IntegerValueBinder) binder).bindValue(mSharedPreferences.getInt(preferenceKey,
                             (int) binder.getValue()));
@@ -97,7 +99,8 @@ public class Tweakable {
                     binder = new StringValueBinder(field);
                     ((StringValueBinder) binder).bindValue(mSharedPreferences.getString(
                             preferenceKey, (String) binder.getValue()));
-                } else if (field.getType().equals(Float.class) || field.getType().equals(float.class)) {
+                } else if (field.getType().equals(Float.class)
+                        || field.getType().equals(float.class)) {
                     binder = new FloatValueBinder(field);
                     ((FloatValueBinder) binder).bindValue(mSharedPreferences.getFloat(
                             preferenceKey, (Float) binder.getValue()));

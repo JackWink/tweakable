@@ -82,7 +82,7 @@ public class SliderPreference extends DialogPreference {
 
     private void setSelectedValue(int value, boolean persist) {
         mSelectedValue = value;
-        mValue = mMinValue + ((((float)mSelectedValue /(float)MAX_VALUE)) * mRange);
+        mValue = mMinValue + ((((float) mSelectedValue / (float) MAX_VALUE)) * mRange);
         if (mValue > mMaxValue) {
             mValue = mMaxValue;
         }
@@ -95,7 +95,7 @@ public class SliderPreference extends DialogPreference {
 
     private void setValue(float value, boolean persist) {
         mValue = value;
-        mSelectedValue = (int)(((mValue - mMinValue) * 100) / mRange);
+        mSelectedValue = (int) (((mValue - mMinValue) * 100) / mRange);
         if (mSelectedValue > MAX_VALUE) {
             mSelectedValue = MAX_VALUE;
         }

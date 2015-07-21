@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Builds a {@link Preference} from a {@link Bundle}
  */
-@SuppressWarnings({ "rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
 
@@ -210,5 +210,4 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
         }
         return preference;
     }
-
 }

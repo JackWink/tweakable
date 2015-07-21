@@ -43,7 +43,8 @@ public class PreferenceScreenBuilder extends BaseBuilder<PreferenceScreen> {
     /** {@inheritDoc} */
     public PreferenceScreen build() {
         if (mContext == null) {
-            throw new FailedToBuildPreferenceScreenException("Failed to set context before building!");
+            throw new FailedToBuildPreferenceScreenException(
+                    "Failed to set context before building!");
         }
 
         if (mPreferenceManager == null) {
