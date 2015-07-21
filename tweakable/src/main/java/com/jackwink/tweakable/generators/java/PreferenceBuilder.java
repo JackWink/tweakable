@@ -27,6 +27,7 @@ import java.util.Map;
 /**
  * Builds a {@link Preference} from a {@link Bundle}
  */
+@SuppressWarnings({ "rawtypes", "unchecked"})
 public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceBuilder.class.getSimpleName();
 
@@ -87,14 +88,14 @@ public class PreferenceBuilder<T extends Class> extends BaseBuilder<Preference> 
      * </ul>
      */
     @Override
-    public PreferenceBuilder setBundle(Map<String, Object> attributeMap) {
+    public PreferenceBuilder<T> setBundle(Map<String, Object> attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
 
     /** {@inheritDoc}*/
     @Override
-    public PreferenceBuilder setContext(Context context) {
+    public PreferenceBuilder<T> setContext(Context context) {
         mContext = context;
         return this;
     }

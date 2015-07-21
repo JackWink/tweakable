@@ -60,7 +60,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
      * @param attributeMap Bundle containing values used to construct the preference
      * @return The updated builder
      */
-    public BaseBuilder setBundle(Map<String, Object> attributeMap) {
+    public BaseBuilder<T> setBundle(Map<String, Object> attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
@@ -70,7 +70,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
      * @param context
      * @return The updated builder
      */
-    public BaseBuilder setContext(Context context) {
+    public BaseBuilder<T> setContext(Context context) {
         mContext = context;
         return this;
     }

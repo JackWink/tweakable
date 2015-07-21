@@ -8,7 +8,6 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
-import com.jackwink.tweakable.binders.StringValueBinder;
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceBuilder;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
@@ -20,6 +19,7 @@ import java.util.Map;
 /**
  *
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TweaksFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = TweaksFragment.class.getSimpleName();
 
@@ -74,7 +74,7 @@ public class TweaksFragment extends PreferenceFragment implements SharedPreferen
         /* Generate all the preferences */
         for (Map<String, Object> bundle : mProcessor.getDeclaredPreferences()) {
             String key = (String) bundle.get(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
-            //noinspection unchecked
+
             Preference preference = new PreferenceBuilder()
                     .setBundle(bundle)
                     .setContext(getActivity())

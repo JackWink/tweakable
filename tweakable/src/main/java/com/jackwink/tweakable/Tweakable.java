@@ -13,6 +13,7 @@ import com.jackwink.tweakable.binders.BooleanValueBinder;
 import com.jackwink.tweakable.binders.FloatValueBinder;
 import com.jackwink.tweakable.binders.IntegerValueBinder;
 import com.jackwink.tweakable.binders.StringValueBinder;
+import com.jackwink.tweakable.binders.ValueBinder;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
@@ -33,6 +34,7 @@ import java.util.Map;
  *
  * <p>Shake your phone to pull up the generated settings!</p>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class Tweakable {
     private static final String TAG = Tweakable.class.getSimpleName();
 
@@ -45,7 +47,7 @@ public class Tweakable {
     private static TweakShakeListener mShakeListener;
     private static SensorManager mSensorManager;
 
-    private static LinkedHashMap<String, AbstractValueBinder> mValueBinders =
+    private static LinkedHashMap<String, ValueBinder> mValueBinders =
             new LinkedHashMap<>();
 
 
@@ -129,7 +131,7 @@ public class Tweakable {
 
     protected static void bindValue(String key, Object value) {
         if (mValueBinders.containsKey(key)) {
-            AbstractValueBinder binder = mValueBinders.get(key);
+            ValueBinder binder = mValueBinders.get(key);
             if (binder.getType().equals(Method.class)) {
                 binder.bindValue(binder.getValue());
             } else {
