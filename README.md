@@ -1,6 +1,7 @@
 #Tweakable
 
-Feature flags, tweakable values, and actions for Android.
+Feature flags, tweakable values, and actions for Android. Annotate some public static fields, shake the phone, 
+and the user can adjust the field values on the fly.
 
 ## Getting the Jars 
 
