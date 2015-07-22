@@ -55,10 +55,28 @@
             <configuration>
               <artifactSet>
                   <includes>
-                    <include>com.jackwink.tweakable:tweakable-annotations</include>
-                    <include>com.squareup:seismic</include>
+                      <include>com.jackwink.tweakable:tweakable-annotations</include>
+                      <include>com.squareup:*</include>
                   </includes>
               </artifactSet>
+              <relocations>
+                <relocation>
+                  <pattern>com.squareup.seismic</pattern>
+                  <shadedPattern>com.jackwink.squareup.seismic</shadedPattern>
+                </relocation>
+              </relocations>
+                <filters>
+                    <filter>
+                        <artifact>*:*</artifact>
+                        <excludes>
+                            <exclude>META-INF/**</exclude>
+                            <exclude>LICENSE</exclude>
+                            <exclude>NOTICE</exclude>
+                            <exclude>/*.txt</exclude>
+                            <exclude>build.properties</exclude>
+                        </excludes>
+                    </filter>
+                </filters>
             </configuration>
           </execution>
         </executions>

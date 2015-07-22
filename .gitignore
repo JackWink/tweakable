@@ -25,5 +25,6 @@ classes
 obj
 
 .DS_Store
+scripts
 
 dependency-reduced-pom.xml
