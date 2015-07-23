@@ -9,7 +9,7 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 
 import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
-import com.jackwink.tweakable.generators.java.PreferenceBuilder;
+import com.jackwink.tweakable.generators.java.PreferenceFactory;
 import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
@@ -27,12 +27,14 @@ public class TweaksFragment extends PreferenceFragment implements
     LinkedHashMap<String, PreferenceScreen> mScreens = new LinkedHashMap<>();
     LinkedHashMap<String, PreferenceCategory> mCategories = new LinkedHashMap<>();
 
+    private PreferenceFactory mFactory;
     private PreferenceAnnotationProcessor mProcessor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mFactory = new PreferenceFactory();
         mProcessor = Tweakable.getPreferences();
         createRootElements();
 
@@ -75,15 +77,10 @@ public class TweaksFragment extends PreferenceFragment implements
         /* Generate all the preferences */
         for (Map<String, Object> bundle : mProcessor.getDeclaredPreferences()) {
             String key = (String) bundle.get(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
-
-            Preference preference = new PreferenceBuilder()
-                    .setBundle(bundle)
-                    .setContext(getActivity())
-                    .setType(Tweakable.getType(key))
-                    .setDefaultValue(Tweakable.getValue(key))
-                    .build();
-
             String categoryKey = (String) bundle.get(AbstractTweakableValue.BUNDLE_CATEGORY_KEY);
+            Preference preference = mFactory.build(Tweakable.getType(key), getActivity(),
+                    bundle, Tweakable.getValue(key));
+
             Log.d(TAG, "Adding preference '" + preference.getTitle() + "' to " + categoryKey);
             mCategories.get(categoryKey).addPreference(preference);
         }

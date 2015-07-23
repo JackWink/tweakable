@@ -14,24 +14,12 @@ import java.util.Map;
 public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     private static final String TAG = PreferenceCategoryBuilder.class.getSimpleName();
 
-    public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
-    public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
-
     public PreferenceCategoryBuilder() {
     }
 
-    /** {@inheritDoc} */
     @Override
-    public PreferenceCategoryBuilder setBundle(Map<String, Object> attributeMap) {
-        mAttributeMap = attributeMap;
-        return this;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PreferenceCategoryBuilder setContext(Context context) {
-        mContext = context;
-        return this;
+    public Class[] getHandledTypes() {
+        return new Class[0];
     }
 
     /** {@inheritDoc} */

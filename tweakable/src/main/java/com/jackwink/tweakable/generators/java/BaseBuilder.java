@@ -2,20 +2,32 @@ package com.jackwink.tweakable.generators.java;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.DialogPreference;
+import android.preference.Preference;
+import android.util.Log;
 
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
+import com.jackwink.tweakable.types.AbstractTweakableValue;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
  *  Contains convenience methods for any {@link JavaBuilder} subclass
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class BaseBuilder<T> implements JavaBuilder<T> {
     private static final String TAG = BaseBuilder.class.getSimpleName();
+
+    public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
+    public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
+    public static final String BUNDLE_SUMMARY_KEY = AbstractTweakableValue.BUNDLE_SUMMARY_KEY;
 
     /* Builder set attributes */
     protected Map<String, Object> mAttributeMap = null;
     protected Context mContext = null;
+    protected Object mDefaultValue = null;
 
     /**
      * Returns the value of a given attribute or throws an exception if it's not found
@@ -73,5 +85,60 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
     public BaseBuilder<T> setContext(Context context) {
         mContext = context;
         return this;
+    }
+
+    /**
+     * Sets the default value of the preference.
+     *
+     * @param defaultValue Default value of this preference
+     * @return The updated builder
+     */
+    public BaseBuilder<T> setDefaultValue(Object defaultValue) {
+        mDefaultValue = defaultValue;
+        return this;
+    }
+
+    @Override
+    public void reset() {
+        mDefaultValue = null;
+        mContext = null;
+        mAttributeMap = null;
+    }
+
+    protected <V extends Preference> V build(Class<V> cls, boolean persistent) {
+        Constructor constructor = null;
+        Preference preference = null;
+        try {
+            constructor = cls.getConstructor(Context.class);
+            preference = (Preference) constructor.newInstance(mContext);
+
+            /* Required Attributes */
+            String title = (String) getRequiredAttribute(BUNDLE_TITLE_KEY);
+            preference.setKey((String) getRequiredAttribute(BUNDLE_KEYATTR_KEY));
+            preference.setTitle(title);
+            preference.setSummary((String) getRequiredAttribute(BUNDLE_SUMMARY_KEY));
+            preference.setDefaultValue(mDefaultValue);
+            preference.setPersistent(persistent);
+            if (preference instanceof DialogPreference) {
+                ((DialogPreference) preference).setDialogTitle(title);
+            }
+        } catch (InstantiationException error) {
+            Log.e(TAG, "InstantiationException!");
+            throw new FailedToBuildPreferenceException(
+                    "Could not find default constructor for " + cls.getSimpleName(), error);
+        } catch (IllegalAccessException error) {
+            Log.e(TAG, "Illegal Access!");
+            throw new FailedToBuildPreferenceException(
+                    "Could not access constructor for " + cls.getSimpleName(), error);
+        } catch (NoSuchMethodException error) {
+            Log.e(TAG, "No preference constructor with single argument: 'Context'!");
+            throw new FailedToBuildPreferenceException(
+                    "No 'Context'-only constructor for " + cls.getSimpleName(), error);
+        } catch (InvocationTargetException error) {
+            Log.e(TAG, "Invalid target?");
+            throw new FailedToBuildPreferenceException(
+                    "Invalid constructor target for: " + cls.getSimpleName(), error);
+        }
+        return (V) preference;
     }
 }

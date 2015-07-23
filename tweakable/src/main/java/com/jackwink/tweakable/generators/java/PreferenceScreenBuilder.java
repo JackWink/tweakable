@@ -24,6 +24,11 @@ public class PreferenceScreenBuilder extends BaseBuilder<PreferenceScreen> {
     }
 
     @Override
+    public Class[] getHandledTypes() {
+        return new Class[0];
+    }
+
+    @Override
     public PreferenceScreenBuilder setContext(Context context) {
         mContext = context;
         return this;
