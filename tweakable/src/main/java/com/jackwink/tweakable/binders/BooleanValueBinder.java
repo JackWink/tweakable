@@ -1,6 +1,8 @@
 package com.jackwink.tweakable.binders;
 
 
+import android.content.SharedPreferences;
+
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 
 import java.lang.reflect.Field;
@@ -9,11 +11,13 @@ import java.lang.reflect.Field;
  * Binds a boolean value to a given field
  */
 public class BooleanValueBinder extends AbstractValueBinder<Boolean> {
+    public static final Class[] DECLARED_TYPES = {Boolean.class, boolean.class };
 
     public BooleanValueBinder(Field field) {
         mField = field;
     }
 
+    @Override
     public Class<Boolean> getType() {
         return Boolean.class;
     }
@@ -35,12 +39,12 @@ public class BooleanValueBinder extends AbstractValueBinder<Boolean> {
     }
 
     @Override
-    public void bindValue(Boolean value) {
+    public void bindValue(SharedPreferences preferences, String key) {
         try {
             if (mField.getType().equals(boolean.class)) {
-                mField.setBoolean(null, value);
+                mField.setBoolean(null, preferences.getBoolean(key, getValue()));
             } else if (mField.getType().equals(Boolean.class)) {
-                mField.set(null, value);
+                mField.set(null, preferences.getBoolean(key, getValue()));
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();

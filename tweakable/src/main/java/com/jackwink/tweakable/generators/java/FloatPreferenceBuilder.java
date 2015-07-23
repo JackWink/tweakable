@@ -8,11 +8,12 @@ import com.jackwink.tweakable.types.TweakableFloat;
 /**
  *
  */
+@SuppressWarnings({ "rawtypes" })
 public class FloatPreferenceBuilder extends BaseBuilder<Preference> {
 
     @Override
     public Class[] getHandledTypes() {
-        return new Class[] { Float.class, float.class };
+        return new Class[] {Float.class, float.class };
     }
 
     @Override

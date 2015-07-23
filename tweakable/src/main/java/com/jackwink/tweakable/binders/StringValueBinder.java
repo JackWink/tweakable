@@ -1,5 +1,7 @@
 package com.jackwink.tweakable.binders;
 
+import android.content.SharedPreferences;
+
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 
 import java.lang.reflect.Field;
@@ -8,11 +10,13 @@ import java.lang.reflect.Field;
  * Binds a String value to a given {@link Field}.
  */
 public class StringValueBinder extends AbstractValueBinder<String> {
+    public static final Class[] DECLARED_TYPES = {String.class };
 
     public StringValueBinder(Field field) {
         mField = field;
     }
 
+    @Override
     public Class<String> getType() {
         return String.class;
     }
@@ -32,10 +36,10 @@ public class StringValueBinder extends AbstractValueBinder<String> {
     }
 
     @Override
-    public void bindValue(String value) {
+    public void bindValue(SharedPreferences preferences, String key) {
         try {
             if (mField.getType().equals(String.class)) {
-                mField.set(null, value);
+                mField.set(null, preferences.getString(key, getValue()));
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();

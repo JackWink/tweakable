@@ -1,34 +1,38 @@
 package com.jackwink.tweakable.binders;
 
+import android.content.SharedPreferences;
+
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 
 import java.lang.reflect.Field;
+
 
 /**
  *
  */
 public class FloatValueBinder extends AbstractValueBinder<Float> {
+    public static final Class[] DECLARED_TYPES = {Float.class, float.class };
 
     public FloatValueBinder(Field field) {
         mField = field;
     }
 
     @Override
-    public void bindValue(Float value) {
+    public Class<Float> getType() {
+        return Float.class;
+    }
+
+    @Override
+    public void bindValue(SharedPreferences preferences, String key) {
         try {
             if (mField.getType().equals(Float.class)) {
-                mField.set(null, value);
+                mField.set(null, preferences.getFloat(key, getValue()));
             } else if (mField.getType().equals(float.class)) {
-                mField.setFloat(null, value);
+                mField.setFloat(null, preferences.getFloat(key, getValue()));
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public Class<Float> getType() {
-        return Float.class;
     }
 
     @Override

@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * Builds a {@link PreferenceScreen}
  */
+@SuppressWarnings({ "rawtypes" })
 public class PreferenceScreenBuilder extends BaseBuilder<PreferenceScreen> {
     private static final String TAG = PreferenceScreenBuilder.class.getSimpleName();
 

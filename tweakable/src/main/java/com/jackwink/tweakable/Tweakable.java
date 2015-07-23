@@ -7,7 +7,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.util.Log;
 
-import com.jackwink.tweakable.binders.AbstractValueBinder;
 import com.jackwink.tweakable.binders.ActionBinder;
 import com.jackwink.tweakable.binders.BooleanValueBinder;
 import com.jackwink.tweakable.binders.FloatValueBinder;
@@ -65,62 +64,23 @@ public class Tweakable {
         mContext = context;
         mOnShakeEnabled = onShake;
         mSharedPreferencesName = context.getPackageName() + "_preferences";
-        mSharedPreferences = context.getSharedPreferences(mSharedPreferencesName,
-                Context.MODE_PRIVATE);
+        mSharedPreferences = context.getSharedPreferences(
+                mSharedPreferencesName, Context.MODE_PRIVATE);
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mShakeListener = new TweakShakeListener();
         mShakeDetector = new ShakeDetector(mShakeListener);
 
         for (Map<String, Object> bundle : getPreferences().getDeclaredPreferences()) {
             String preferenceKey = (String) bundle.get(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
-
-            /* Set default / saved values init */
             String fieldName = preferenceKey.substring(preferenceKey.lastIndexOf('.') + 1);
             String clsName = preferenceKey.substring(0, preferenceKey.lastIndexOf('.'));
-            Log.i(TAG, "Updating '" + clsName + "' field: " + fieldName);
-
-            AbstractValueBinder binder = null;
-            Field field = null;
-            Method action = null;
-            try {
-                field = Class.forName(clsName).getDeclaredField(fieldName);
-
-                if (field.getType().equals(boolean.class)
-                        || field.getType().equals(Boolean.class)) {
-                    binder = new BooleanValueBinder(field);
-                    ((BooleanValueBinder) binder).bindValue(mSharedPreferences.getBoolean(
-                            preferenceKey, (boolean) binder.getValue()));
-                } else if (field.getType().equals(int.class)
-                        || field.getType().equals(Integer.class)) {
-                    binder = new IntegerValueBinder(field);
-                    ((IntegerValueBinder) binder).bindValue(mSharedPreferences.getInt(preferenceKey,
-                            (int) binder.getValue()));
-                } else if (field.getType().equals(String.class)) {
-                    binder = new StringValueBinder(field);
-                    ((StringValueBinder) binder).bindValue(mSharedPreferences.getString(
-                            preferenceKey, (String) binder.getValue()));
-                } else if (field.getType().equals(Float.class)
-                        || field.getType().equals(float.class)) {
-                    binder = new FloatValueBinder(field);
-                    ((FloatValueBinder) binder).bindValue(mSharedPreferences.getFloat(
-                            preferenceKey, (Float) binder.getValue()));
-                } else {
-                    throw new FailedToBuildPreferenceException(
-                            "No value binder exists for: " + field.getType().toString());
-                }
-                Log.i(TAG, "Value: " + binder.getValue());
-                mValueBinders.put(preferenceKey, binder);
-            } catch (NoSuchFieldException e) {
-                try {
-                    Method method = Class.forName(clsName).getMethod(fieldName);
-                    binder = new ActionBinder(method);
-                    mValueBinders.put(preferenceKey, binder);
-                } catch (Exception methodError) {
-                    throw new FailedToBuildPreferenceException("No such method", methodError);
-                }
-            } catch (Exception error) {
-                throw new FailedToBuildPreferenceException("Failed to build value binders.", error);
+            ValueBinder binder = createBinder(clsName, fieldName);
+            // We don't want to call actions on init, but we want to restore values from prefs
+            if (!(binder instanceof ActionBinder)) {
+                Log.i(TAG, "Updating '" + clsName + "' field: " + fieldName);
+                binder.bindValue(mSharedPreferences, preferenceKey);
             }
+            mValueBinders.put(preferenceKey, binder);
         }
 
         if (mOnShakeEnabled) {
@@ -132,14 +92,49 @@ public class Tweakable {
         }
     }
 
+    private static ValueBinder createBinder(String clsName, String fieldName) {
+        Field field = null;
+        try {
+            field = Class.forName(clsName).getDeclaredField(fieldName);
+            if (contains(BooleanValueBinder.DECLARED_TYPES, field.getType())) {
+                return new BooleanValueBinder(field);
+            } else if (contains(IntegerValueBinder.DECLARED_TYPES, field.getType())) {
+                return new IntegerValueBinder(field);
+            } else if (contains(StringValueBinder.DECLARED_TYPES, field.getType())) {
+                return new StringValueBinder(field);
+            } else if (contains(FloatValueBinder.DECLARED_TYPES, field.getType())) {
+                return new FloatValueBinder(field);
+            }
+        } catch (NoSuchFieldException e) {
+            return createMethodBinder(clsName, fieldName);
+        } catch (ClassNotFoundException error) {
+            throw new FailedToBuildPreferenceException("Class not found: " + clsName, error);
+        }
+
+        throw new FailedToBuildPreferenceException("Unhandled field type: " + field.getType());
+    }
+
+    private static ValueBinder createMethodBinder(String clsName, String methodName) {
+        try {
+            Method method = Class.forName(clsName).getMethod(methodName);
+            return new ActionBinder(method);
+        } catch (Exception e) {
+            throw new FailedToBuildPreferenceException("No such method: " + methodName, e);
+        }
+    }
+
+    private static boolean contains(Class[] classList, Class cls) {
+        for (Class clazz : classList) {
+            if (clazz.equals(cls)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected static void bindValue(String key, Object value) {
         if (mValueBinders.containsKey(key)) {
-            ValueBinder binder = mValueBinders.get(key);
-            if (binder.getType().equals(Method.class)) {
-                binder.bindValue(binder.getValue());
-            } else {
-                binder.bindValue(value);
-            }
+            mValueBinders.get(key).bindValue(mSharedPreferences, key);
         }
     }
 

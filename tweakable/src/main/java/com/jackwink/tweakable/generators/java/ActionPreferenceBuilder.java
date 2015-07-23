@@ -9,11 +9,12 @@ import java.lang.reflect.Method;
 /**
  *
  */
+@SuppressWarnings({ "rawtypes" })
 public class ActionPreferenceBuilder extends BaseBuilder<Preference> {
 
     @Override
     public Class[] getHandledTypes() {
-        return new Class[] { Method.class };
+        return new Class[] {Method.class };
     }
 
     @Override

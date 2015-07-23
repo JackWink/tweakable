@@ -9,6 +9,7 @@ import com.jackwink.tweakable.types.TweakableBoolean;
 /**
  *
  */
+@SuppressWarnings({ "rawtypes" })
 public class BooleanPreferenceBuilder extends BaseBuilder<Preference> {
     private static final String TAG = PreferenceFactory.class.getSimpleName();
 
@@ -17,7 +18,7 @@ public class BooleanPreferenceBuilder extends BaseBuilder<Preference> {
 
     @Override
     public Class[] getHandledTypes() {
-        return new Class[] { Boolean.class, boolean.class };
+        return new Class[] {Boolean.class, boolean.class };
     }
 
     /**

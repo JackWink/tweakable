@@ -8,10 +8,11 @@ import com.jackwink.tweakable.types.TweakableInteger;
 /**
  *
  */
+@SuppressWarnings({ "rawtypes" })
 public class IntegerPreferenceBuilder extends BaseBuilder<Preference> {
     @Override
     public Class[] getHandledTypes() {
-        return new Class[] { Integer.class, int.class };
+        return new Class[] {Integer.class, int.class };
     }
 
     @Override

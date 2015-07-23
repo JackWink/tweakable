@@ -9,11 +9,12 @@ import com.jackwink.tweakable.types.TweakableString;
 /**
  *
  */
+@SuppressWarnings({ "rawtypes" })
 public class StringPreferenceBuilder extends BaseBuilder<Preference> {
 
     @Override
     public Class[] getHandledTypes() {
-        return new Class[] { String.class };
+        return new Class[] {String.class };
     }
 
     @Override

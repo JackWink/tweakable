@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Builds a {@link Preference} from a {@link Bundle}
  */
-
+@SuppressWarnings({ "rawtypes" })
 public class PreferenceFactory {
     private static final String TAG = PreferenceFactory.class.getSimpleName();
 
@@ -28,6 +28,8 @@ public class PreferenceFactory {
         builders.add(new IntegerPreferenceBuilder());
         builders.add(new StringPreferenceBuilder());
     }
+
+    private Context mContext;
 
     public PreferenceFactory() {
     }

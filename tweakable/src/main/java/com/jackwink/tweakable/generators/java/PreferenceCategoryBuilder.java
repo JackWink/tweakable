@@ -1,16 +1,12 @@
 package com.jackwink.tweakable.generators.java;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceCategory;
-
-import com.jackwink.tweakable.types.AbstractTweakableValue;
-
-import java.util.Map;
 
 /**
  * Builds a {@link PreferenceCategory} from a {@link Bundle}
  */
+@SuppressWarnings({ "rawtypes" })
 public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
     private static final String TAG = PreferenceCategoryBuilder.class.getSimpleName();
 

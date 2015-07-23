@@ -1,5 +1,7 @@
 package com.jackwink.tweakable.binders;
 
+import android.content.SharedPreferences;
+
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 
 import java.lang.reflect.Field;
@@ -8,9 +10,15 @@ import java.lang.reflect.Field;
  * Binds an integer value to a static field
  */
 public class IntegerValueBinder extends AbstractValueBinder<Integer> {
+    public static final Class[] DECLARED_TYPES = {Integer.class, int.class };
 
     public IntegerValueBinder(Field field) {
         mField = field;
+    }
+
+    @Override
+    public Class<Integer> getType() {
+        return Integer.class;
     }
 
     @Override
@@ -30,20 +38,16 @@ public class IntegerValueBinder extends AbstractValueBinder<Integer> {
     }
 
     @Override
-    public void bindValue(Integer value) {
+    public void bindValue(SharedPreferences preferences, String key) {
         try {
             if (mField.getType().equals(int.class)) {
-                mField.setInt(null, value);
+                mField.setInt(null, preferences.getInt(key, getValue()));
             } else if (mField.getType().equals(Integer.class)) {
-                mField.set(null, value);
+                mField.set(null, preferences.getInt(key, getValue()));
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public Class<Integer> getType() {
-        return Integer.class;
-    }
 }
