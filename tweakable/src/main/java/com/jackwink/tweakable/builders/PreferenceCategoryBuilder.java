@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.os.Bundle;
 import android.preference.PreferenceCategory;
@@ -7,7 +7,7 @@ import android.preference.PreferenceCategory;
  * Builds a {@link PreferenceCategory} from a {@link Bundle}
  */
 @SuppressWarnings({ "rawtypes" })
-public class PreferenceCategoryBuilder extends BaseBuilder<PreferenceCategory> {
+public class PreferenceCategoryBuilder extends BasePreferenceBuilder<PreferenceCategory> {
     private static final String TAG = PreferenceCategoryBuilder.class.getSimpleName();
 
     public PreferenceCategoryBuilder() {

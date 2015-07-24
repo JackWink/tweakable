@@ -8,9 +8,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 
-import com.jackwink.tweakable.generators.java.PreferenceCategoryBuilder;
-import com.jackwink.tweakable.generators.java.PreferenceFactory;
-import com.jackwink.tweakable.generators.java.PreferenceScreenBuilder;
+import com.jackwink.tweakable.builders.PreferenceCategoryBuilder;
+import com.jackwink.tweakable.builders.PreferenceFactory;
+import com.jackwink.tweakable.builders.PreferenceScreenBuilder;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
 import java.util.LinkedHashMap;

@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
  * Binds a String value to a given {@link Field}.
  */
 public class StringValueBinder extends AbstractValueBinder<String> {
-    public static final Class[] DECLARED_TYPES = {String.class };
 
     public StringValueBinder(Field field) {
         mField = field;

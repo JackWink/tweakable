@@ -1,24 +1,16 @@
 package com.jackwink.tweakable;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.hardware.SensorManager;
-import android.os.Build;
 import android.util.Log;
 
 import com.jackwink.tweakable.binders.ActionBinder;
-import com.jackwink.tweakable.binders.BooleanValueBinder;
-import com.jackwink.tweakable.binders.FloatValueBinder;
-import com.jackwink.tweakable.binders.IntegerValueBinder;
-import com.jackwink.tweakable.binders.StringValueBinder;
 import com.jackwink.tweakable.binders.ValueBinder;
 import com.jackwink.tweakable.exceptions.FailedToBuildPreferenceException;
 import com.jackwink.tweakable.types.AbstractTweakableValue;
 
-import com.squareup.seismic.ShakeDetector;
-
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,36 +31,38 @@ public class Tweakable {
 
     private static String mSharedPreferencesName;
     private static SharedPreferences mSharedPreferences;
-    private static Context mContext;
 
+    private static TweakableShakeDetector mShakeDetector;
     private static boolean mOnShakeEnabled;
-    private static ShakeDetector mShakeDetector;
-    private static TweakShakeListener mShakeListener;
-    private static SensorManager mSensorManager;
 
     private static LinkedHashMap<String, ValueBinder> mValueBinders =
             new LinkedHashMap<>();
 
-
+    /**
+     * Binds the default values (or saved values) to all annotated fields and enables shake
+     * detection in your app.  For release builds, it's suggested to not call init to avoid
+     * a performance hit.
+     *
+     * @param context
+     */
     public static void init(Context context) {
         init(context, true);
     }
 
     /**
-     * Binds the default values (or saved values) to all annotated fields.
+     * Binds the default values (or saved values) to all annotated fields. If startOnShake is true,
+     * then this enables shake detection in your app.  If you wish to launch the
+     * {@link TweaksActivity} on your own, you should pass in false.
      *
-     * @param context Application or activity context used to retrieve the shared preferences file.
-     * @param onShake True if you want the TweaksActivity to start on shake, false otherwise.
+     * @param context Application context used to retrieve the shared preferences file.
+     * @param startOnShake True if you want the TweaksActivity to start on shake, false otherwise.
      */
-    public static void init(Context context, boolean onShake) {
-        mContext = context;
-        mOnShakeEnabled = onShake;
+    public static void init(Context context, boolean startOnShake) {
+        mShakeDetector = new TweakableShakeDetector(context);
+        mOnShakeEnabled = startOnShake;
         mSharedPreferencesName = context.getPackageName() + "_preferences";
         mSharedPreferences = context.getSharedPreferences(
                 mSharedPreferencesName, Context.MODE_PRIVATE);
-        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        mShakeListener = new TweakShakeListener();
-        mShakeDetector = new ShakeDetector(mShakeListener);
 
         for (Map<String, Object> bundle : getPreferences().getDeclaredPreferences()) {
             String preferenceKey = (String) bundle.get(AbstractTweakableValue.BUNDLE_KEYATTR_KEY);
@@ -86,50 +80,6 @@ public class Tweakable {
         if (mOnShakeEnabled) {
             startShakeListener();
         }
-
-        if (Build.FINGERPRINT.startsWith("generic")) {
-            mShakeListener.hearShake();
-        }
-    }
-
-    private static ValueBinder createBinder(String clsName, String fieldName) {
-        Field field = null;
-        try {
-            field = Class.forName(clsName).getDeclaredField(fieldName);
-            if (contains(BooleanValueBinder.DECLARED_TYPES, field.getType())) {
-                return new BooleanValueBinder(field);
-            } else if (contains(IntegerValueBinder.DECLARED_TYPES, field.getType())) {
-                return new IntegerValueBinder(field);
-            } else if (contains(StringValueBinder.DECLARED_TYPES, field.getType())) {
-                return new StringValueBinder(field);
-            } else if (contains(FloatValueBinder.DECLARED_TYPES, field.getType())) {
-                return new FloatValueBinder(field);
-            }
-        } catch (NoSuchFieldException e) {
-            return createMethodBinder(clsName, fieldName);
-        } catch (ClassNotFoundException error) {
-            throw new FailedToBuildPreferenceException("Class not found: " + clsName, error);
-        }
-
-        throw new FailedToBuildPreferenceException("Unhandled field type: " + field.getType());
-    }
-
-    private static ValueBinder createMethodBinder(String clsName, String methodName) {
-        try {
-            Method method = Class.forName(clsName).getMethod(methodName);
-            return new ActionBinder(method);
-        } catch (Exception e) {
-            throw new FailedToBuildPreferenceException("No such method: " + methodName, e);
-        }
-    }
-
-    private static boolean contains(Class[] classList, Class cls) {
-        for (Class clazz : classList) {
-            if (clazz.equals(cls)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     protected static void bindValue(String key, Object value) {
@@ -146,14 +96,22 @@ public class Tweakable {
         return mValueBinders.get(key).getValue();
     }
 
-    protected static synchronized void disableShakeListener() {
-        mShakeDetector.stop();
-        mOnShakeEnabled = false;
+    protected static synchronized void resetShakeListener() {
+        if (!mOnShakeEnabled) {
+            Log.w(TAG, "Shake detection not enabled!");
+        }
+        mShakeDetector.reset();
+    }
+
+    protected static synchronized boolean isShakeListenerEnabled() {
+        return mOnShakeEnabled;
     }
 
     protected static synchronized void startShakeListener() {
-        mOnShakeEnabled = true;
-        mShakeDetector.start(mSensorManager);
+        if (mOnShakeEnabled) {
+            Log.w(TAG, "Shake detection not enabled!");
+        }
+        mShakeDetector.listen();
     }
 
     /**
@@ -170,18 +128,30 @@ public class Tweakable {
         }
     }
 
-    private static class TweakShakeListener implements ShakeDetector.Listener {
-        @Override
-        public synchronized void hearShake() {
-            if (mOnShakeEnabled) {
-                Tweakable.disableShakeListener();
-                Intent settingsIntent = new Intent(mContext, TweaksActivity.class);
-                settingsIntent.putExtra(TweaksActivity.EXTRA_SHOW_FRAGMENT,
-                        TweaksFragment.class.getCanonicalName());
-                settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(settingsIntent);
+    private static ValueBinder createBinder(String clsName, String fieldName) {
+        Member fieldOrMethod = null;
+        Class type = null;
+        try {
+            fieldOrMethod = Class.forName(clsName).getDeclaredField(fieldName);
+            type = ((Field) fieldOrMethod).getType();
+        } catch (NoSuchFieldException e) {
+            try {
+                fieldOrMethod = Class.forName(clsName).getDeclaredMethod(fieldName);
+                type = Method.class;
+            } catch (Exception methodException) {
+                throw new FailedToBuildPreferenceException(
+                        "Couldn't create binder for " + fieldName, methodException);
+            }
+        } catch (Exception e) {
+            throw new FailedToBuildPreferenceException("Couldn't create binder for: " + clsName, e);
+        }
+
+        for (ValueBinder.DeclaredTypes binderType : ValueBinder.DeclaredTypes.values()) {
+            if (binderType.contains(type)) {
+                return binderType.getBinder(fieldOrMethod);
             }
         }
-    }
 
+        throw new FailedToBuildPreferenceException("Unhandled field type: " + type);
+    }
 }

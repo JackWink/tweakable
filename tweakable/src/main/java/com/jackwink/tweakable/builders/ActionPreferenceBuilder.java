@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.preference.Preference;
 
@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  *
  */
 @SuppressWarnings({ "rawtypes" })
-public class ActionPreferenceBuilder extends BaseBuilder<Preference> {
+public class ActionPreferenceBuilder extends BasePreferenceBuilder<Preference> {
 
     @Override
     public Class[] getHandledTypes() {

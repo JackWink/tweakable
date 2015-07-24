@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.preference.Preference;
 
@@ -9,7 +9,7 @@ import com.jackwink.tweakable.types.TweakableFloat;
  *
  */
 @SuppressWarnings({ "rawtypes" })
-public class FloatPreferenceBuilder extends BaseBuilder<Preference> {
+public class FloatPreferenceBuilder extends BasePreferenceBuilder<Preference> {
 
     @Override
     public Class[] getHandledTypes() {

@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,7 +20,7 @@ import java.util.Set;
 public class PreferenceFactory {
     private static final String TAG = PreferenceFactory.class.getSimpleName();
 
-    static Set<BaseBuilder<Preference>> builders = new LinkedHashSet<>(5);
+    static Set<BasePreferenceBuilder<Preference>> builders = new LinkedHashSet<>(5);
     static {
         builders.add(new ActionPreferenceBuilder());
         builders.add(new BooleanPreferenceBuilder());
@@ -48,7 +48,7 @@ public class PreferenceFactory {
      */
     public Preference build(Class type, Context context, Map<String, Object> attributeMap,
                             Object defaultValue) {
-        for (BaseBuilder<Preference> builder : builders) {
+        for (BasePreferenceBuilder<Preference> builder : builders) {
             for (Class cls : builder.getHandledTypes()) {
                 if (cls.equals(type)) {
                     Preference preference = builder

@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
  *
  */
 public class FloatValueBinder extends AbstractValueBinder<Float> {
-    public static final Class[] DECLARED_TYPES = {Float.class, float.class };
 
     public FloatValueBinder(Field field) {
         mField = field;

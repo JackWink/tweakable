@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,11 +14,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
- *  Contains convenience methods for any {@link JavaBuilder} subclass
+ *  Contains convenience methods for any {@link PreferenceBuilder} subclass
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public abstract class BaseBuilder<T> implements JavaBuilder<T> {
-    private static final String TAG = BaseBuilder.class.getSimpleName();
+public abstract class BasePreferenceBuilder<T extends Preference> implements PreferenceBuilder<T> {
+    private static final String TAG = BasePreferenceBuilder.class.getSimpleName();
 
     public static final String BUNDLE_KEYATTR_KEY = AbstractTweakableValue.BUNDLE_KEYATTR_KEY;
     public static final String BUNDLE_TITLE_KEY = AbstractTweakableValue.BUNDLE_TITLE_KEY;
@@ -72,7 +72,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
      * @param attributeMap Bundle containing values used to construct the preference
      * @return The updated builder
      */
-    public BaseBuilder<T> setBundle(Map<String, Object> attributeMap) {
+    public BasePreferenceBuilder<T> setBundle(Map<String, Object> attributeMap) {
         mAttributeMap = attributeMap;
         return this;
     }
@@ -82,7 +82,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
      * @param context
      * @return The updated builder
      */
-    public BaseBuilder<T> setContext(Context context) {
+    public BasePreferenceBuilder<T> setContext(Context context) {
         mContext = context;
         return this;
     }
@@ -93,7 +93,7 @@ public abstract class BaseBuilder<T> implements JavaBuilder<T> {
      * @param defaultValue Default value of this preference
      * @return The updated builder
      */
-    public BaseBuilder<T> setDefaultValue(Object defaultValue) {
+    public BasePreferenceBuilder<T> setDefaultValue(Object defaultValue) {
         mDefaultValue = defaultValue;
         return this;
     }

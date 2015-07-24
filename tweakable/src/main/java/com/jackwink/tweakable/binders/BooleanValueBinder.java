@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
  * Binds a boolean value to a given field
  */
 public class BooleanValueBinder extends AbstractValueBinder<Boolean> {
-    public static final Class[] DECLARED_TYPES = {Boolean.class, boolean.class };
 
     public BooleanValueBinder(Field field) {
         mField = field;

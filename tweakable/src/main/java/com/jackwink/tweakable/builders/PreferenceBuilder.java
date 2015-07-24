@@ -1,9 +1,11 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
+
+import android.preference.Preference;
 
 /**
  *  Builds a java object
  */
-public interface JavaBuilder<T> {
+public interface PreferenceBuilder<T extends Preference> {
 
     /**
      * Lists the registered classes this builder can handle.  For example, a builder that

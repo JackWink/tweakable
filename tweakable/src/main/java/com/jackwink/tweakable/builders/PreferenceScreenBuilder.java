@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
@@ -14,7 +14,7 @@ import java.util.Map;
  * Builds a {@link PreferenceScreen}
  */
 @SuppressWarnings({ "rawtypes" })
-public class PreferenceScreenBuilder extends BaseBuilder<PreferenceScreen> {
+public class PreferenceScreenBuilder extends BasePreferenceBuilder<PreferenceScreen> {
     private static final String TAG = PreferenceScreenBuilder.class.getSimpleName();
 
     private PreferenceManager mPreferenceManager = null;

@@ -19,9 +19,12 @@ public class TweaksActivity extends PreferenceActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        Tweakable.startShakeListener();
-        super.onDestroy();
+    protected void onStop() {
+        if (Tweakable.isShakeListenerEnabled()) {
+            Tweakable.resetShakeListener();
+            Tweakable.startShakeListener();
+        }
+        super.onStop();
     }
 
     @Override

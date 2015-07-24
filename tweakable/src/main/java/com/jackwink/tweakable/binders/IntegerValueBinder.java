@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
  * Binds an integer value to a static field
  */
 public class IntegerValueBinder extends AbstractValueBinder<Integer> {
-    public static final Class[] DECLARED_TYPES = {Integer.class, int.class };
 
     public IntegerValueBinder(Field field) {
         mField = field;

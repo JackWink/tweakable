@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
  *
  */
 public class ActionBinder extends AbstractValueBinder<Method> {
-    public static final Class[] DECLARED_TYPES = {Method.class };
 
     protected Method mMethod;
 

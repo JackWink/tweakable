@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.preference.Preference;
 
@@ -9,7 +9,7 @@ import com.jackwink.tweakable.types.TweakableInteger;
  *
  */
 @SuppressWarnings({ "rawtypes" })
-public class IntegerPreferenceBuilder extends BaseBuilder<Preference> {
+public class IntegerPreferenceBuilder extends BasePreferenceBuilder<Preference> {
     @Override
     public Class[] getHandledTypes() {
         return new Class[] {Integer.class, int.class };

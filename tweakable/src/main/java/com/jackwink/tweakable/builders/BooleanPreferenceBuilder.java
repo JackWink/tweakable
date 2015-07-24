@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.preference.Preference;
 import android.preference.SwitchPreference;
@@ -10,7 +10,7 @@ import com.jackwink.tweakable.types.TweakableBoolean;
  *
  */
 @SuppressWarnings({ "rawtypes" })
-public class BooleanPreferenceBuilder extends BaseBuilder<Preference> {
+public class BooleanPreferenceBuilder extends BasePreferenceBuilder<Preference> {
     private static final String TAG = PreferenceFactory.class.getSimpleName();
 
     public BooleanPreferenceBuilder() {

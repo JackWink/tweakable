@@ -1,4 +1,4 @@
-package com.jackwink.tweakable.generators.java;
+package com.jackwink.tweakable.builders;
 
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -10,7 +10,7 @@ import com.jackwink.tweakable.types.TweakableString;
  *
  */
 @SuppressWarnings({ "rawtypes" })
-public class StringPreferenceBuilder extends BaseBuilder<Preference> {
+public class StringPreferenceBuilder extends BasePreferenceBuilder<Preference> {
 
     @Override
     public Class[] getHandledTypes() {
