@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  *
  */
 @Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 public @interface TwkInteger {
 
     // If this string is empty, preference will be added to the root screen.
