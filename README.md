@@ -62,9 +62,10 @@ Be sure to add the TweakActivity to your AndroidManifest.xml:
 
 #### Application Setup 
 
-Call `Tweakable.init(Context context)` when the app starts to inject the present values (or 
-default values) from shared preferences to static fields. Tweakable will start
-listening for the phone to shake and show a preferences screen to the user.
+Call `Tweakable.init(Context context)` when the app starts (with the application context!) to inject the present 
+values (or default values) from shared preferences to static fields. 
+
+Tweakable will start listening for the phone to shake and show a preferences screen to the user.
 
 #### Field Annotations - Tweakable Values
 
