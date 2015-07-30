@@ -39,13 +39,24 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
     private PreferencesGenerator mPreferenceGenerator;
     private boolean built = false;
 
+    /**
+     * When adding a type to this set, make sure you add a handler to
+     * {@link #process(Class, RoundEnvironment)}. Still a WIP to clean that up.
+     */
+    private static final Set<Class<? extends Annotation>> mAnnotationSet = new LinkedHashSet<>(5);
+    static {
+        mAnnotationSet.add(TwkBoolean.class);
+        mAnnotationSet.add(TwkString.class);
+        mAnnotationSet.add(TwkInteger.class);
+        mAnnotationSet.add(TwkFloat.class);
+        mAnnotationSet.add(TwkAction.class);
+    }
+
     @Override public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new LinkedHashSet<String>();
-        types.add(TwkBoolean.class.getCanonicalName());
-        types.add(TwkString.class.getCanonicalName());
-        types.add(TwkInteger.class.getCanonicalName());
-        types.add(TwkFloat.class.getCanonicalName());
-        types.add(TwkAction.class.getCanonicalName());
+        for (Class type : mAnnotationSet) {
+            types.add(type.getCanonicalName());
+        }
         return types;
     }
 
@@ -61,11 +72,10 @@ public class TweakableValueAnnotationProcessor extends AbstractProcessor {
             return true;
         }
 
-        process(TwkBoolean.class, env);
-        process(TwkString.class, env);
-        process(TwkInteger.class, env);
-        process(TwkFloat.class, env);
-        process(TwkAction.class, env);
+        for (Class type : mAnnotationSet) {
+            process(type, env);
+        }
+
         mPreferenceGenerator.build();
         built = true;
         return true;
