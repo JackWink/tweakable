@@ -109,6 +109,17 @@ call that method from the tweak menu.
 
 Actions support the `screen`, `category`, and `title` attributes.
 
+
+#### Launching the activity yourself
+
+In some cases, such as the emulator where shake detection won't work, you can launch the TweakActivity yourself:
+
+    Intent settingsIntent = new Intent(this, TweaksActivity.class);
+    settingsIntent.putExtra(TweaksActivity.EXTRA_SHOW_FRAGMENT,
+                            TweaksFragment.class.getCanonicalName());
+    settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(settingsIntent);
+
 ## Thanks / Attributions
 
 * [Tweaks](https://github.com/facebook/Tweaks) for the initial inspiration. 
